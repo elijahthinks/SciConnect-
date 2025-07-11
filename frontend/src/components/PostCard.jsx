@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { ChatBubbleLeftIcon, ShareIcon, TrashIcon, PencilIcon, GlobeAltIcon, UserGroupIcon, LockClosedIcon, TagIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '../store/auth';
 import axios from 'axios';
-import CommentSection from './CommentSection';
+const CommentSection = lazy(() => import('./CommentSection'));
 import ReactionButton from './ReactionButton';
 import UserAvatar from './UserAvatar';
 
@@ -241,7 +241,9 @@ export default function PostCard({ post, onDelete, onUpdate }) {
       {/* Comments Section */}
       {showComments && (
         <div className="mt-6 border-t border-gradient-to-r from-blue-100 to-purple-100 pt-6">
-          <CommentSection postId={post.id} />
+          <Suspense fallback={null}>
+            <CommentSection postId={post.id} />
+          </Suspense>
         </div>
       )}
     </div>
