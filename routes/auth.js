@@ -22,7 +22,9 @@ router.post(
       }
 
       const { name, email, password } = req.body;
-      console.log('Registration attempt:', { name, email }); // Log registration attempt
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Registration attempt:', { name, email });
+      }
 
       let user = await User.findOne({ where: { email } });
       if (user) {
@@ -63,7 +65,9 @@ router.post(
       }
 
       const { email, password } = req.body;
-      console.log('Login attempt:', { email }); // Log login attempt
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Login attempt:', { email });
+      }
 
       const user = await User.findOne({ where: { email } });
       if (!user) {

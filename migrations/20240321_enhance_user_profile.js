@@ -5,7 +5,8 @@ async function up({ context: queryInterface }) {
   await queryInterface.sequelize.query('ALTER TABLE Users ADD COLUMN bio TEXT');
   await queryInterface.sequelize.query('ALTER TABLE Users ADD COLUMN education TEXT');
   await queryInterface.sequelize.query('ALTER TABLE Users ADD COLUMN research_interests TEXT');
-  await queryInterface.sequelize.query('ALTER TABLE Users ADD COLUMN social_links TEXT DEFAULT \'[]\'');
+  // Store social links as a JSON object string (e.g. {"twitter": "", "github": ""})
+  await queryInterface.sequelize.query('ALTER TABLE Users ADD COLUMN social_links TEXT DEFAULT \'{}\'');
 
   // Add new fields to Post table
   await queryInterface.sequelize.query('ALTER TABLE Posts ADD COLUMN visibility TEXT DEFAULT \'public\' NOT NULL');
