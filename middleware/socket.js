@@ -25,7 +25,7 @@ function initializeSocket(server) {
       }
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      socket.userId = decoded.userId;
+      socket.userId = decoded.id;
       next();
     } catch (error) {
       next(new Error('Authentication error'));

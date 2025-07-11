@@ -29,12 +29,17 @@ const server = http.createServer(app);
 const io = initializeSocket(server);
 
 // Middleware
-// Configure CORS: dynamically reflect the request origin when credentials are sent
+// Configure CORS using allowed client URLs from config
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    return callback(null, true); // Reflect the origin provided by the request
+    const allowedOrigins = process.env.NODE_ENV === 'production'
+      ? [config.clientUrl]
+      : config.clientUrls;
+
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
