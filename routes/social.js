@@ -5,6 +5,7 @@ const UserRelationship = require('../models/UserRelationship');
 const Notification = require('../models/Notification');
 const { sendNotification } = require('../middleware/socket');
 const auth = require('../middleware/auth');
+const { BASIC_USER_ATTRIBUTES, getFollowStats } = require('../utils/userUtils');
 
 const router = express.Router();
 
@@ -15,7 +16,7 @@ router.get('/:userId/followers', async (req, res) => {
       include: [{
         model: User,
         as: 'followers',
-        attributes: ['id', 'name', 'avatar', 'institution', 'position'],
+        attributes: BASIC_USER_ATTRIBUTES,
         through: { attributes: [] }
       }]
     });
@@ -38,7 +39,7 @@ router.get('/:userId/following', async (req, res) => {
       include: [{
         model: User,
         as: 'following',
-        attributes: ['id', 'name', 'avatar', 'institution', 'position'],
+        attributes: BASIC_USER_ATTRIBUTES,
         through: { attributes: [] }
       }]
     });
@@ -96,13 +97,8 @@ router.post('/follow/:userId', auth, async (req, res) => {
     await sendNotification(targetUser.id, notification);
 
     // Get updated follower/following counts
-    const followerCount = await UserRelationship.count({
-      where: { followingId: targetUser.id, status: 'accepted' }
-    });
-
-    const followingCount = await UserRelationship.count({
-      where: { followerId: req.user.id, status: 'accepted' }
-    });
+    const { followerCount } = await getFollowStats(targetUser.id);
+    const { followingCount } = await getFollowStats(req.user.id);
 
     res.json({
       message: `Now following ${targetUser.name}`,
@@ -135,13 +131,8 @@ router.delete('/unfollow/:userId', auth, async (req, res) => {
     }
 
     // Get updated follower/following counts
-    const followerCount = await UserRelationship.count({
-      where: { followingId: targetUser.id, status: 'accepted' }
-    });
-
-    const followingCount = await UserRelationship.count({
-      where: { followerId: req.user.id, status: 'accepted' }
-    });
+    const { followerCount } = await getFollowStats(targetUser.id);
+    const { followingCount } = await getFollowStats(req.user.id);
 
     res.json({
       message: `Unfollowed ${targetUser.name}`,
@@ -159,15 +150,7 @@ router.get('/status/:userId', auth, async (req, res) => {
   try {
     const targetUserId = parseInt(req.params.userId);
     
-    // Get follower count
-    const followerCount = await UserRelationship.count({
-      where: { followingId: targetUserId, status: 'accepted' }
-    });
-
-    // Get following count
-    const followingCount = await UserRelationship.count({
-      where: { followerId: targetUserId, status: 'accepted' }
-    });
+    const { followerCount, followingCount } = await getFollowStats(targetUserId);
 
     // Check if current user is following the target user
     const isFollowing = await UserRelationship.findOne({
@@ -219,7 +202,7 @@ router.get('/suggestions', auth, async (req, res) => {
 
     const users = await User.findAndCountAll({
       where: whereClause,
-      attributes: ['id', 'name', 'avatar', 'institution', 'position', 'department'],
+      attributes: [...BASIC_USER_ATTRIBUTES, 'department'],
       limit,
       offset,
       order: [['name', 'ASC']]

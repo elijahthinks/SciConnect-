@@ -3,6 +3,7 @@ const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
 const auth = require('../middleware/auth');
 const { avatarUpload, processAvatar } = require('../middleware/upload');
+const { PROFILE_ATTRIBUTES } = require('../utils/userUtils');
 const fs = require('fs').promises;
 const path = require('path');
 
@@ -42,13 +43,7 @@ router.post('/avatar', auth, avatarUpload, processAvatar, async (req, res) => {
 router.get('/:userId', async (req, res) => {
   try {
     const user = await User.findByPk(req.params.userId, {
-      attributes: [
-        'id', 'name', 'email', 'avatar', 'bio', 
-        'institution', 'position', 'department',
-        'education', 'publications', 'researchInterests',
-        'socialLinks', 'isVerified', 'lastActive',
-        'createdAt'
-      ]
+      attributes: PROFILE_ATTRIBUTES
     });
 
     if (!user) {
@@ -117,13 +112,7 @@ router.put('/', auth, [
 
     // Return updated user without sensitive info
     const updatedUser = await User.findByPk(user.id, {
-      attributes: [
-        'id', 'name', 'email', 'avatar', 'bio',
-        'institution', 'position', 'department',
-        'education', 'publications', 'researchInterests',
-        'socialLinks', 'isVerified', 'lastActive',
-        'createdAt'
-      ]
+      attributes: PROFILE_ATTRIBUTES
     });
 
     res.json(updatedUser);

@@ -26,7 +26,7 @@ const app = express();
 const server = http.createServer(app);
 
 // Initialize socket.io
-const io = initializeSocket(server);
+initializeSocket(server);
 
 // Middleware
 // Configure CORS: dynamically reflect the request origin when credentials are sent
@@ -105,9 +105,17 @@ app.use((err, req, res, next) => {
 const PORT = config.port;
 
 // Sync database schema without dropping existing data
-sequelize.sync({ alter: true }).then(() => {
-  server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-    console.log(`Server is serving both frontend and backend on http://localhost:${PORT}`);
+function startServer() {
+  sequelize.sync({ alter: true }).then(() => {
+    server.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+      console.log(`Server is serving both frontend and backend on http://localhost:${PORT}`);
+    });
   });
-}); 
+}
+
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = { app, startServer };

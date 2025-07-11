@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { useAuth } from './store/auth';
 import useChatStore from './store/chat';
 import ErrorBoundary from './components/ErrorBoundary';
 import Navbar from './components/Navbar';
-import ChatWindow from './components/ChatWindow';
+const ChatWindow = lazy(() => import('./components/ChatWindow'));
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
@@ -48,10 +48,12 @@ function App() {
           </main>
           
           {/* Chat Window - Rendered at app level for proper modal overlay */}
-          <ChatWindow 
-            isOpen={isChatOpen} 
-            onClose={() => setIsChatOpen(false)} 
-          />
+          <Suspense fallback={null}>
+            <ChatWindow
+              isOpen={isChatOpen}
+              onClose={() => setIsChatOpen(false)}
+            />
+          </Suspense>
         </div>
       </Router>
     </ErrorBoundary>
