@@ -60,6 +60,22 @@ FRONTEND_URL=https://your-app.vercel.app
 
 ### Step 3: Deploy to Vercel
 
+#### Option A: Import from GitHub (Recommended)
+
+1. **Go to [vercel.com](https://vercel.com)**
+2. **Click "New Project"**
+3. **Import your repository**: `rashireader908/SciConnect-`
+4. **Configure Project Settings**:
+   - **Framework Preset**: `Vite`
+   - **Root Directory**: `frontend`
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+   - **Install Command**: `npm install`
+5. **Add Environment Variables** (see below)
+6. **Deploy!**
+
+#### Option B: Vercel CLI
+
 1. **Install Vercel CLI**:
    ```bash
    npm i -g vercel
