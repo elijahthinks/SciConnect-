@@ -15,7 +15,7 @@ router.get('/:userId/followers', async (req, res) => {
       include: [{
         model: User,
         as: 'followers',
-        attributes: ['id', 'name', 'avatar', 'institution', 'position'],
+        attributes: ['id', 'username', 'firstName', 'lastName', 'avatar', 'institution', 'position'],
         through: { attributes: [] }
       }]
     });
@@ -38,7 +38,7 @@ router.get('/:userId/following', async (req, res) => {
       include: [{
         model: User,
         as: 'following',
-        attributes: ['id', 'name', 'avatar', 'institution', 'position'],
+        attributes: ['id', 'username', 'firstName', 'lastName', 'avatar', 'institution', 'position'],
         through: { attributes: [] }
       }]
     });
@@ -87,7 +87,7 @@ router.post('/follow/:userId', auth, async (req, res) => {
     // Create notification
     const notification = await Notification.create({
       type: 'follow',
-      content: `${req.user.name} started following you`,
+      content: `${req.user.firstName} ${req.user.lastName} started following you`,
       recipientId: targetUser.id,
       senderId: req.user.id
     });
@@ -105,7 +105,7 @@ router.post('/follow/:userId', auth, async (req, res) => {
     });
 
     res.json({
-      message: `Now following ${targetUser.name}`,
+      message: `Now following ${targetUser.firstName} ${targetUser.lastName}`,
       followerCount,
       followingCount
     });
@@ -144,7 +144,7 @@ router.delete('/unfollow/:userId', auth, async (req, res) => {
     });
 
     res.json({
-      message: `Unfollowed ${targetUser.name}`,
+      message: `Unfollowed ${targetUser.firstName} ${targetUser.lastName}`,
       followerCount,
       followingCount
     });
@@ -211,18 +211,20 @@ router.get('/suggestions', auth, async (req, res) => {
 
     if (q) {
       whereClause[Op.or] = [
-        { name: { [Op.iLike]: `%${q}%` } },
-        { institution: { [Op.iLike]: `%${q}%` } },
-        { department: { [Op.iLike]: `%${q}%` } }
+        { firstName: { [Op.like]: `%${q}%` } },
+        { lastName: { [Op.like]: `%${q}%` } },
+        { username: { [Op.like]: `%${q}%` } },
+        { institution: { [Op.like]: `%${q}%` } },
+        { department: { [Op.like]: `%${q}%` } }
       ];
     }
 
     const users = await User.findAndCountAll({
       where: whereClause,
-      attributes: ['id', 'name', 'avatar', 'institution', 'position', 'department'],
+      attributes: ['id', 'username', 'firstName', 'lastName', 'avatar', 'institution', 'position', 'department'],
       limit,
       offset,
-      order: [['name', 'ASC']]
+      order: [['firstName', 'ASC']]
     });
 
     res.json({
@@ -233,6 +235,52 @@ router.get('/suggestions', auth, async (req, res) => {
     });
   } catch (error) {
     console.error('Error getting user suggestions:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Get all users for messaging (excludes current user)
+router.get('/users', auth, async (req, res) => {
+  try {
+    const { q } = req.query;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 50;
+    const offset = (page - 1) * limit;
+
+    const whereClause = {
+      id: { [Op.ne]: req.user.id } // Exclude current user
+    };
+
+    if (q) {
+      whereClause[Op.or] = [
+        { firstName: { [Op.like]: `%${q}%` } },
+        { lastName: { [Op.like]: `%${q}%` } },
+        { username: { [Op.like]: `%${q}%` } },
+        { institution: { [Op.like]: `%${q}%` } },
+        { department: { [Op.like]: `%${q}%` } }
+      ];
+    }
+
+    console.log('🔍 /api/social/users query:', JSON.stringify(whereClause));
+
+    const users = await User.findAndCountAll({
+      where: whereClause,
+      attributes: ['id', 'username', 'firstName', 'lastName', 'avatar', 'institution', 'position', 'department'],
+      limit,
+      offset,
+      order: [['firstName', 'ASC']]
+    });
+
+    console.log('🔍 /api/social/users found:', users.rows.length, 'users');
+
+    res.json({
+      users: users.rows,
+      total: users.count,
+      page,
+      totalPages: Math.ceil(users.count / limit)
+    });
+  } catch (error) {
+    console.error('Error getting all users:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });

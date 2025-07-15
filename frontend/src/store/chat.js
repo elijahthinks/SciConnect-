@@ -41,8 +41,20 @@ const useChatStore = create(
         const apiUrl = import.meta.env.VITE_API_URL || (
           import.meta.env.MODE === 'production' ? 'https://sciconnect.com' : 'http://localhost:3000');
 
+        // Get token from auth store format
+        let token = null;
+        try {
+          const auth = localStorage.getItem('auth');
+          if (auth) {
+            const parsedAuth = JSON.parse(auth);
+            token = parsedAuth.token;
+          }
+        } catch (error) {
+          console.error('Error getting token from localStorage:', error);
+        }
+
         const newSocket = io(apiUrl, {
-          auth: { token: localStorage.getItem('token') },
+          auth: { token },
           reconnection: true,
           reconnectionAttempts: 5,
           reconnectionDelay: RECONNECT_DELAY,
@@ -228,7 +240,6 @@ const useChatStore = create(
 
       fetchConversations: async () => {
         try {
-          const token = localStorage.getItem('token');
           const response = await axios.get('/api/chat/conversations');
           
           const conversations = response.data;
@@ -242,7 +253,6 @@ const useChatStore = create(
 
       createConversation: async (participantId) => {
         try {
-          const token = localStorage.getItem('token');
           const response = await axios.post('/api/chat/conversations', 
             { participantId }
           );
@@ -275,7 +285,6 @@ const useChatStore = create(
 
       fetchMessages: async (conversationId, page = 1) => {
         try {
-          const token = localStorage.getItem('token');
           const response = await axios.get(`/api/chat/conversations/${conversationId}/messages?page=${page}`);
           
           const newMessages = response.data;
@@ -312,7 +321,6 @@ const useChatStore = create(
         if (!currentConversation) return;
 
         try {
-          const token = localStorage.getItem('token');
           const response = await axios.post(
             `/api/chat/conversations/${currentConversation.conversationId}/messages`,
             { content, messageType, mediaUrl }
@@ -362,7 +370,6 @@ const useChatStore = create(
 
       markAsRead: async (conversationId) => {
         try {
-          const token = localStorage.getItem('token');
           await axios.put(`/api/chat/conversations/${conversationId}/read`, {});
           
           // Update conversations list

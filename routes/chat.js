@@ -5,7 +5,7 @@ const Message = require('../models/Message');
 const Conversation = require('../models/Conversation');
 const User = require('../models/User');
 const auth = require('../middleware/auth');
-const { chatMediaUpload, processChatMedia, uploadProgress } = require('../middleware/upload');
+const { chatMediaUpload, processChatMedia, uploadProgress } = require('../middleware/cloudinary');
 
 const router = express.Router();
 
@@ -23,12 +23,12 @@ router.get('/conversations', auth, async (req, res) => {
         {
           model: User,
           as: 'participant1',
-          attributes: ['id', 'name', 'avatar']
+          attributes: ['id', 'username', 'firstName', 'lastName', 'avatar']
         },
         {
           model: User,
           as: 'participant2',
-          attributes: ['id', 'name', 'avatar']
+          attributes: ['id', 'username', 'firstName', 'lastName', 'avatar']
         }
       ],
       order: [['lastMessageAt', 'DESC']]
@@ -103,7 +103,7 @@ router.post('/conversations', auth, [
 
     // Get the other participant info
     const otherParticipant = await User.findByPk(participantId, {
-      attributes: ['id', 'name', 'avatar']
+      attributes: ['id', 'username', 'firstName', 'lastName', 'avatar']
     });
 
     res.json({
@@ -163,7 +163,7 @@ router.get('/conversations/:conversationId/messages', auth, async (req, res) => 
         {
           model: User,
           as: 'sender',
-          attributes: ['id', 'name', 'avatar']
+          attributes: ['id', 'username', 'firstName', 'lastName', 'avatar']
         }
       ],
       order: [['createdAt', 'DESC']],

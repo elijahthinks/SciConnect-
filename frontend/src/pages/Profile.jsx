@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../store/auth';
-import { UserGroupIcon, AcademicCapIcon, BriefcaseIcon, BuildingLibraryIcon, LinkIcon } from '@heroicons/react/24/outline';
+import { UserGroupIcon, AcademicCapIcon, BriefcaseIcon, BuildingLibraryIcon, LinkIcon, ChatBubbleLeftRightIcon, CodeBracketIcon, BeakerIcon } from '@heroicons/react/24/outline';
 import AvatarUpload from '../components/AvatarUpload';
 import FollowButton from '../components/FollowButton';
+import UserAvatar from '../components/UserAvatar';
+import UserBadge from '../components/UserBadge';
+import SkillTagManager from '../components/SkillTagManager';
+import SideProjectManager from '../components/SideProjectManager';
+import useOnlineStatusStore from '../store/onlineStatus';
 import axios from 'axios';
 
 const Profile = () => {
-  const { id: userId } = useParams();
+  const { userId } = useParams();
   const { user: currentUser, token } = useAuth();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -19,12 +25,17 @@ const Profile = () => {
     institution: '',
     position: '',
     department: '',
+    userType: 'academic',
+    badges: [],
+    skillTags: [],
+    sideProjects: [],
     education: [],
     publications: [],
     researchInterests: [],
     socialLinks: {}
   });
   const [followStats, setFollowStats] = useState({ followerCount: 0, followingCount: 0, isFollowing: false });
+  const { fetchUserStatus, isUserOnline, getFormattedLastActive } = useOnlineStatusStore();
 
   useEffect(() => {
     if (currentUser) {
@@ -37,6 +48,12 @@ const Profile = () => {
       fetchFollowStats();
     }
   }, [userId, currentUser]);
+
+  useEffect(() => {
+    if (profile?.id) {
+      fetchUserStatus(profile.id);
+    }
+  }, [profile?.id, fetchUserStatus]);
 
   const fetchProfile = async () => {
     try {
@@ -52,13 +69,19 @@ const Profile = () => {
       const response = await axios.get(`/api/profile/${profileId}`);
       
       const data = response.data;
-      setProfile(data);
+      // Construct full name from firstName and lastName
+      const fullName = data.firstName && data.lastName ? `${data.firstName} ${data.lastName}` : data.username;
+      setProfile({ ...data, name: fullName });
       setFormData({
-        name: data.name || '',
+        name: fullName,
         bio: data.bio || '',
         institution: data.institution || '',
         position: data.position || '',
         department: data.department || '',
+        userType: data.userType || 'academic',
+        badges: data.badges || [],
+        skillTags: data.skillTags || [],
+        sideProjects: data.sideProjects || [],
         education: data.education || [],
         publications: data.publications || [],
         researchInterests: data.researchInterests || [],
@@ -114,6 +137,44 @@ const Profile = () => {
 
   const handleAvatarUpload = (avatarPath) => {
     setProfile({ ...profile, avatar: avatarPath });
+  };
+
+  const startConversation = async () => {
+    if (!profile || !currentUser) return;
+    
+    try {
+      const response = await axios.post('/api/chat/conversations', {
+        participantId: profile.id
+      });
+      
+      // Navigate to messages page
+      navigate('/chat');
+    } catch (error) {
+      console.error('Error starting conversation:', error);
+      alert('Failed to start conversation. Please try again.');
+    }
+  };
+
+  const getUserTypeLabel = (userType) => {
+    const labels = {
+      'academic': 'Academic',
+      'hobbyist': 'Hobbyist',
+      'independent': 'Independent',
+      'student': 'Student',
+      'professional': 'Professional'
+    };
+    return labels[userType] || userType;
+  };
+
+  const getUserTypeDescription = (userType) => {
+    const descriptions = {
+      'academic': 'University researcher or faculty member',
+      'hobbyist': 'Science enthusiast pursuing knowledge for fun',
+      'independent': 'Self-directed researcher or practitioner',
+      'student': 'Currently studying or in training',
+      'professional': 'Industry or applied science professional'
+    };
+    return descriptions[userType] || '';
   };
 
   if (loading) {
@@ -175,74 +236,94 @@ const Profile = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <div className="max-w-4xl mx-auto p-6">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/30 overflow-hidden transform transition-all duration-300 hover:shadow-3xl">
-          {/* Profile Header */}
-          <div className="relative h-48 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-sm"></div>
+        <div className="bg-white rounded-2xl shadow-2xl border border-white/30 overflow-hidden">
+          {/* Cover Photo */}
+          <div className="h-48 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/90 to-purple-600/90"></div>
             <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/5 opacity-20"></div>
-            
-            <div className="absolute -bottom-16 left-8 z-10">
-              {isOwnProfile ? (
-                <div className="relative">
+          </div>
+
+          {/* Profile Header */}
+          <div className="relative px-8 pb-6">
+            {/* Avatar - positioned to overlap cover */}
+            <div className="flex justify-center sm:justify-start -mt-16 mb-4">
+              <div className="relative">
+                {isOwnProfile ? (
                   <AvatarUpload
                     onUploadComplete={handleAvatarUpload}
                     currentAvatar={profile.avatar}
                   />
-                  <div className="absolute inset-0 rounded-full border-4 border-white/50 pointer-events-none"></div>
-                </div>
-              ) : (
-                <div className="relative">
+                ) : (
                   <img
-                    src={profile.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=random`}
-                    alt={profile.name}
+                    src={profile.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name || profile.username)}&background=random`}
+                    alt={profile.name || profile.username}
                     className="w-32 h-32 rounded-full border-4 border-white object-cover shadow-2xl"
                   />
-                  <div className="absolute inset-0 rounded-full border-4 border-white/50 pointer-events-none"></div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
 
-          {/* Profile Info */}
-          <div className="pt-20 px-8 pb-8">
-            <div className="flex justify-between items-start mb-6">
-              <div className="flex-1">
+            {/* Profile Info */}
+            <div className="text-center sm:text-left">
+              {/* Name and Email */}
+              <div className="mb-4">
                 <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-                  {profile.name}
+                  {profile.name || `${profile.firstName} ${profile.lastName}` || profile.username}
                 </h1>
-                <div className="flex flex-wrap items-center gap-4 text-gray-600 mb-3">
-                  {profile.position && (
-                    <div className="flex items-center bg-white/70 backdrop-blur-sm rounded-lg px-3 py-1.5 border border-white/50">
-                      <BriefcaseIcon className="h-4 w-4 mr-2 text-blue-600" />
-                      <span className="text-sm font-medium">{profile.position}</span>
-                    </div>
-                  )}
-                  {profile.institution && (
-                    <div className="flex items-center bg-white/70 backdrop-blur-sm rounded-lg px-3 py-1.5 border border-white/50">
-                      <BuildingLibraryIcon className="h-4 w-4 mr-2 text-purple-600" />
-                      <span className="text-sm font-medium">{profile.institution}</span>
-                    </div>
-                  )}
-                </div>
                 {profile.email && isOwnProfile && (
-                  <div className="text-sm text-gray-500 font-medium bg-white/50 backdrop-blur-sm rounded-lg px-3 py-1.5 border border-white/50 inline-block">
-                    {profile.email}
+                  <p className="text-gray-600 mb-3">{profile.email}</p>
+                )}
+                {!isOwnProfile && (
+                  <div className="flex items-center justify-center sm:justify-start space-x-2 mb-3">
+                    <UserAvatar user={profile} size="sm" showOnlineStatus={true} />
+                    <span className={`text-sm font-medium ${isUserOnline(profile.id) ? 'text-green-600' : 'text-gray-500'}`}>
+                      {isUserOnline(profile.id) ? '🟢 Online' : `⚪ Last seen ${getFormattedLastActive(profile.id)}`}
+                    </span>
                   </div>
                 )}
               </div>
-              
-              <div className="flex items-center space-x-6">
-                <div className="flex items-center space-x-4">
-                  <Link to="/connections" className="text-center group">
-                    <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 border border-white/50 hover:bg-white/90 transition-all duration-200 transform hover:scale-105">
+
+              {/* User Type Badge */}
+              <div className="flex justify-center sm:justify-start mb-4">
+                <UserBadge
+                  type={profile.userType}
+                  label={getUserTypeLabel(profile.userType)}
+                  description={getUserTypeDescription(profile.userType)}
+                />
+              </div>
+
+              {/* Work Info */}
+              {(profile.position || profile.institution) && (
+                <div className="flex flex-wrap justify-center sm:justify-start items-center gap-3 mb-4">
+                  {profile.position && (
+                    <div className="flex items-center bg-blue-50 rounded-lg px-3 py-1.5 border border-blue-200">
+                      <BriefcaseIcon className="h-4 w-4 mr-2 text-blue-600" />
+                      <span className="text-sm font-medium text-gray-700">{profile.position}</span>
+                    </div>
+                  )}
+                  {profile.institution && (
+                    <div className="flex items-center bg-purple-50 rounded-lg px-3 py-1.5 border border-purple-200">
+                      <BuildingLibraryIcon className="h-4 w-4 mr-2 text-purple-600" />
+                      <span className="text-sm font-medium text-gray-700">{profile.institution}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Stats and Actions */}
+              <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-4">
+                {/* Stats */}
+                <div className="flex items-center space-x-6">
+                  <Link to="/connections" className="group">
+                    <div className="text-center bg-gray-50 rounded-lg px-4 py-2 hover:bg-gray-100 transition-all duration-200">
                       <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                         {followStats.followerCount}
                       </div>
                       <div className="text-sm text-gray-500 font-medium">Followers</div>
                     </div>
                   </Link>
-                  <Link to="/connections" className="text-center group">
-                    <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 border border-white/50 hover:bg-white/90 transition-all duration-200 transform hover:scale-105">
+                  <Link to="/connections" className="group">
+                    <div className="text-center bg-gray-50 rounded-lg px-4 py-2 hover:bg-gray-100 transition-all duration-200">
                       <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                         {followStats.followingCount}
                       </div>
@@ -250,41 +331,56 @@ const Profile = () => {
                     </div>
                   </Link>
                 </div>
-                
-                {!isOwnProfile && (
-                  <FollowButton
-                    userId={profile.id}
-                    onFollowChange={(isFollowing) => {
-                      setFollowStats(prev => ({
-                        ...prev,
-                        isFollowing,
-                        followerCount: isFollowing ? prev.followerCount + 1 : prev.followerCount - 1
-                      }));
-                    }}
-                  />
-                )}
-                
-                {isOwnProfile && (
-                  <button
-                    onClick={() => setIsEditing(!isEditing)}
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-lg font-medium"
-                  >
-                    {isEditing ? 'Cancel' : 'Edit Profile'}
-                  </button>
-                )}
+
+                {/* Action Buttons */}
+                <div className="flex space-x-3">
+                  {!isOwnProfile && (
+                    <>
+                      <FollowButton
+                        userId={profile.id}
+                        onFollowChange={(isFollowing) => {
+                          setFollowStats(prev => ({
+                            ...prev,
+                            isFollowing,
+                            followerCount: isFollowing ? prev.followerCount + 1 : prev.followerCount - 1
+                          }));
+                        }}
+                      />
+                      <button
+                        onClick={startConversation}
+                        className="inline-flex items-center px-6 py-3 bg-white text-gray-700 border border-gray-300 rounded-xl hover:bg-gray-50 transition-all duration-200 font-medium shadow-lg"
+                      >
+                        <ChatBubbleLeftRightIcon className="h-5 w-5 mr-2" />
+                        Message
+                      </button>
+                    </>
+                  )}
+                  
+                  {isOwnProfile && (
+                    <button
+                      onClick={() => setIsEditing(!isEditing)}
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg"
+                    >
+                      {isEditing ? 'Cancel' : 'Edit Profile'}
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
+          </div>
 
+          {/* Profile Content */}
+          <div className="px-8 pb-8">
             {/* Bio */}
             {profile.bio ? (
               <div className="mb-8">
-                <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 border border-white/50 shadow-sm">
+                <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
                   <p className="text-gray-700 leading-relaxed text-lg">{profile.bio}</p>
                 </div>
               </div>
             ) : isOwnProfile && (
               <div className="mb-8">
-                <div className="bg-gradient-to-r from-blue-50/80 to-purple-50/80 backdrop-blur-sm rounded-xl p-6 border-2 border-dashed border-blue-300/50">
+                <div className="bg-gradient-to-r from-blue-50/80 to-purple-50/80 rounded-xl p-6 border-2 border-dashed border-blue-300/50">
                   <div className="text-center">
                     <div className="w-12 h-12 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
                       <UserGroupIcon className="w-6 h-6 text-blue-600" />
@@ -301,7 +397,76 @@ const Profile = () => {
               </div>
             )}
 
-            {/* Research Interests */}
+            {/* Skill Tags */}
+            {profile.skillTags && profile.skillTags.length > 0 && (
+              <div className="mb-8">
+                <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4 flex items-center">
+                  <CodeBracketIcon className="h-6 w-6 mr-2 text-blue-600" />
+                  Skills & Expertise
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  {profile.skillTags.map((skill, index) => (
+                    <span
+                      key={index}
+                      className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 border border-blue-200 shadow-sm transition-all duration-200 hover:from-blue-200 hover:to-purple-200 hover:scale-105"
+                    >
+                      <CodeBracketIcon className="h-4 w-4 mr-2" />
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Side Projects */}
+            {profile.sideProjects && profile.sideProjects.length > 0 && (
+              <div className="mb-8">
+                <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4 flex items-center">
+                  <BeakerIcon className="h-6 w-6 mr-2 text-blue-600" />
+                  Side Projects & Experiments
+                </h3>
+                <div className="space-y-4">
+                  {profile.sideProjects.map((project, index) => (
+                    <div key={index} className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm border-l-4 border-l-green-500">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-gray-900 text-lg mb-2">{project.title}</h4>
+                          {project.description && (
+                            <p className="text-gray-600 mb-3">{project.description}</p>
+                          )}
+                          {project.url && (
+                            <a
+                              href={project.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm mb-3"
+                            >
+                              <LinkIcon className="h-4 w-4 mr-1" />
+                              View Project
+                            </a>
+                          )}
+                          {project.technologies && project.technologies.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                              {project.technologies.map((tech, techIndex) => (
+                                <span
+                                  key={techIndex}
+                                  className="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full border border-blue-200"
+                                >
+                                  <CodeBracketIcon className="h-3 w-3 mr-1" />
+                                  {tech}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Interests */}
             {profile.researchInterests && profile.researchInterests.length > 0 && (
               <div className="mb-8">
                 <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
@@ -329,25 +494,25 @@ const Profile = () => {
                 </h3>
                 <div className="space-y-4">
                   {profile.education.map((edu, index) => (
-                    <div key={index} className="bg-white/70 backdrop-blur-sm rounded-xl p-6 border border-white/50 shadow-sm border-l-4 border-l-blue-500">
+                    <div key={index} className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm border-l-4 border-l-blue-500">
                       <div className="font-semibold text-gray-900 text-lg mb-1">{edu.degree} in {edu.field}</div>
                       <div className="text-blue-600 font-medium mb-1">{edu.institution}</div>
-                      <div className="text-sm text-gray-500 bg-gray-100/70 px-3 py-1 rounded-full inline-block">{edu.year}</div>
+                      <div className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full inline-block">{edu.year}</div>
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Publications */}
+            {/* Work & Projects */}
             {profile.publications && profile.publications.length > 0 && (
               <div className="mb-8">
                 <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-                  Publications
+                  Publications & Research
                 </h3>
                 <div className="space-y-4">
                   {profile.publications.map((pub, index) => (
-                    <div key={index} className="bg-white/70 backdrop-blur-sm rounded-xl p-6 border border-white/50 shadow-sm border-l-4 border-l-green-500">
+                    <div key={index} className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm border-l-4 border-l-green-500">
                       <div className="font-semibold text-gray-900 text-lg mb-2">{pub.title}</div>
                       <div className="text-gray-600 mb-2">{pub.journal} ({pub.year})</div>
                       {pub.doi && (
@@ -357,7 +522,7 @@ const Profile = () => {
                       )}
                       {pub.authors && pub.authors.length > 0 && (
                         <div className="text-sm text-gray-500">
-                          Authors: {pub.authors.join(', ')}
+                          Contributors: {pub.authors.join(', ')}
                         </div>
                       )}
                     </div>
@@ -380,7 +545,7 @@ const Profile = () => {
                       href={url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-white/70 backdrop-blur-sm text-gray-700 border border-white/50 hover:bg-white/90 transition-all duration-200 transform hover:scale-105 shadow-sm"
+                      className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition-all duration-200 transform hover:scale-105 shadow-sm"
                     >
                       {platform}
                     </a>
@@ -391,22 +556,23 @@ const Profile = () => {
 
             {/* Empty State for New Users */}
             {isOwnProfile && !profile.bio && (!profile.researchInterests || profile.researchInterests.length === 0) && 
-             (!profile.education || profile.education.length === 0) && (!profile.publications || profile.publications.length === 0) && (
-              <div className="bg-gradient-to-r from-blue-50/80 to-purple-50/80 backdrop-blur-sm rounded-xl p-8 border border-white/50 text-center">
+             (!profile.education || profile.education.length === 0) && (!profile.publications || profile.publications.length === 0) && 
+             (!profile.skillTags || profile.skillTags.length === 0) && (!profile.sideProjects || profile.sideProjects.length === 0) && (
+              <div className="bg-gradient-to-r from-blue-50/80 to-purple-50/80 rounded-xl p-8 border border-gray-200 text-center">
                 <div className="w-16 h-16 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <UserGroupIcon className="w-8 h-8 text-blue-600" />
                 </div>
                 <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-                  Complete Your Profile
+                  Complete your profile
                 </h3>
-                <p className="text-gray-600 mb-6">
-                  Add information about yourself to help others discover and connect with you.
+                <p className="text-gray-600 mb-4">
+                  Share a bit about yourself and your interests with the community
                 </p>
                 <button
                   onClick={() => setIsEditing(true)}
                   className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-lg font-medium"
                 >
-                  Edit Profile
+                  Get Started
                 </button>
               </div>
             )}
@@ -417,23 +583,43 @@ const Profile = () => {
       {/* Edit Profile Modal */}
       {isEditing && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-white/30 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-8">
               <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
                 Edit Profile
               </h2>
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    className="w-full bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      First Name
+                    </label>
+                    <input
+                      type="text"
+                      name="firstName"
+                      value={formData.name.split(' ')[0] || ''}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        name: `${e.target.value} ${formData.name.split(' ').slice(1).join(' ')}`
+                      })}
+                      className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Last Name
+                    </label>
+                    <input
+                      type="text"
+                      name="lastName"
+                      value={formData.name.split(' ').slice(1).join(' ') || ''}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        name: `${formData.name.split(' ')[0] || ''} ${e.target.value}`
+                      })}
+                      className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    />
+                  </div>
                 </div>
 
                 <div>
@@ -445,37 +631,55 @@ const Profile = () => {
                     value={formData.bio}
                     onChange={handleInputChange}
                     rows={4}
-                    placeholder="Tell people about yourself..."
-                    className="w-full bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
+                    placeholder="Tell people about yourself and what you're working on..."
+                    className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    I identify as a...
+                  </label>
+                  <select
+                    name="userType"
+                    value={formData.userType}
+                    onChange={handleInputChange}
+                    className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                  >
+                    <option value="academic">Academic Researcher</option>
+                    <option value="hobbyist">Hobbyist</option>
+                    <option value="independent">Independent Researcher</option>
+                    <option value="student">Student</option>
+                    <option value="professional">Professional</option>
+                  </select>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Institution
+                      Organization
                     </label>
                     <input
                       type="text"
                       name="institution"
                       value={formData.institution}
                       onChange={handleInputChange}
-                      placeholder="University or Organization"
-                      className="w-full bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                      placeholder="Where do you work or study?"
+                      className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Position
+                      Role
                     </label>
                     <input
                       type="text"
                       name="position"
                       value={formData.position}
                       onChange={handleInputChange}
-                      placeholder="Your role or title"
-                      className="w-full bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                      placeholder="What's your role or title?"
+                      className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                     />
                   </div>
                 </div>
@@ -489,8 +693,29 @@ const Profile = () => {
                     name="department"
                     value={formData.department}
                     onChange={handleInputChange}
-                    placeholder="Department or Field"
-                    className="w-full bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    placeholder="Which department or field?"
+                    className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Skills & Expertise
+                  </label>
+                  <SkillTagManager
+                    tags={formData.skillTags}
+                    onTagsChange={(skillTags) => setFormData({ ...formData, skillTags })}
+                    placeholder="Add your skills and expertise..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Side Projects & Experiments
+                  </label>
+                  <SideProjectManager
+                    projects={formData.sideProjects}
+                    onProjectsChange={(sideProjects) => setFormData({ ...formData, sideProjects })}
                   />
                 </div>
 
@@ -502,8 +727,8 @@ const Profile = () => {
                     type="text"
                     value={formData.researchInterests.join(', ')}
                     onChange={(e) => handleArrayInput('researchInterests', e.target.value)}
-                    placeholder="Machine Learning, Data Science, Biology..."
-                    className="w-full bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    placeholder="What are you interested in? AI, Biology, Physics..."
+                    className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                   />
                 </div>
 
@@ -517,7 +742,7 @@ const Profile = () => {
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-lg font-medium"
+                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg font-medium"
                   >
                     Save Changes
                   </button>

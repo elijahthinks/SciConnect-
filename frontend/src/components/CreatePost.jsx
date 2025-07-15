@@ -63,13 +63,19 @@ export default function CreatePost({ onPostCreated }) {
         visibility
       });
 
-      const response = await axios.post('/api/posts', {
+      const postData = {
         content: content.trim(),
-        media: mediaUrls,
-        mediaType,
         tags,
         visibility
-      });
+      };
+
+      // Only add media fields if there's actually media
+      if (mediaUrls.length > 0) {
+        postData.media = mediaUrls;
+        postData.mediaType = mediaType;
+      }
+
+      const response = await axios.post('/api/posts', postData);
 
       console.log('Post created successfully:', response.data);
       
@@ -138,7 +144,7 @@ export default function CreatePost({ onPostCreated }) {
   };
 
   const handleTagAdd = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     const tag = tagInput.trim().toLowerCase();
     if (tag && !tags.includes(tag) && tags.length < 5) {
       setTags([...tags, tag]);
@@ -177,7 +183,7 @@ export default function CreatePost({ onPostCreated }) {
                 Share your thoughts
               </h3>
               <p className="text-sm text-gray-600">
-                Connect with the scientific community
+                What's on your mind? Share with the community
               </p>
             </div>
 
@@ -206,10 +212,9 @@ export default function CreatePost({ onPostCreated }) {
               <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                placeholder="What's on your mind? Share your research, insights, or thoughts..."
-                className="w-full p-4 border border-gray-200 rounded-xl resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white/80 backdrop-blur-sm placeholder-gray-500 text-gray-900 min-h-[120px]"
+                placeholder="What's on your mind? Share your latest work, ideas, or discoveries..."
+                className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none bg-white/70 backdrop-blur-sm placeholder-gray-500 text-gray-900 text-lg leading-relaxed shadow-sm"
                 rows="4"
-                maxLength="2000"
               />
               <div className="mt-2 flex justify-between items-center">
                 <div className="text-xs text-gray-500">
@@ -242,24 +247,31 @@ export default function CreatePost({ onPostCreated }) {
                 ))}
               </div>
               {tags.length < 5 && (
-                <form onSubmit={handleTagAdd} className="flex items-center">
+                <div className="flex items-center">
                   <div className="relative flex-1">
                     <TagIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <input
                       type="text"
                       value={tagInput}
                       onChange={(e) => setTagInput(e.target.value)}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleTagAdd(e);
+                        }
+                      }}
                       placeholder="Add tags (e.g., research, ai, quantum)..."
                       className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white/80 backdrop-blur-sm text-sm"
                     />
                   </div>
                   <button
-                    type="submit"
+                    type="button"
+                    onClick={handleTagAdd}
                     className="ml-2 px-3 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-medium rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-200 transform hover:scale-105 shadow-sm"
                   >
                     Add
                   </button>
-                </form>
+                </div>
               )}
             </div>
             

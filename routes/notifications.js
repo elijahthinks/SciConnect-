@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const Notification = require('../models/Notification');
+const User = require('../models/User'); // Added User model import
 const { sendNotification } = require('../middleware/socket');
 
 // Get all notifications for the authenticated user
@@ -10,7 +11,11 @@ router.get('/', auth, async (req, res) => {
     const notifications = await Notification.findAll({
       where: { recipientId: req.user.id },
       order: [['createdAt', 'DESC']],
-      include: ['sender']
+      include: [{
+        model: User,
+        as: 'sender',
+        attributes: ['id', 'username', 'firstName', 'lastName', 'avatar']
+      }]
     });
     res.json(notifications);
   } catch (error) {

@@ -17,17 +17,26 @@ function CommentForm({ postId, parentId = null, onCommentAdded, onCancel = null 
 
     setIsSubmitting(true);
     try {
-      const response = await axios.post('/api/comments', {
-        postId,
+      const commentData = {
+        postId: parseInt(postId), // Ensure postId is a number
         content: content.trim(),
-        parentId
-      });
+        parentId: parentId ? parseInt(parentId) : null // Ensure parentId is a number if it exists
+      };
+      
+      console.log('Sending comment data:', commentData);
+      console.log('User token available:', !!token);
+      console.log('PostId type:', typeof commentData.postId);
+      
+      const response = await axios.post('/api/comments', commentData);
 
+      console.log('Comment created successfully:', response.data);
       setContent('');
       onCommentAdded(response.data);
       if (onCancel) onCancel();
     } catch (err) {
       console.error('Failed to add comment:', err);
+      console.error('Error response:', err.response?.data);
+      console.error('Error status:', err.response?.status);
       alert('Failed to add comment. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -219,7 +228,7 @@ function Comment({ comment, onCommentAdded, onCommentDeleted, isReply = false })
             </div>
 
             {showReplyForm && (
-              <div className="mt-4">
+              <div className="mt-4 border-l-2 border-blue-200 pl-4">
                 <CommentForm
                   postId={comment.postId}
                   parentId={comment.id}
@@ -257,12 +266,15 @@ export default function CommentSection({ postId }) {
   const { user, token } = useAuth();
 
   useEffect(() => {
+    console.log('CommentSection useEffect triggered for postId:', postId);
     fetchComments();
   }, [postId]);
 
   const fetchComments = async () => {
     try {
+      console.log('Fetching comments for postId:', postId);
       const response = await axios.get(`/api/comments/post/${postId}`);
+      console.log('Fetched comments:', response.data);
       setComments(response.data);
     } catch (err) {
       console.error('Failed to fetch comments:', err);

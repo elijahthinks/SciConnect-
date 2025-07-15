@@ -35,14 +35,22 @@ export default function Connections() {
 
   const fetchConnections = async () => {
     try {
+      console.log('Fetching connections for user:', user.id);
       const [followersRes, followingRes] = await Promise.all([
         axios.get(`/api/social/${user.id}/followers`),
         axios.get(`/api/social/${user.id}/following`)
       ]);
+      console.log('Followers response:', followersRes.data);
+      console.log('Following response:', followingRes.data);
       setFollowers(followersRes.data);
       setFollowing(followingRes.data);
     } catch (error) {
       console.error('Error fetching connections:', error);
+      console.error('Error details:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
     } finally {
       setLoading(false);
     }
@@ -50,12 +58,19 @@ export default function Connections() {
 
   const fetchSuggestions = async () => {
     try {
-              const response = await axios.get('/api/social/suggestions', {
-          params: { limit: 10 }
-        });
+      console.log('Fetching suggestions...');
+      const response = await axios.get('/api/social/suggestions', {
+        params: { limit: 10 }
+      });
+      console.log('Suggestions response:', response.data);
       setSuggestions(response.data.users || []);
     } catch (error) {
       console.error('Error fetching suggestions:', error);
+      console.error('Error details:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
     }
   };
 

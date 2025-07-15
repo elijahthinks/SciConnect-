@@ -81,6 +81,8 @@ export default function Feed() {
   };
 
   const handlePostCreated = (newPost) => {
+    console.log('New post created:', newPost);
+    console.log('Adding to posts array. Current posts count:', posts.length);
     setPosts([newPost, ...posts]);
     // Refresh tags if the new post has tags
     if (newPost.tags?.length > 0) {
@@ -134,11 +136,16 @@ export default function Feed() {
       {user && (
         <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 mb-6 border border-blue-200/50 shadow-lg">
           <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-            Welcome back, {user.name}!
+            Welcome back, {user.firstName || user.name || user.username}!
           </h1>
           <p className="text-gray-600">
-            Share your latest research, connect with fellow scientists, and discover new insights
+            Share your latest work, connect with fellow scientists and technologists, and discover new ideas
           </p>
+          {user.institution && (
+            <p className="text-sm text-gray-500 mt-2">
+              {user.institution} {user.position && `• ${user.position}`}
+            </p>
+          )}
         </div>
       )}
 

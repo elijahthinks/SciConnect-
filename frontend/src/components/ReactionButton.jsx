@@ -55,6 +55,9 @@ export default function ReactionButton({ targetType, targetId }) {
   const { user, token } = useAuth();
   const pickerRef = useRef(null);
 
+  // Debug logging
+  console.log('ReactionButton rendered:', { targetType, targetId, user: user?.id });
+
   useEffect(() => {
     fetchReactions();
   }, [targetId]);
@@ -75,13 +78,16 @@ export default function ReactionButton({ targetType, targetId }) {
     try {
       setLoading(true);
       const response = await axios.get(`/api/reactions/${targetType}/${targetId}`);
+      console.log('Fetched reactions:', response.data);
       setReactions(response.data);
       
       // Find user's reaction
       setUserReaction(null);
       if (user) {
         Object.entries(response.data).forEach(([type, users]) => {
+          console.log('Checking reaction type:', type, 'users:', users);
           if (users.some(r => r.user.id === user.id)) {
+            console.log('Found user reaction:', type);
             setUserReaction(type);
           }
         });
@@ -97,13 +103,16 @@ export default function ReactionButton({ targetType, targetId }) {
     if (!user) return;
 
     try {
-      await axios.post(`/api/reactions/${targetType}/${targetId}`, {
+      console.log('Adding reaction:', type, 'to', targetType, targetId);
+      const response = await axios.post(`/api/reactions/${targetType}/${targetId}`, {
         type
       });
+      console.log('Reaction response:', response.data);
       
       await fetchReactions();
     } catch (err) {
       console.error('Failed to add reaction:', err);
+      console.error('Error details:', err.response?.data);
     }
     
     setShowReactionPicker(false);

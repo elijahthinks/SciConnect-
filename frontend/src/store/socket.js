@@ -57,4 +57,6 @@ const useSocketStore = create((set) => ({
   }
 }));
 
-export default useSocketStore; 
+// Export both the store and a convenience hook
+export default useSocketStore;
+export const useSocket = useSocketStore; 

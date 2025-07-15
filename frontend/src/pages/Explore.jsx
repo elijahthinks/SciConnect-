@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../store/auth';
-import { MagnifyingGlassIcon, HashtagIcon, UserGroupIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, HashtagIcon, UserGroupIcon, DocumentTextIcon, BriefcaseIcon, BuildingLibraryIcon } from '@heroicons/react/24/outline';
 import PostCard from '../components/PostCard';
 import UserList from '../components/UserList';
 import FollowButton from '../components/FollowButton';
@@ -41,7 +42,7 @@ export default function Explore() {
           params: { filter: 'all', limit: 20 }
         }),
         axios.get('/api/social/suggestions', {
-          params: { limit: 10 }
+          params: { limit: 20 }
         }),
         axios.get('/api/posts/tags/popular')
       ]);
@@ -73,7 +74,7 @@ export default function Explore() {
           params: { search: searchQuery, limit: 20 }
         }),
         axios.get('/api/social/suggestions', {
-          params: { q: searchQuery, limit: 10 }
+          params: { q: searchQuery, limit: 20 }
         })
       ]);
 
@@ -130,7 +131,7 @@ export default function Explore() {
           <MagnifyingGlassIcon className="h-7 w-7 mr-2" />
           Explore
         </h1>
-        <p className="text-gray-600">Discover new content, people, and trending topics</p>
+        <p className="text-gray-600">Discover new content, people, and trending topics in the community</p>
       </div>
 
       {/* Search Bar */}
@@ -155,17 +156,19 @@ export default function Explore() {
       {/* Trending Section (only show when not searching) */}
       {!searchQuery && trendingPosts.length > 0 && (
         <div className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">🔥 Trending Now</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Trending Now</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {trendingPosts.map(post => (
               <div key={post.id} className="bg-white rounded-lg shadow-sm border p-4">
                 <div className="flex items-center space-x-2 mb-2">
                   <img
-                    src={post.author?.avatar || `https://ui-avatars.com/api/?name=${post.author?.name}&background=random`}
-                    alt={post.author?.name}
+                    src={post.author?.avatar || `https://ui-avatars.com/api/?name=${post.author?.firstName || post.author?.username}&background=random`}
+                    alt={post.author?.firstName || post.author?.username}
                     className="w-6 h-6 rounded-full"
                   />
-                  <span className="text-sm font-medium text-gray-900">{post.author?.name}</span>
+                  <span className="text-sm font-medium text-gray-900">
+                    {post.author?.firstName && post.author?.lastName ? `${post.author.firstName} ${post.author.lastName}` : post.author?.username}
+                  </span>
                 </div>
                 <p className="text-sm text-gray-700 line-clamp-3">{post.content}</p>
                 <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
@@ -173,6 +176,56 @@ export default function Explore() {
                   <span>{post.comments || 0} comments</span>
                 </div>
               </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Quick Access to Users */}
+      {!searchQuery && users.length > 0 && (
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">Featured Community Members</h2>
+            <button 
+              onClick={() => setActiveTab('users')}
+              className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+            >
+              View all →
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {users.slice(0, 4).map(person => (
+              <Link
+                key={person.id}
+                to={`/profile/${person.id}`}
+                className="bg-white rounded-lg shadow-sm border p-4 hover:shadow-md transition-shadow"
+              >
+                <div className="flex flex-col items-center text-center">
+                  <img
+                    src={person.avatar || `https://ui-avatars.com/api/?name=${person.firstName || person.username}&background=random`}
+                    alt={person.firstName || person.username}
+                    className="w-16 h-16 rounded-full mb-3"
+                  />
+                  <h3 className="text-sm font-medium text-gray-900 mb-1">
+                    {person.firstName && person.lastName ? `${person.firstName} ${person.lastName}` : person.username}
+                  </h3>
+                  {person.position && (
+                    <div className="flex items-center text-xs text-gray-500 mb-1">
+                      <BriefcaseIcon className="h-3 w-3 mr-1" />
+                      {person.position}
+                    </div>
+                  )}
+                  {person.institution && (
+                    <div className="flex items-center text-xs text-gray-500 mb-2">
+                      <BuildingLibraryIcon className="h-3 w-3 mr-1" />
+                      {person.institution}
+                    </div>
+                  )}
+                  {person.bio && (
+                    <p className="text-xs text-gray-600 line-clamp-2">{person.bio}</p>
+                  )}
+                </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -229,12 +282,64 @@ export default function Explore() {
           )}
 
           {activeTab === 'users' && (
-            <UserList
-              users={users}
-              emptyMessage={searchQuery ? "No users found matching your search." : "No users to discover right now."}
-              onFollowChange={fetchExploreData}
-              showFollowButton={true}
-            />
+            <div className="space-y-6">
+              <div className="bg-white shadow rounded-lg p-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Community Members</h3>
+                {users.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {users.map(person => (
+                      <Link
+                        key={person.id}
+                        to={`/profile/${person.id}`}
+                        className="flex items-center space-x-4 p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                      >
+                        <img
+                          src={person.avatar || `https://ui-avatars.com/api/?name=${person.firstName || person.username}&background=random`}
+                          alt={person.firstName || person.username}
+                          className="w-12 h-12 rounded-full"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-sm font-medium text-gray-900">
+                            {person.firstName && person.lastName ? `${person.firstName} ${person.lastName}` : person.username}
+                          </h4>
+                          {person.position && (
+                            <div className="flex items-center text-xs text-gray-500 mt-1">
+                              <BriefcaseIcon className="h-3 w-3 mr-1" />
+                              {person.position}
+                            </div>
+                          )}
+                          {person.institution && (
+                            <div className="flex items-center text-xs text-gray-500 mt-1">
+                              <BuildingLibraryIcon className="h-3 w-3 mr-1" />
+                              {person.institution}
+                            </div>
+                          )}
+                          {person.bio && (
+                            <p className="text-xs text-gray-600 mt-1 line-clamp-2">{person.bio}</p>
+                          )}
+                        </div>
+                        {user && user.id !== person.id && (
+                          <div onClick={(e) => e.preventDefault()}>
+                            <FollowButton 
+                              userId={person.id} 
+                              onFollowChange={fetchExploreData}
+                            />
+                          </div>
+                        )}
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <UserGroupIcon className="mx-auto h-12 w-12 text-gray-400" />
+                    <h3 className="mt-2 text-sm font-medium text-gray-900">No users found</h3>
+                    <p className="mt-1 text-sm text-gray-500">
+                      {searchQuery ? 'Try a different search term' : 'No users available to discover'}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
           )}
 
           {activeTab === 'tags' && (
@@ -287,17 +392,22 @@ export default function Explore() {
               <div className="space-y-3">
                 {users.slice(0, 5).map(person => (
                   <div key={person.id} className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
+                    <Link 
+                      to={`/profile/${person.id}`}
+                      className="flex items-center space-x-2 flex-1 min-w-0"
+                    >
                       <img
-                        src={person.avatar || `https://ui-avatars.com/api/?name=${person.name}&background=random`}
-                        alt={person.name}
+                        src={person.avatar || `https://ui-avatars.com/api/?name=${person.firstName || person.username}&background=random`}
+                        alt={person.firstName || person.username}
                         className="w-8 h-8 rounded-full"
                       />
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">{person.name}</p>
-                        <p className="text-xs text-gray-500">{person.position}</p>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                          {person.firstName && person.lastName ? `${person.firstName} ${person.lastName}` : person.username}
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">{person.position}</p>
                       </div>
-                    </div>
+                    </Link>
                     {user && user.id !== person.id && (
                       <FollowButton 
                         userId={person.id} 

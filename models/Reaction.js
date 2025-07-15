@@ -24,6 +24,10 @@ const Reaction = sequelize.define('Reaction', {
     validate: {
       isIn: [['post', 'comment']]
     }
+  },
+  targetId: {
+    type: DataTypes.INTEGER,
+    allowNull: false
   }
 }, {
   indexes: [

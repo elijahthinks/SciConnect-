@@ -2,6 +2,7 @@ const socketIo = require('socket.io');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 const Message = require('../models/Message');
+const onlineStatusService = require('../utils/onlineStatus');
 
 // Store active connections
 const activeConnections = new Map();
@@ -24,7 +25,7 @@ function initializeSocket(server) {
         return next(new Error('Authentication error'));
       }
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, config[process.env.NODE_ENV || 'development'].jwtSecret);
       socket.userId = decoded.userId;
       next();
     } catch (error) {
@@ -37,6 +38,14 @@ function initializeSocket(server) {
     
     // Store the connection
     activeConnections.set(socket.userId, socket);
+
+    // Mark user as online
+    onlineStatusService.setUserOnline(socket.userId);
+
+    // Set up heartbeat to keep user online
+    const heartbeatInterval = setInterval(async () => {
+      await onlineStatusService.updateLastSeen(socket.userId);
+    }, 60000); // Update every minute
 
     // Handle message sending
     socket.on('send_message', async (message) => {
@@ -157,6 +166,12 @@ function initializeSocket(server) {
     socket.on('disconnect', () => {
       console.log(`User ${socket.userId} disconnected`);
       activeConnections.delete(socket.userId);
+      
+      // Clear heartbeat interval
+      clearInterval(heartbeatInterval);
+      
+      // Mark user as offline
+      onlineStatusService.setUserOffline(socket.userId);
     });
   });
 

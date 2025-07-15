@@ -24,9 +24,16 @@ router.get('/:targetType/:targetId', async (req, res) => {
       include: [{
         model: User,
         as: 'user',
-        attributes: ['id', 'name', 'avatar']
+        attributes: ['id', 'firstName', 'lastName', 'avatar']
       }],
       order: [['createdAt', 'DESC']]
+    });
+    
+    // Manually construct names for all reactions
+    reactions.forEach(reaction => {
+      if (reaction.user) {
+        reaction.user.dataValues.name = `${reaction.user.firstName} ${reaction.user.lastName}`;
+      }
     });
 
     // Group reactions by type
@@ -58,6 +65,8 @@ router.post('/:targetType/:targetId', auth, [
     const { targetType, targetId } = req.params;
     const { type } = req.body;
     
+    console.log('Reaction request:', { targetType, targetId, type, userId: req.user.id });
+    
     if (!['post', 'comment'].includes(targetType)) {
       return res.status(400).json({ message: 'Invalid target type' });
     }
@@ -68,9 +77,14 @@ router.post('/:targetType/:targetId', auth, [
       include: [{
         model: User,
         as: targetType === 'post' ? 'author' : 'author',
-        attributes: ['id', 'name']
+        attributes: ['id', 'firstName', 'lastName']
       }]
     });
+    
+    // Manually construct the name
+    if (target && target.author) {
+      target.author.dataValues.name = `${target.author.firstName} ${target.author.lastName}`;
+    }
 
     if (!target) {
       return res.status(404).json({ message: `${targetType} not found` });
@@ -89,7 +103,7 @@ router.post('/:targetType/:targetId', auth, [
       // If same type, remove reaction (toggle off)
       if (reaction.type === type) {
         await reaction.destroy();
-        return res.json({ message: 'Reaction removed' });
+        return res.json({ message: 'Reaction removed', removed: true });
       }
       // If different type, update reaction
       reaction.type = type;
@@ -105,16 +119,22 @@ router.post('/:targetType/:targetId', auth, [
 
       // Create notification for target author (if not self)
       if (target.author.id !== req.user.id) {
-        const notification = await Notification.create({
-          type: 'reaction',
-          content: `${req.user.name} reacted to your ${targetType}`,
-          recipientId: target.author.id,
-          senderId: req.user.id,
-          relatedModelId: targetId,
-          relatedModelType: targetType
-        });
+        try {
+          const userFullName = `${req.user.firstName} ${req.user.lastName}`;
+          const notification = await Notification.create({
+            type: 'reaction',
+            content: `${userFullName} reacted to your ${targetType}`,
+            recipientId: target.author.id,
+            senderId: req.user.id,
+            relatedModelId: targetId,
+            relatedModelType: targetType
+          });
 
-        await sendNotification(target.author.id, notification);
+          await sendNotification(target.author.id, notification);
+        } catch (notificationError) {
+          console.error('Error creating notification:', notificationError);
+          // Don't fail the reaction if notification fails
+        }
       }
     }
 
@@ -123,13 +143,20 @@ router.post('/:targetType/:targetId', auth, [
       include: [{
         model: User,
         as: 'user',
-        attributes: ['id', 'name', 'avatar']
+        attributes: ['id', 'firstName', 'lastName', 'avatar']
       }]
     });
+    
+    // Manually construct the name
+    if (updatedReaction && updatedReaction.user) {
+      updatedReaction.user.dataValues.name = `${updatedReaction.user.firstName} ${updatedReaction.user.lastName}`;
+    }
 
+    console.log('Sending reaction response:', updatedReaction);
     res.json(updatedReaction);
   } catch (err) {
     console.error('Error handling reaction:', err);
+    console.error('Error stack:', err.stack);
     res.status(500).json({ message: 'Server error' });
   }
 });

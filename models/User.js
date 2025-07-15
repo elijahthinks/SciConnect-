@@ -7,18 +7,37 @@ const User = sequelize.define('User', {
     primaryKey: true,
     autoIncrement: true,
   },
-  name: {
+  username: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
+  },
+  firstName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  lastName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  name: {
+    type: DataTypes.VIRTUAL,
+    get() {
+      return `${this.firstName} ${this.lastName}`;
+    }
   },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
   },
+  fieldOfStudy: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   password: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true, // Allow null for OAuth users
   },
   avatar: {
     type: DataTypes.STRING,
@@ -44,6 +63,48 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: true,
     defaultValue: null,
+  },
+  // New fields for open-access profiles
+  userType: {
+    type: DataTypes.ENUM('academic', 'hobbyist', 'independent', 'student', 'professional'),
+    defaultValue: 'academic',
+    allowNull: false,
+  },
+  badges: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    defaultValue: '[]',
+    get() {
+      const value = this.getDataValue('badges');
+      return value ? JSON.parse(value) : [];
+    },
+    set(value) {
+      this.setDataValue('badges', JSON.stringify(value || []));
+    }
+  },
+  skillTags: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    defaultValue: '[]',
+    get() {
+      const value = this.getDataValue('skillTags');
+      return value ? JSON.parse(value) : [];
+    },
+    set(value) {
+      this.setDataValue('skillTags', JSON.stringify(value || []));
+    }
+  },
+  sideProjects: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    defaultValue: '[]',
+    get() {
+      const value = this.getDataValue('sideProjects');
+      return value ? JSON.parse(value) : [];
+    },
+    set(value) {
+      this.setDataValue('sideProjects', JSON.stringify(value || []));
+    }
   },
   education: {
     type: DataTypes.TEXT,
@@ -98,6 +159,65 @@ const User = sequelize.define('User', {
     defaultValue: false,
   },
   lastActive: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  // OAuth fields
+  googleId: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    unique: true,
+  },
+  facebookId: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    unique: true,
+  },
+  provider: {
+    type: DataTypes.ENUM('local', 'google', 'facebook'),
+    defaultValue: 'local',
+  },
+  // Email verification
+  emailVerificationToken: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  emailVerificationExpires: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  isEmailVerified: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  // Password reset
+  passwordResetToken: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  passwordResetExpires: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  // Refresh token
+  refreshToken: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  refreshTokenExpires: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  // Account status
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+  },
+  loginAttempts: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+  lockUntil: {
     type: DataTypes.DATE,
     allowNull: true,
   }

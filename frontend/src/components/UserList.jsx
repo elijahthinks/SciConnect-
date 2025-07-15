@@ -30,7 +30,7 @@ export default function UserList({ users, emptyMessage, onFollowChange, showFoll
             </div>
             <div className="ml-4 flex-1 min-w-0">
               <p className="text-sm font-medium text-gray-900 truncate">
-                {person.name}
+                {person.firstName && person.lastName ? `${person.firstName} ${person.lastName}` : person.username}
               </p>
               {(person.position || person.institution) && (
                 <p className="text-sm text-gray-500 truncate">

@@ -10,7 +10,7 @@ const auth = async (req, res, next) => {
       return res.status(401).json({ message: 'No auth token found' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+    const decoded = jwt.verify(token, config.jwtSecret);
     const user = await User.findByPk(decoded.id);
 
     if (!user) {

@@ -9,7 +9,7 @@ const Notification = sequelize.define('Notification', {
     autoIncrement: true
   },
   type: {
-    type: DataTypes.ENUM('follow', 'like', 'comment'),
+    type: DataTypes.ENUM('follow', 'like', 'comment', 'reaction', 'message', 'group_invite', 'group_message'),
     allowNull: false
   },
   content: {

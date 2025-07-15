@@ -7,7 +7,7 @@ const UserRelationship = require('../models/UserRelationship');
 const Notification = require('../models/Notification');
 const { sendNotification } = require('../middleware/socket');
 const auth = require('../middleware/auth');
-const { mediaUpload, processMedia } = require('../middleware/upload');
+const { mediaUpload, processMedia } = require('../middleware/cloudinary');
 
 const router = express.Router();
 
@@ -81,7 +81,7 @@ router.get('/', async (req, res) => {
         {
           model: User,
           as: 'author',
-          attributes: ['id', 'name', 'avatar', 'email']
+          attributes: ['id', 'username', 'firstName', 'lastName', 'avatar', 'email']
         }
       ],
       order: [['createdAt', 'DESC']],
@@ -149,7 +149,7 @@ router.get('/:id', async (req, res) => {
         {
           model: User,
           as: 'author',
-          attributes: ['id', 'name', 'avatar', 'email']
+          attributes: ['id', 'username', 'firstName', 'lastName', 'avatar', 'email']
         }
       ]
     });
@@ -199,7 +199,7 @@ router.post('/', auth, [
         {
           model: User,
           as: 'author',
-          attributes: ['id', 'name', 'avatar', 'email']
+          attributes: ['id', 'username', 'firstName', 'lastName', 'avatar', 'email']
         }
       ]
     });
@@ -252,7 +252,7 @@ router.put('/:id', auth, [
         {
           model: User,
           as: 'author',
-          attributes: ['id', 'name', 'avatar', 'email']
+          attributes: ['id', 'username', 'firstName', 'lastName', 'avatar', 'email']
         }
       ]
     });
@@ -292,7 +292,7 @@ router.post('/:id/like', auth, async (req, res) => {
         {
           model: User,
           as: 'author',
-          attributes: ['id', 'name']
+          attributes: ['id', 'username', 'firstName', 'lastName']
         }
       ]
     });
@@ -314,7 +314,7 @@ router.post('/:id/like', auth, async (req, res) => {
     if (post.userId !== req.user.id) {
       const notification = await Notification.create({
         type: 'like',
-        content: `${req.user.name} liked your post`,
+        content: `${req.user.firstName} ${req.user.lastName} liked your post`,
         recipientId: post.userId,
         senderId: req.user.id,
         relatedModelId: post.id,

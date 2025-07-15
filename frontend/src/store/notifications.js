@@ -18,6 +18,12 @@ const useNotificationStore = create((set) => ({
       unreadCount: Math.max(0, state.unreadCount - 1)
     })),
     
+  setNotifications: (notifications) =>
+    set({ notifications }),
+    
+  setUnreadCount: (count) =>
+    set({ unreadCount: count }),
+    
   clearNotifications: () =>
     set({ notifications: [], unreadCount: 0 }),
 }));

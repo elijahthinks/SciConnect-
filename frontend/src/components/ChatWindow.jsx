@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+ import { useState, useEffect, useRef, useCallback } from 'react';
 import { PaperAirplaneIcon, CheckIcon, CheckCircleIcon, ExclamationCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '../store/auth';
 import useChatStore from '../store/chat';
@@ -7,6 +7,20 @@ import ChatMediaUpload from './ChatMediaUpload';
 import ChatMediaMessage from './ChatMediaMessage';
 import ReactMarkdown from 'react-markdown';
 import EmojiPicker from 'emoji-picker-react';
+import UserAvatar from './UserAvatar';
+import useOnlineStatusStore from '../store/onlineStatus';
+
+const OnlineStatusIndicator = ({ userId }) => {
+  const { isUserOnline, getFormattedLastActive } = useOnlineStatusStore();
+  const isOnline = isUserOnline(userId);
+  const lastActive = getFormattedLastActive(userId);
+
+  return (
+    <p className={`text-sm font-medium ${isOnline ? 'text-green-600' : 'text-gray-500'}`}>
+      {isOnline ? '🟢 Online' : `⚪ Last seen ${lastActive}`}
+    </p>
+  );
+};
 
 const MessageStatus = ({ status }) => {
   switch (status) {
@@ -290,19 +304,11 @@ export default function ChatWindow({ isOpen, onClose }) {
                       }`}
                     >
                       <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center shadow-lg border border-white/50 flex-shrink-0">
-                          {conversation.otherParticipant.avatar ? (
-                            <img
-                              src={conversation.otherParticipant.avatar}
-                              alt={conversation.otherParticipant.name}
-                              className="w-12 h-12 rounded-full object-cover"
-                            />
-                          ) : (
-                            <span className="text-sm text-blue-600 font-bold">
-                              {conversation.otherParticipant.name?.charAt(0).toUpperCase()}
-                            </span>
-                          )}
-                        </div>
+                        <UserAvatar 
+                          user={conversation.otherParticipant} 
+                          size="md" 
+                          showOnlineStatus={true}
+                        />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between">
                             <p className={`font-semibold truncate ${
@@ -348,28 +354,16 @@ export default function ChatWindow({ isOpen, onClose }) {
                 {/* Chat Header */}
                 <div className="p-4 border-b border-gray-200/50 bg-white/80 backdrop-blur-sm flex-shrink-0">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center shadow-lg border border-white/50">
-                      {currentConversation.otherParticipant.avatar ? (
-                        <img
-                          src={currentConversation.otherParticipant.avatar}
-                          alt={currentConversation.otherParticipant.name}
-                          className="w-10 h-10 rounded-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-sm text-blue-600 font-bold">
-                          {currentConversation.otherParticipant.name?.charAt(0).toUpperCase()}
-                        </span>
-                      )}
-                    </div>
+                    <UserAvatar 
+                      user={currentConversation.otherParticipant} 
+                      size="md" 
+                      showOnlineStatus={true}
+                    />
                     <div>
                       <h3 className="font-semibold text-gray-900 text-lg">
                         {currentConversation.otherParticipant.name}
                       </h3>
-                      <p className={`text-sm font-medium ${
-                        isConnected ? 'text-green-600' : 'text-gray-500'
-                      }`}>
-                        {isConnected ? '🟢 Online' : '⚪ Offline'}
-                      </p>
+                      <OnlineStatusIndicator userId={currentConversation.otherParticipant.id} />
                     </div>
                   </div>
                 </div>

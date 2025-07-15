@@ -1,4 +1,6 @@
 import { UserIcon } from '@heroicons/react/24/outline';
+import { useEffect } from 'react';
+import useOnlineStatusStore from '../store/onlineStatus';
 
 export default function UserAvatar({ 
   user, 
@@ -26,6 +28,36 @@ export default function UserAvatar({
     xxl: 'w-6 h-6 border-2'
   };
 
+  const getUserInitial = () => {
+    if (!user) return <UserIcon className="w-1/2 h-1/2" />;
+    
+    // Try different name formats
+    if (user.name) {
+      return user.name.charAt(0).toUpperCase();
+    }
+    
+    if (user.firstName) {
+      return user.firstName.charAt(0).toUpperCase();
+    }
+    
+    if (user.username) {
+      return user.username.charAt(0).toUpperCase();
+    }
+    
+    return <UserIcon className="w-1/2 h-1/2" />;
+  };
+
+  const getUserName = () => {
+    if (!user) return '';
+    
+    // Try different name formats
+    if (user.name) return user.name;
+    if (user.firstName && user.lastName) return `${user.firstName} ${user.lastName}`;
+    if (user.firstName) return user.firstName;
+    if (user.username) return user.username;
+    return '';
+  };
+
   const avatarClasses = `
     ${sizeClasses[size]} 
     bg-gradient-to-br from-blue-100 to-purple-100 
@@ -36,13 +68,24 @@ export default function UserAvatar({
     ${className}
   `;
 
+  // Get online status from store if not provided
+  const { fetchUserStatus, isUserOnline } = useOnlineStatusStore();
+  const actualIsOnline = isOnline !== undefined ? isOnline : (user ? isUserOnline(user.id) : false);
+
+  // Fetch user status when component mounts if showOnlineStatus is true
+  useEffect(() => {
+    if (showOnlineStatus && user?.id && isOnline === undefined) {
+      fetchUserStatus(user.id);
+    }
+  }, [showOnlineStatus, user?.id, fetchUserStatus, isOnline]);
+
   return (
     <div className="relative inline-block" onClick={onClick}>
       <div className={avatarClasses}>
         {user?.avatar ? (
           <img 
             src={user.avatar} 
-            alt={user.name} 
+            alt={getUserName()} 
             className="w-full h-full object-cover"
             onError={(e) => {
               // Fallback to initials if image fails to load
@@ -59,7 +102,7 @@ export default function UserAvatar({
           }`}
           style={{ display: user?.avatar ? 'none' : 'flex' }}
         >
-          {user?.name ? user.name.charAt(0).toUpperCase() : <UserIcon className="w-1/2 h-1/2" />}
+          {getUserInitial()}
         </span>
       </div>
       
@@ -69,7 +112,7 @@ export default function UserAvatar({
           absolute -bottom-0.5 -right-0.5 
           ${onlineIndicatorSizes[size]}
           rounded-full border-white
-          ${isOnline ? 'bg-green-500' : 'bg-gray-400'}
+          ${actualIsOnline ? 'bg-green-500' : 'bg-gray-400'}
         `} />
       )}
     </div>

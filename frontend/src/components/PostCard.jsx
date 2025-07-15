@@ -153,6 +153,7 @@ export default function PostCard({ post, onDelete, onUpdate }) {
             <UserAvatar 
               user={post.author} 
               size="md" 
+              showOnlineStatus={true}
               className="transition-transform duration-300 hover:scale-105"
             />
           </Link>
@@ -162,7 +163,9 @@ export default function PostCard({ post, onDelete, onUpdate }) {
                 to={`/profile/${post.author?.id}`}
                 className="font-semibold text-gray-900 hover:text-blue-600 transition-colors duration-200"
               >
-                {post.author?.name}
+                {post.author?.name || (post.author?.firstName && post.author?.lastName 
+                  ? `${post.author.firstName} ${post.author.lastName}` 
+                  : post.author?.username || 'Unknown User')}
               </Link>
               <span className="text-gray-400">·</span>
               <span className="text-sm text-gray-500 font-medium">{formatDate(post.createdAt)}</span>
@@ -218,7 +221,7 @@ export default function PostCard({ post, onDelete, onUpdate }) {
       {/* Post Actions */}
       <div className="flex items-center justify-between mt-6 pt-4 border-t border-gradient-to-r from-blue-100 to-purple-100">
         <div className="flex items-center space-x-6">
-          <ReactionButton targetType="post" targetId={post.id} />
+          <ReactionButton key={`reaction-${post.id}`} targetType="post" targetId={post.id} />
 
           <button
             onClick={() => setShowComments(!showComments)}

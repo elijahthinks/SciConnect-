@@ -1,57 +1,116 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useState } from 'react';
 import { useAuth } from './store/auth';
-import useChatStore from './store/chat';
-import ErrorBoundary from './components/ErrorBoundary';
+import { useEffect } from 'react';
 import Navbar from './components/Navbar';
-import ChatWindow from './components/ChatWindow';
-import SignUp from './pages/SignUp';
-import Login from './pages/Login';
-import Profile from './pages/Profile';
 import Feed from './pages/Feed';
-import Connections from './pages/Connections';
+import Login from './pages/Login';
+import SignUp from './pages/SignUp';
+import ResetPassword from './pages/ResetPassword';
+import Profile from './pages/Profile';
 import Explore from './pages/Explore';
+import Connections from './pages/Connections';
 import Settings from './pages/Settings';
+import Messages from './pages/Messages';
+import Groups from './pages/Groups';
+import ErrorBoundary from './components/ErrorBoundary';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
-  const { user } = useAuth();
-  const { initializeSocket } = useChatStore();
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  const { user, token } = useAuth();
 
-  const handleChatClick = () => {
-    if (user) {
-      initializeSocket(user.id);
-      setIsChatOpen(true);
+  useEffect(() => {
+    console.log('App mounted, auth state:', { 
+      hasUser: !!user, 
+      hasToken: !!token,
+      userDetails: user ? { id: user.id, email: user.email, username: user.username } : null,
+      storedAuth: localStorage.getItem('auth')
+    });
+    
+    // Additional debugging for auth state
+    if (user && token) {
+      console.log('User is authenticated, should show protected routes');
+    } else {
+      console.log('User is not authenticated, should redirect to login');
     }
-  };
+  }, [user, token]);
+
+  // Add debugging for route changes
+  useEffect(() => {
+    const handleRouteChange = () => {
+      console.log('Route changed to:', window.location.pathname, {
+        hasUser: !!user,
+        hasToken: !!token
+      });
+    };
+    
+    window.addEventListener('popstate', handleRouteChange);
+    return () => window.removeEventListener('popstate', handleRouteChange);
+  }, [user, token]);
 
   return (
     <ErrorBoundary>
       <Router>
         <div className="min-h-screen bg-gray-50">
-          <Navbar onChatClick={handleChatClick} />
-          <main className="pt-16">
+          <Toaster 
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: '#ffffff',
+                color: '#374151',
+                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                borderRadius: '0.75rem',
+                border: '1px solid #e5e7eb'
+              }
+            }}
+          />
+          
+          {user && <Navbar />}
+          
+          <main className={user ? '' : 'min-h-screen'}>
             <Routes>
+              {/* Public Routes */}
               <Route 
-                path="/" 
-                element={user ? <Navigate to="/feed" /> : <Navigate to="/login" />} 
+                path="/login" 
+                element={
+                  user ? <Navigate to="/" replace /> : <Login />
+                } 
               />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/feed" element={user ? <Feed /> : <Navigate to="/login" />} />
-              <Route path="/explore" element={user ? <Explore /> : <Navigate to="/login" />} />
-              <Route path="/connections" element={user ? <Connections /> : <Navigate to="/login" />} />
-              <Route path="/settings" element={user ? <Settings /> : <Navigate to="/login" />} />
-              <Route path="/profile/:id" element={<Profile />} />
-              <Route path="/profile" element={user ? <Navigate to={`/profile/${user.id}`} /> : <Navigate to="/login" />} />
+              <Route 
+                path="/signup" 
+                element={
+                  user ? <Navigate to="/" replace /> : <SignUp />
+                } 
+              />
+              <Route 
+                path="/reset-password" 
+                element={
+                  user ? <Navigate to="/" replace /> : <ResetPassword />
+                } 
+              />
+              
+              {/* Protected Routes */}
+              {user ? (
+                <>
+                  <Route path="/" element={<Feed />} />
+                  <Route path="/feed" element={<Navigate to="/" replace />} />
+                  <Route path="/explore" element={<Explore />} />
+                  <Route path="/connections" element={<Connections />} />
+                  <Route path="/groups" element={<Groups />} />
+                  <Route path="/chat" element={<Messages />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/profile/:userId" element={<Profile />} />
+                  <Route path="/settings" element={<Settings />} />
+                  
+                  {/* Fallback for authenticated users */}
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </>
+              ) : (
+                /* Redirect unauthenticated users to login */
+                <Route path="*" element={<Navigate to="/login" replace />} />
+              )}
             </Routes>
           </main>
-          
-          {/* Chat Window - Rendered at app level for proper modal overlay */}
-          <ChatWindow 
-            isOpen={isChatOpen} 
-            onClose={() => setIsChatOpen(false)} 
-          />
         </div>
       </Router>
     </ErrorBoundary>
