@@ -8,7 +8,6 @@
     "dev": "nodemon server.js",
     "test": "jest",
     "build": "cd frontend && npm install && npm run build",
-    "vercel-build": "cd frontend && npm install && npm run build",
     "dev:full": "concurrently \"npm run dev\" \"cd frontend && npm run dev\"",
     "install:all": "npm install && cd frontend && npm install",
     "setup": "node setup.js",
