@@ -297,7 +297,7 @@ export default function ResearchPostCard({ post, onDelete, onUpdate }) {
   };
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6 mb-6 transform transition-all duration-300 hover:shadow-2xl hover:scale-[1.01]">
+    <div className="card-research animate-fadeIn">
       {/* Post Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
@@ -313,24 +313,24 @@ export default function ResearchPostCard({ post, onDelete, onUpdate }) {
             <div className="flex items-center space-x-2">
               <Link 
                 to={`/profile/${post.author?.id}`}
-                className="font-semibold text-gray-900 hover:text-blue-600 transition-colors duration-200"
+                className="font-semibold text-navy-900 hover:text-teal-600 transition-colors duration-200"
               >
                 {post.author?.name || (post.author?.firstName && post.author?.lastName 
                   ? `${post.author.firstName} ${post.author.lastName}` 
                   : post.author?.username || 'Unknown User')}
               </Link>
               {post.author?.isVerified && (
-                <CheckCircleIcon className="h-4 w-4 text-blue-500" />
+                <CheckCircleIcon className="h-4 w-4 text-emerald-500" />
               )}
-              <span className="text-gray-400">·</span>
-              <span className="text-sm text-gray-500 font-medium">{formatDate(post.createdAt)}</span>
-              <span className="text-gray-400">·</span>
-              <div className="flex items-center text-gray-500" title={visibilityIcons[post.visibility || 'public'].label}>
+              <span className="text-navy-400">·</span>
+              <span className="text-sm text-navy-500 font-medium">{formatDate(post.createdAt)}</span>
+              <span className="text-navy-400">·</span>
+              <div className="flex items-center text-navy-500" title={visibilityIcons[post.visibility || 'public'].label}>
                 <VisibilityIcon className="h-4 w-4" />
               </div>
             </div>
             {post.author?.institution && (
-              <p className="text-sm text-gray-600 mt-1">{post.author.institution} {post.author.position && `• ${post.author.position}`}</p>
+              <p className="text-sm text-navy-600 mt-1">{post.author.institution} {post.author.position && `• ${post.author.position}`}</p>
             )}
           </div>
         </div>
@@ -339,14 +339,14 @@ export default function ResearchPostCard({ post, onDelete, onUpdate }) {
           <div className="flex items-center space-x-2">
             <button
               onClick={() => onUpdate && onUpdate(post)}
-              className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 transform hover:scale-105"
+              className="p-2 text-navy-400 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all duration-200 transform hover:scale-105"
             >
               <PencilIcon className="h-4 w-4" />
             </button>
             <button
               onClick={handleDelete}
               disabled={isDeleting}
-              className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 disabled:opacity-50 rounded-lg transition-all duration-200 transform hover:scale-105"
+              className="p-2 text-navy-400 hover:text-rose-600 hover:bg-rose-50 disabled:opacity-50 rounded-lg transition-all duration-200 transform hover:scale-105"
             >
               <TrashIcon className="h-4 w-4" />
             </button>
@@ -354,41 +354,20 @@ export default function ResearchPostCard({ post, onDelete, onUpdate }) {
         )}
       </div>
 
-      {/* Fact Check Status */}
-      {post.factCheckStatus && (
-        <div className={`inline-flex items-center space-x-2 px-3 py-2 rounded-lg mb-4 ${factCheckConfig.bg}`}>
-          <factCheckConfig.icon className={`h-4 w-4 ${factCheckConfig.color}`} />
-          <span className={`text-sm font-medium ${factCheckConfig.color}`}>
-            {factCheckConfig.label}
-          </span>
-          {post.factCheckScore > 0 && (
-            <span className="text-xs text-gray-600">
-              Score: {Math.round(post.factCheckScore * 100)}%
-            </span>
-          )}
-        </div>
-      )}
-
-      {/* Open Access Badge */}
-      {post.openAccess && (
-        <div className="inline-flex items-center space-x-2 px-3 py-2 rounded-lg mb-4 bg-green-100">
-          <CheckCircleIcon className="h-4 w-4 text-green-600" />
-          <span className="text-sm font-medium text-green-600">Open Access</span>
-        </div>
-      )}
+      {/* Research Details */}
+      {renderResearchDetails()}
 
       {/* Post Content */}
       {renderContent()}
-      {renderResearchDetails()}
       {renderMedia()}
 
-      {/* Post Tags */}
+      {/* Research Tags */}
       {post.tags && post.tags.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-4">
           {post.tags.map((tag, index) => (
             <span
               key={index}
-              className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 border border-blue-200 shadow-sm transition-all duration-200 hover:from-blue-200 hover:to-purple-200 hover:scale-105"
+              className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-teal-100 text-teal-700 border border-teal-200 shadow-sm transition-all duration-200 hover:bg-teal-200 hover:scale-105"
             >
               <TagIcon className="h-3 w-3 mr-1" />
               {tag}
@@ -397,30 +376,14 @@ export default function ResearchPostCard({ post, onDelete, onUpdate }) {
         </div>
       )}
 
-      {/* Stats */}
-      <div className="flex items-center space-x-6 mt-4 text-sm text-gray-500">
-        <div className="flex items-center space-x-1">
-          <EyeIcon className="h-4 w-4" />
-          <span>{post.views || 0} views</span>
-        </div>
-        <div className="flex items-center space-x-1">
-          <ChatBubbleLeftIcon className="h-4 w-4" />
-          <span>{post.comments || 0} comments</span>
-        </div>
-        <div className="flex items-center space-x-1">
-          <ShareIcon className="h-4 w-4" />
-          <span>{post.shares || 0} shares</span>
-        </div>
-      </div>
-
-      {/* Post Actions */}
-      <div className="flex items-center justify-between mt-6 pt-4 border-t border-gradient-to-r from-blue-100 to-purple-100">
+      {/* Research Actions */}
+      <div className="flex items-center justify-between mt-6 pt-4 border-t border-navy-100">
         <div className="flex items-center space-x-6">
-          <ReactionButton key={`reaction-${post.id}`} targetType="research" targetId={post.id} />
+          <ReactionButton key={`reaction-${post.id}`} targetType="researchPost" targetId={post.id} />
 
           <button
             onClick={() => setShowComments(!showComments)}
-            className="flex items-center space-x-2 text-gray-500 hover:text-blue-600 bg-white/70 hover:bg-blue-50 px-3 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 border border-gray-200"
+            className="flex items-center space-x-2 text-navy-500 hover:text-teal-600 bg-white/70 hover:bg-teal-50 px-3 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 border border-navy-200"
           >
             <ChatBubbleLeftIcon className="h-5 w-5" />
             <span className="font-medium">Comment</span>
@@ -428,15 +391,15 @@ export default function ResearchPostCard({ post, onDelete, onUpdate }) {
 
           <button
             onClick={() => setShowFactChecks(!showFactChecks)}
-            className="flex items-center space-x-2 text-gray-500 hover:text-orange-600 bg-white/70 hover:bg-orange-50 px-3 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 border border-gray-200"
+            className="flex items-center space-x-2 text-navy-500 hover:text-amber-600 bg-white/70 hover:bg-amber-50 px-3 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 border border-navy-200"
           >
-            <FlagIcon className="h-5 w-5" />
+            <CheckCircleIcon className="h-5 w-5" />
             <span className="font-medium">Fact Check</span>
           </button>
 
           <button
             onClick={() => setShowCollaborations(!showCollaborations)}
-            className="flex items-center space-x-2 text-gray-500 hover:text-green-600 bg-white/70 hover:bg-green-50 px-3 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 border border-gray-200"
+            className="flex items-center space-x-2 text-navy-500 hover:text-emerald-600 bg-white/70 hover:bg-emerald-50 px-3 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 border border-navy-200"
           >
             <UserPlusIcon className="h-5 w-5" />
             <span className="font-medium">Collaborate</span>
@@ -444,7 +407,7 @@ export default function ResearchPostCard({ post, onDelete, onUpdate }) {
 
           <button
             onClick={handleShare}
-            className="flex items-center space-x-2 text-gray-500 hover:text-purple-600 bg-white/70 hover:bg-purple-50 px-3 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 border border-gray-200"
+            className="flex items-center space-x-2 text-navy-500 hover:text-sky-600 bg-white/70 hover:bg-sky-50 px-3 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 border border-navy-200"
           >
             <ShareIcon className="h-5 w-5" />
             <span className="font-medium">Share</span>
@@ -454,21 +417,21 @@ export default function ResearchPostCard({ post, onDelete, onUpdate }) {
 
       {/* Comments Section */}
       {showComments && (
-        <div className="mt-6 border-t border-gradient-to-r from-blue-100 to-purple-100 pt-6">
+        <div className="mt-6 border-t border-navy-100 pt-6">
           <CommentSection postId={post.id} />
         </div>
       )}
 
       {/* Fact Check Section */}
       {showFactChecks && (
-        <div className="mt-6 border-t border-gradient-to-r from-blue-100 to-purple-100 pt-6">
+        <div className="mt-6 border-t border-navy-100 pt-6">
           <FactCheckSection researchPostId={post.id} />
         </div>
       )}
 
       {/* Collaboration Section */}
       {showCollaborations && (
-        <div className="mt-6 border-t border-gradient-to-r from-blue-100 to-purple-100 pt-6">
+        <div className="mt-6 border-t border-navy-100 pt-6">
           <CollaborationSection researchPostId={post.id} />
         </div>
       )}

@@ -51,24 +51,25 @@ function App() {
   return (
     <ErrorBoundary>
       <Router>
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gradient-to-br from-navy-50 via-teal-50 to-emerald-50">
           <Toaster 
             position="top-right"
             toastOptions={{
               duration: 4000,
               style: {
                 background: '#ffffff',
-                color: '#374151',
-                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                color: '#1e293b',
+                boxShadow: '0 10px 15px -3px rgba(15, 118, 110, 0.1), 0 4px 6px -2px rgba(15, 118, 110, 0.05)',
                 borderRadius: '0.75rem',
-                border: '1px solid #e5e7eb'
+                border: '1px solid #e2e8f0',
+                fontFamily: 'Inter, system-ui, sans-serif'
               }
             }}
           />
           
           {user && <Navbar />}
           
-          <main className={user ? '' : 'min-h-screen'}>
+          <main className={user ? 'pt-4 pb-8' : 'min-h-screen'}>
             <Routes>
               {/* Public Routes */}
               <Route 

@@ -111,17 +111,17 @@ export default function Feed() {
   if (error) {
     return (
       <div className="max-w-2xl mx-auto p-6">
-        <div className="bg-red-50/80 backdrop-blur-sm border border-red-200/50 rounded-2xl p-6 shadow-xl">
-          <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-red-500 to-red-600 rounded-xl mx-auto mb-4">
+        <div className="bg-rose-50/80 backdrop-blur-sm border border-rose-200/50 rounded-2xl p-6 shadow-science">
+          <div className="flex items-center justify-center w-16 h-16 gradient-amber rounded-xl mx-auto mb-4">
             <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-red-800 text-center mb-2">Something went wrong</h3>
-          <p className="text-red-700 text-center mb-4">{error}</p>
+          <h3 className="text-lg font-semibold text-rose-800 text-center mb-2">Something went wrong</h3>
+          <p className="text-rose-700 text-center mb-4">{error}</p>
           <button
             onClick={() => fetchPosts(true)}
-            className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-200 transform hover:scale-105 shadow-lg"
+            className="w-full gradient-amber text-white py-3 px-4 rounded-xl font-semibold hover:shadow-science-lg transition-all duration-200 transform hover:scale-105 shadow-science"
           >
             Try again
           </button>
@@ -134,15 +134,15 @@ export default function Feed() {
     <div className="max-w-2xl mx-auto p-6">
       {/* Welcome Header */}
       {user && (
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 mb-6 border border-blue-200/50 shadow-lg">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+        <div className="bg-gradient-to-r from-teal-50 to-emerald-50 rounded-2xl p-6 mb-6 border border-teal-200/50 shadow-science">
+          <h1 className="text-2xl font-bold gradient-science bg-clip-text text-transparent mb-2">
             Welcome back, {user.firstName || user.name || user.username}!
           </h1>
-          <p className="text-gray-600">
-            Share your latest work, connect with fellow scientists and technologists, and discover new ideas
+          <p className="text-navy-600">
+            Share your latest research, connect with fellow scientists and technologists, and discover new ideas
           </p>
           {user.institution && (
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-navy-500 mt-2">
               {user.institution} {user.position && `• ${user.position}`}
             </p>
           )}
@@ -159,7 +159,7 @@ export default function Feed() {
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="rounded-xl border-gray-200 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm shadow-sm px-4 py-2 font-medium"
+              className="rounded-xl border-navy-200 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white/80 backdrop-blur-sm shadow-science px-4 py-2 font-medium"
             >
               <option value="all">All Posts</option>
               {user && (
@@ -172,10 +172,10 @@ export default function Feed() {
             
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-sm ${
+              className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-science ${
                 showFilters || selectedTags.length > 0
-                  ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
-                  : 'bg-white/80 backdrop-blur-sm text-gray-600 hover:bg-blue-50 border border-gray-200'
+                  ? 'gradient-science text-white shadow-science-lg'
+                  : 'bg-white/80 backdrop-blur-sm text-navy-600 hover:bg-teal-50 border border-navy-200'
               }`}
             >
               <FunnelIcon className="h-4 w-4" />
@@ -191,9 +191,9 @@ export default function Feed() {
 
         {/* Tags Filter */}
         {showFilters && (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6 mb-4 transform transition-all duration-300">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center">
-              <TagIcon className="h-5 w-5 mr-2 text-blue-600" />
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-science border border-navy-200 p-6 mb-4 transform transition-all duration-300">
+            <h3 className="text-sm font-semibold text-navy-700 mb-3 flex items-center">
+              <TagIcon className="h-5 w-5 mr-2 text-teal-600" />
               Filter by Tags
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -201,109 +201,58 @@ export default function Feed() {
                 <button
                   key={tag}
                   onClick={() => toggleTag(tag)}
-                  className={`inline-flex items-center px-3 py-2 rounded-full text-xs font-medium transition-all duration-200 transform hover:scale-105 ${
+                  className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 transform hover:scale-105 ${
                     selectedTags.includes(tag)
-                      ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
-                      : 'bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 hover:from-blue-100 hover:to-purple-100 border border-blue-200 shadow-sm'
+                      ? 'bg-teal-100 text-teal-700 border border-teal-200 shadow-sm'
+                      : 'bg-navy-100 text-navy-600 border border-navy-200 hover:bg-navy-200'
                   }`}
                 >
-                  #{tag}
+                  {tag}
                 </button>
               ))}
             </div>
           </div>
         )}
       </div>
-      
-      {/* Posts Feed */}
+
+      {/* Posts */}
       <div className="space-y-6">
-        {loading && posts.length === 0 ? (
-          <div className="animate-pulse space-y-6">
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6">
-              <div className="flex items-center space-x-4 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full"></div>
-                <div className="flex-1 space-y-2">
-                  <div className="h-4 bg-gradient-to-r from-blue-200 to-purple-200 rounded-lg w-1/4"></div>
-                  <div className="h-3 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg w-1/6"></div>
-                </div>
-              </div>
-              <div className="space-y-3">
-                <div className="h-4 bg-gradient-to-r from-blue-200 to-purple-200 rounded-lg w-full"></div>
-                <div className="h-4 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg w-3/4"></div>
-                <div className="h-32 bg-gradient-to-br from-blue-100 to-purple-100 rounded-xl"></div>
-              </div>
-            </div>
-            {[1, 2].map(i => (
-              <div key={i} className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6">
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full"></div>
-                  <div className="flex-1 space-y-2">
-                    <div className="h-4 bg-gradient-to-r from-blue-200 to-purple-200 rounded-lg w-1/4"></div>
-                    <div className="h-3 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg w-1/6"></div>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="h-4 bg-gradient-to-r from-blue-200 to-purple-200 rounded-lg w-full"></div>
-                  <div className="h-4 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg w-2/3"></div>
-                </div>
-              </div>
-            ))}
+        {posts.map((post, index) => (
+          <div key={post.id} ref={index === posts.length - 1 ? lastPostRef : null}>
+            <PostCard
+              post={post}
+              onDelete={handlePostDeleted}
+              onUpdate={handlePostUpdated}
+            />
           </div>
-        ) : posts.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8">
-              <div className="w-20 h-20 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <DocumentIcon className="h-10 w-10 text-blue-600" />
-              </div>
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3">
-                No posts yet
-              </h3>
-              <p className="text-gray-600 text-lg">
-                {user ? 'Be the first to share something amazing!' : 'Sign in to see posts from the scientific community.'}
-              </p>
-              {user && (
-                <div className="mt-6">
-                  <p className="text-gray-500 text-sm">
-                    Share your research, insights, or connect with fellow scientists
-                  </p>
-                </div>
-              )}
-            </div>
+        ))}
+        
+        {loading && (
+          <div className="flex justify-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
           </div>
-        ) : (
-          <>
-            {posts.map((post, index) => (
-              <div
-                key={post.id}
-                ref={index === posts.length - 1 ? lastPostRef : null}
-              >
-                <PostCard
-                  post={post}
-                  onDelete={handlePostDeleted}
-                  onUpdate={handlePostUpdated}
-                />
-              </div>
-            ))}
-            {loading && (
-              <div className="animate-pulse space-y-6">
-                {[1, 2].map(i => (
-                  <div key={i} className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6">
-                    <div className="flex items-center space-x-4 mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full"></div>
-                      <div className="flex-1 space-y-2">
-                        <div className="h-4 bg-gradient-to-r from-blue-200 to-purple-200 rounded-lg w-1/4"></div>
-                        <div className="h-3 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg w-1/6"></div>
-                      </div>
-                    </div>
-                    <div className="space-y-3">
-                      <div className="h-4 bg-gradient-to-r from-blue-200 to-purple-200 rounded-lg w-full"></div>
-                      <div className="h-4 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg w-3/4"></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </>
+        )}
+        
+        {!loading && !hasMore && posts.length > 0 && (
+          <div className="text-center py-8">
+            <p className="text-navy-500">No more posts to load</p>
+          </div>
+        )}
+        
+        {!loading && posts.length === 0 && (
+          <div className="text-center py-12">
+            <div className="w-16 h-16 bg-gradient-to-r from-teal-100 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <DocumentIcon className="h-8 w-8 text-teal-600" />
+            </div>
+            <h3 className="text-lg font-semibold text-navy-900 mb-2">No posts yet</h3>
+            <p className="text-navy-600 mb-4">Be the first to share your research or thoughts!</p>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="gradient-science text-white px-6 py-2 rounded-lg font-medium hover:shadow-science-lg transition-all duration-200 transform hover:scale-105 shadow-science"
+            >
+              Create Post
+            </button>
+          </div>
         )}
       </div>
     </div>
