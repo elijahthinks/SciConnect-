@@ -182,34 +182,34 @@ export default function ResearchFeed() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold gradient-science bg-clip-text text-transparent">
-                  Research Feed
-                </h1>
+            Research Feed
+          </h1>
                 <p className="text-navy-600">Discover and share cutting-edge research</p>
               </div>
             </div>
-          </div>
+        </div>
 
-          {/* Create Research Post */}
-          {user && <CreateResearchPost onPostCreated={handlePostCreated} />}
-          
+      {/* Create Research Post */}
+      {user && <CreateResearchPost onPostCreated={handlePostCreated} />}
+      
           {/* Advanced Filters */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center space-x-4">
-                <select
-                  value={filter}
-                  onChange={(e) => setFilter(e.target.value)}
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-4">
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
                   className="rounded-xl border-navy-200 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white/80 backdrop-blur-sm shadow-science px-4 py-2 font-medium"
-                >
-                  <option value="all">All Research</option>
-                  {user && (
-                    <>
-                      <option value="following">Following</option>
-                      <option value="connections">Connections</option>
-                    </>
-                  )}
-                </select>
-                
+            >
+              <option value="all">All Research</option>
+              {user && (
+                <>
+                  <option value="following">Following</option>
+                  <option value="connections">Connections</option>
+                </>
+              )}
+            </select>
+            
                 <select
                   value={researchType}
                   onChange={(e) => setResearchType(e.target.value)}
@@ -227,7 +227,7 @@ export default function ResearchFeed() {
                   value={factCheckStatus}
                   onChange={(e) => setFactCheckStatus(e.target.value)}
                   className="rounded-xl border-navy-200 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white/80 backdrop-blur-sm shadow-science px-4 py-2 font-medium"
-                >
+                  >
                   <option value="">All Status</option>
                   <option value="verified">Verified</option>
                   <option value="pending">Pending Review</option>
@@ -260,7 +260,7 @@ export default function ResearchFeed() {
                   Clear all
                 </button>
               )}
-            </div>
+              </div>
 
             {/* Search Bar */}
             <div className="relative mb-4">
@@ -281,20 +281,20 @@ export default function ResearchFeed() {
                   <TagIcon className="h-5 w-5 mr-2 text-teal-600" />
                   Filter by Research Areas
                 </h3>
-                <div className="flex flex-wrap gap-2">
-                  {popularTags.map(tag => (
-                    <button
-                      key={tag}
-                      onClick={() => toggleTag(tag)}
+              <div className="flex flex-wrap gap-2">
+                {popularTags.map(tag => (
+                  <button
+                    key={tag}
+                    onClick={() => toggleTag(tag)}
                       className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 transform hover:scale-105 ${
-                        selectedTags.includes(tag)
+                      selectedTags.includes(tag)
                           ? 'bg-teal-100 text-teal-700 border border-teal-200 shadow-sm'
                           : 'bg-navy-100 text-navy-600 border border-navy-200 hover:bg-navy-200'
-                      }`}
-                    >
+                    }`}
+                  >
                       {tag}
-                    </button>
-                  ))}
+                  </button>
+                ))}
                 </div>
               </div>
             )}
@@ -303,13 +303,13 @@ export default function ResearchFeed() {
           {/* Research Posts */}
           <div className="space-y-6">
             {posts.map((post, index) => (
-              <div key={post.id} ref={index === posts.length - 1 ? lastPostRef : null}>
-                <ResearchPostCard
-                  post={post}
-                  onDelete={handlePostDeleted}
-                  onUpdate={handlePostUpdated}
-                />
-              </div>
+            <div key={post.id} ref={index === posts.length - 1 ? lastPostRef : null}>
+              <ResearchPostCard 
+                post={post} 
+                onDelete={handlePostDeleted}
+                onUpdate={handlePostUpdated}
+              />
+            </div>
             ))}
             
             {loading && (
@@ -322,21 +322,21 @@ export default function ResearchFeed() {
               <div className="text-center py-8">
                 <p className="text-navy-500">No more research posts to load</p>
               </div>
-            )}
-            
-            {!loading && posts.length === 0 && (
-              <div className="text-center py-12">
+        )}
+        
+        {!loading && posts.length === 0 && (
+          <div className="text-center py-12">
                 <div className="w-16 h-16 bg-gradient-to-r from-teal-100 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <BeakerIcon className="h-8 w-8 text-teal-600" />
-                </div>
+            </div>
                 <h3 className="text-lg font-semibold text-navy-900 mb-2">No research posts yet</h3>
                 <p className="text-navy-600 mb-4">Be the first to share your research findings!</p>
-                <button
+              <button
                   onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                   className="gradient-science text-white px-6 py-2 rounded-lg font-medium hover:shadow-science-lg transition-all duration-200 transform hover:scale-105 shadow-science"
-                >
+              >
                   Create Research Post
-                </button>
+              </button>
               </div>
             )}
           </div>
@@ -413,8 +413,8 @@ export default function ResearchFeed() {
                   Find Collaborators
                 </button>
               </div>
-            </div>
-          )}
+          </div>
+        )}
         </div>
       </div>
     </div>

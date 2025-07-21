@@ -122,7 +122,7 @@ export default function Navbar() {
               </div>
               <div className="hidden md:block">
                 <h1 className="text-xl font-bold gradient-science bg-clip-text text-transparent">
-                  SciConnect
+                SciConnect
                 </h1>
                 <p className="text-xs text-navy-500">Research Community</p>
               </div>
@@ -212,8 +212,8 @@ export default function Navbar() {
                           <p className="text-xs text-navy-400">
                             {user.institution}
                           </p>
-                        )}
-                      </div>
+                      )}
+                    </div>
                     </div>
                   </div>
 
@@ -235,17 +235,17 @@ export default function Navbar() {
                     >
                       <Cog6ToothIcon className="h-5 w-5" />
                       <span>Settings</span>
-                    </Link>
+                  </Link>
                     
                     <hr className="my-2 border-navy-100" />
-                    
-                    <button
-                      onClick={handleLogout}
+                  
+                  <button
+                    onClick={handleLogout}
                       className="flex items-center space-x-3 px-4 py-2 text-rose-600 hover:bg-rose-50 transition-colors w-full text-left"
-                    >
+                  >
                       <ArrowRightOnRectangleIcon className="h-5 w-5" />
                       <span>Sign Out</span>
-                    </button>
+                  </button>
                   </div>
                 </div>
               )}

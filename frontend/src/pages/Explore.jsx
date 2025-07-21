@@ -116,26 +116,26 @@ export default function Explore() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold gradient-science bg-clip-text text-transparent">
-                  Explore
-                </h1>
+          Explore
+        </h1>
                 <p className="text-navy-600">Discover research, researchers, and trending topics</p>
               </div>
             </div>
-          </div>
+      </div>
 
-          {/* Search Bar */}
+      {/* Search Bar */}
           <div className="relative mb-6">
             <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-navy-400" />
-            <input
-              type="text"
+          <input
+            type="text"
               placeholder="Search posts, researchers, or topics..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-12 pr-4 py-4 border border-navy-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white/80 backdrop-blur-sm shadow-science text-lg"
             />
           </div>
 
-          {/* Tabs */}
+      {/* Tabs */}
           <div className="mb-6">
             <div className="flex space-x-1 bg-navy-100 p-1 rounded-xl">
               {[
@@ -143,42 +143,42 @@ export default function Explore() {
                 { id: 'researchers', label: 'Researchers', icon: UserGroupIcon },
                 { id: 'trending', label: 'Trending', icon: HashtagIcon }
               ].map(tab => {
-                const Icon = tab.icon;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
+            const Icon = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
                     className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex-1 ${
-                      activeTab === tab.id
+                  activeTab === tab.id
                         ? 'bg-white text-navy-900 shadow-science'
                         : 'text-navy-600 hover:text-navy-900 hover:bg-white/50'
-                    }`}
-                  >
-                    <Icon className="h-4 w-4" />
-                    <span>{tab.label}</span>
-                  </button>
-                );
-              })}
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
             </div>
-          </div>
+      </div>
 
-          {/* Content */}
+      {/* Content */}
           <div className="space-y-6">
-            {activeTab === 'posts' && (
+          {activeTab === 'posts' && (
               <>
                 {searchLoading ? (
                   <div className="flex justify-center py-8">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
                   </div>
                 ) : (
-                  posts.map(post => (
-                    <PostCard
-                      key={post.id}
-                      post={post}
-                      onDelete={handlePostDeleted}
-                      onUpdate={handlePostUpdated}
-                    />
-                  ))
+                posts.map(post => (
+                  <PostCard
+                    key={post.id}
+                    post={post}
+                    onDelete={handlePostDeleted}
+                    onUpdate={handlePostUpdated}
+                  />
+                ))
                 )}
                 {posts.length === 0 && !searchLoading && (
                   <div className="text-center py-12">
@@ -187,10 +187,10 @@ export default function Explore() {
                     </div>
                     <h3 className="text-lg font-semibold text-navy-900 mb-2">No posts found</h3>
                     <p className="text-navy-600">Try adjusting your search terms</p>
-                  </div>
-                )}
+                </div>
+              )}
               </>
-            )}
+          )}
 
             {activeTab === 'researchers' && (
               <>
@@ -208,10 +208,10 @@ export default function Explore() {
                             <h3 className="font-semibold text-navy-900">{user.name || `${user.firstName} ${user.lastName}`}</h3>
                             <p className="text-sm text-navy-600">{user.institution}</p>
                             <p className="text-xs text-navy-500">{user.position}</p>
-                          </div>
+                            </div>
                           <FollowButton userId={user.id} />
                         </div>
-                      </div>
+                          </div>
                     ))}
                   </div>
                 )}
@@ -241,14 +241,14 @@ export default function Explore() {
                           <span>{post.likes?.length || 0} likes</span>
                           <span>•</span>
                           <span>{post.comments || 0} comments</span>
-                        </div>
-                      </div>
+              </div>
+            </div>
                     ))}
                   </div>
                 </div>
               </div>
-            )}
-          </div>
+              )}
+            </div>
         </div>
 
         {/* Sidebar */}
@@ -256,35 +256,35 @@ export default function Explore() {
           {/* Trending Topics */}
           <div className="card">
             <h3 className="text-lg font-semibold text-navy-900 mb-4">Trending Topics</h3>
-            <div className="flex flex-wrap gap-2">
-              {popularTags.slice(0, 10).map(tag => (
-                <button
-                  key={tag}
-                  onClick={() => handleTagClick(tag)}
+              <div className="flex flex-wrap gap-2">
+                {popularTags.slice(0, 10).map(tag => (
+                  <button
+                    key={tag}
+                    onClick={() => handleTagClick(tag)}
                   className="px-3 py-1 rounded-full text-xs font-medium bg-navy-100 text-navy-600 border border-navy-200 hover:bg-navy-200 transition-all duration-200"
-                >
-                  #{tag}
-                </button>
-              ))}
+                  >
+                    #{tag}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
           {/* Top Researchers */}
           <div className="card">
             <h3 className="text-lg font-semibold text-navy-900 mb-4">Top Researchers</h3>
-            <div className="space-y-3">
+              <div className="space-y-3">
               {users.slice(0, 5).map(user => (
                 <div key={user.id} className="flex items-center space-x-3">
                   <UserAvatar user={user} size="sm" showOnlineStatus={true} />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-navy-900 truncate">
                       {user.name || `${user.firstName} ${user.lastName}`}
-                    </p>
+                        </p>
                     <p className="text-xs text-navy-500 truncate">{user.institution}</p>
-                  </div>
+                      </div>
                   <FollowButton userId={user.id} />
-                </div>
-              ))}
+                  </div>
+                ))}
             </div>
           </div>
 
