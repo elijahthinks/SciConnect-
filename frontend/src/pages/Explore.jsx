@@ -6,6 +6,7 @@ import PostCard from '../components/PostCard';
 import UserList from '../components/UserList';
 import FollowButton from '../components/FollowButton';
 import axios from 'axios';
+import UserAvatar from '../components/UserAvatar';
 
 export default function Explore() {
   const { user, token } = useAuth();
@@ -102,320 +103,223 @@ export default function Explore() {
     setTrendingPosts(trendingPosts.map(post => post.id === updatedPost.id ? updatedPost : post));
   };
 
-  const tabs = [
-    { id: 'posts', label: 'Posts', icon: DocumentTextIcon },
-    { id: 'users', label: 'People', icon: UserGroupIcon },
-    { id: 'tags', label: 'Tags', icon: HashtagIcon }
-  ];
-
-  if (loading) {
-    return (
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-48 mb-6"></div>
-          <div className="h-10 bg-gray-200 rounded mb-6"></div>
-          <div className="space-y-4">
-            {[1, 2, 3, 4, 5].map(i => (
-              <div key={i} className="h-48 bg-gray-200 rounded"></div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2 flex items-center">
-          <MagnifyingGlassIcon className="h-7 w-7 mr-2" />
-          Explore
-        </h1>
-        <p className="text-gray-600">Discover new content, people, and trending topics in the community</p>
-      </div>
-
-      {/* Search Bar */}
-      <div className="mb-6">
-        <div className="relative">
-          <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search posts, people, or tags..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-lg"
-          />
-          {searchLoading && (
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-500"></div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Trending Section (only show when not searching) */}
-      {!searchQuery && trendingPosts.length > 0 && (
-        <div className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Trending Now</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {trendingPosts.map(post => (
-              <div key={post.id} className="bg-white rounded-lg shadow-sm border p-4">
-                <div className="flex items-center space-x-2 mb-2">
-                  <img
-                    src={post.author?.avatar || `https://ui-avatars.com/api/?name=${post.author?.firstName || post.author?.username}&background=random`}
-                    alt={post.author?.firstName || post.author?.username}
-                    className="w-6 h-6 rounded-full"
-                  />
-                  <span className="text-sm font-medium text-gray-900">
-                    {post.author?.firstName && post.author?.lastName ? `${post.author.firstName} ${post.author.lastName}` : post.author?.username}
-                  </span>
-                </div>
-                <p className="text-sm text-gray-700 line-clamp-3">{post.content}</p>
-                <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
-                  <span>{post.likes?.length || 0} likes</span>
-                  <span>{post.comments || 0} comments</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Quick Access to Users */}
-      {!searchQuery && users.length > 0 && (
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Featured Community Members</h2>
-            <button 
-              onClick={() => setActiveTab('users')}
-              className="text-sm text-primary-600 hover:text-primary-700 font-medium"
-            >
-              View all →
-            </button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {users.slice(0, 4).map(person => (
-              <Link
-                key={person.id}
-                to={`/profile/${person.id}`}
-                className="bg-white rounded-lg shadow-sm border p-4 hover:shadow-md transition-shadow"
-              >
-                <div className="flex flex-col items-center text-center">
-                  <img
-                    src={person.avatar || `https://ui-avatars.com/api/?name=${person.firstName || person.username}&background=random`}
-                    alt={person.firstName || person.username}
-                    className="w-16 h-16 rounded-full mb-3"
-                  />
-                  <h3 className="text-sm font-medium text-gray-900 mb-1">
-                    {person.firstName && person.lastName ? `${person.firstName} ${person.lastName}` : person.username}
-                  </h3>
-                  {person.position && (
-                    <div className="flex items-center text-xs text-gray-500 mb-1">
-                      <BriefcaseIcon className="h-3 w-3 mr-1" />
-                      {person.position}
-                    </div>
-                  )}
-                  {person.institution && (
-                    <div className="flex items-center text-xs text-gray-500 mb-2">
-                      <BuildingLibraryIcon className="h-3 w-3 mr-1" />
-                      {person.institution}
-                    </div>
-                  )}
-                  {person.bio && (
-                    <p className="text-xs text-gray-600 line-clamp-2">{person.bio}</p>
-                  )}
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Tabs */}
-      <div className="border-b border-gray-200 mb-6">
-        <nav className="-mb-px flex space-x-8">
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
-                  activeTab === tab.id
-                    ? 'border-primary-500 text-primary-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              >
-                <Icon className="h-4 w-4" />
-                <span>{tab.label}</span>
-              </button>
-            );
-          })}
-        </nav>
-      </div>
-
-      {/* Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Main Content */}
-        <div className="lg:col-span-2">
-          {activeTab === 'posts' && (
-            <div className="space-y-6">
-              {posts.length > 0 ? (
-                posts.map(post => (
-                  <PostCard
-                    key={post.id}
-                    post={post}
-                    onDelete={handlePostDeleted}
-                    onUpdate={handlePostUpdated}
-                  />
-                ))
-              ) : (
-                <div className="text-center py-12 bg-white shadow rounded-lg">
-                  <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400" />
-                  <h3 className="mt-2 text-sm font-medium text-gray-900">No posts found</h3>
-                  <p className="mt-1 text-sm text-gray-500">
-                    {searchQuery ? 'Try a different search term' : 'No posts available to explore'}
-                  </p>
-                </div>
-              )}
+        <div className="lg:col-span-8">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-teal-50 to-emerald-50 rounded-2xl p-6 mb-6 border border-teal-200/50 shadow-science">
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="w-12 h-12 gradient-science rounded-full flex items-center justify-center">
+                <MagnifyingGlassIcon className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold gradient-science bg-clip-text text-transparent">
+                  Explore
+                </h1>
+                <p className="text-navy-600">Discover research, researchers, and trending topics</p>
+              </div>
             </div>
-          )}
+          </div>
 
-          {activeTab === 'users' && (
-            <div className="space-y-6">
-              <div className="bg-white shadow rounded-lg p-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Community Members</h3>
-                {users.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {users.map(person => (
-                      <Link
-                        key={person.id}
-                        to={`/profile/${person.id}`}
-                        className="flex items-center space-x-4 p-4 border rounded-lg hover:bg-gray-50 transition-colors"
-                      >
-                        <img
-                          src={person.avatar || `https://ui-avatars.com/api/?name=${person.firstName || person.username}&background=random`}
-                          alt={person.firstName || person.username}
-                          className="w-12 h-12 rounded-full"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <h4 className="text-sm font-medium text-gray-900">
-                            {person.firstName && person.lastName ? `${person.firstName} ${person.lastName}` : person.username}
-                          </h4>
-                          {person.position && (
-                            <div className="flex items-center text-xs text-gray-500 mt-1">
-                              <BriefcaseIcon className="h-3 w-3 mr-1" />
-                              {person.position}
-                            </div>
-                          )}
-                          {person.institution && (
-                            <div className="flex items-center text-xs text-gray-500 mt-1">
-                              <BuildingLibraryIcon className="h-3 w-3 mr-1" />
-                              {person.institution}
-                            </div>
-                          )}
-                          {person.bio && (
-                            <p className="text-xs text-gray-600 mt-1 line-clamp-2">{person.bio}</p>
-                          )}
-                        </div>
-                        {user && user.id !== person.id && (
-                          <div onClick={(e) => e.preventDefault()}>
-                            <FollowButton 
-                              userId={person.id} 
-                              onFollowChange={fetchExploreData}
-                            />
-                          </div>
-                        )}
-                      </Link>
-                    ))}
+          {/* Search Bar */}
+          <div className="relative mb-6">
+            <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-navy-400" />
+            <input
+              type="text"
+              placeholder="Search posts, researchers, or topics..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-12 pr-4 py-4 border border-navy-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white/80 backdrop-blur-sm shadow-science text-lg"
+            />
+          </div>
+
+          {/* Tabs */}
+          <div className="mb-6">
+            <div className="flex space-x-1 bg-navy-100 p-1 rounded-xl">
+              {[
+                { id: 'posts', label: 'Posts', icon: DocumentTextIcon },
+                { id: 'researchers', label: 'Researchers', icon: UserGroupIcon },
+                { id: 'trending', label: 'Trending', icon: HashtagIcon }
+              ].map(tab => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex-1 ${
+                      activeTab === tab.id
+                        ? 'bg-white text-navy-900 shadow-science'
+                        : 'text-navy-600 hover:text-navy-900 hover:bg-white/50'
+                    }`}
+                  >
+                    <Icon className="h-4 w-4" />
+                    <span>{tab.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="space-y-6">
+            {activeTab === 'posts' && (
+              <>
+                {searchLoading ? (
+                  <div className="flex justify-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
                   </div>
                 ) : (
+                  posts.map(post => (
+                    <PostCard
+                      key={post.id}
+                      post={post}
+                      onDelete={handlePostDeleted}
+                      onUpdate={handlePostUpdated}
+                    />
+                  ))
+                )}
+                {posts.length === 0 && !searchLoading && (
                   <div className="text-center py-12">
-                    <UserGroupIcon className="mx-auto h-12 w-12 text-gray-400" />
-                    <h3 className="mt-2 text-sm font-medium text-gray-900">No users found</h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {searchQuery ? 'Try a different search term' : 'No users available to discover'}
-                    </p>
+                    <div className="w-16 h-16 bg-gradient-to-r from-teal-100 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <DocumentTextIcon className="h-8 w-8 text-teal-600" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-navy-900 mb-2">No posts found</h3>
+                    <p className="text-navy-600">Try adjusting your search terms</p>
                   </div>
                 )}
-              </div>
-            </div>
-          )}
+              </>
+            )}
 
-          {activeTab === 'tags' && (
-            <div className="bg-white shadow rounded-lg p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Popular Tags</h3>
-              {popularTags.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
-                  {popularTags.map(tag => (
-                    <button
-                      key={tag}
-                      onClick={() => handleTagClick(tag)}
-                      className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-primary-100 hover:text-primary-700 transition-colors"
-                    >
-                      <HashtagIcon className="h-4 w-4 mr-1" />
-                      {tag}
-                    </button>
-                  ))}
+            {activeTab === 'researchers' && (
+              <>
+                {searchLoading ? (
+                  <div className="flex justify-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {users.map(user => (
+                      <div key={user.id} className="card-hover">
+                        <div className="flex items-center space-x-4">
+                          <UserAvatar user={user} size="lg" showOnlineStatus={true} />
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-navy-900">{user.name || `${user.firstName} ${user.lastName}`}</h3>
+                            <p className="text-sm text-navy-600">{user.institution}</p>
+                            <p className="text-xs text-navy-500">{user.position}</p>
+                          </div>
+                          <FollowButton userId={user.id} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {users.length === 0 && !searchLoading && (
+                  <div className="text-center py-12">
+                    <div className="w-16 h-16 bg-gradient-to-r from-teal-100 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <UserGroupIcon className="h-8 w-8 text-teal-600" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-navy-900 mb-2">No researchers found</h3>
+                    <p className="text-navy-600">Try adjusting your search terms</p>
+                  </div>
+                )}
+              </>
+            )}
+
+            {activeTab === 'trending' && (
+              <div className="space-y-6">
+                <div className="card">
+                  <h3 className="text-lg font-semibold text-navy-900 mb-4">Trending Posts</h3>
+                  <div className="space-y-4">
+                    {trendingPosts.map(post => (
+                      <div key={post.id} className="border-b border-navy-100 pb-4 last:border-b-0">
+                        <h4 className="font-medium text-navy-900 mb-1">{post.content?.slice(0, 100)}...</h4>
+                        <div className="flex items-center space-x-4 text-sm text-navy-500">
+                          <span>{post.author?.name}</span>
+                          <span>•</span>
+                          <span>{post.likes?.length || 0} likes</span>
+                          <span>•</span>
+                          <span>{post.comments || 0} comments</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ) : (
-                <p className="text-gray-500">No popular tags yet.</p>
-              )}
-            </div>
-          )}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Popular Tags Widget */}
-          {activeTab !== 'tags' && popularTags.length > 0 && (
-            <div className="bg-white shadow rounded-lg p-4">
-              <h3 className="text-md font-medium text-gray-900 mb-3">Popular Tags</h3>
-              <div className="flex flex-wrap gap-2">
-                {popularTags.slice(0, 10).map(tag => (
-                  <button
-                    key={tag}
-                    onClick={() => handleTagClick(tag)}
-                    className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 hover:bg-primary-100 hover:text-primary-700 transition-colors"
-                  >
-                    #{tag}
-                  </button>
-                ))}
+        <div className="lg:col-span-4 space-y-6">
+          {/* Trending Topics */}
+          <div className="card">
+            <h3 className="text-lg font-semibold text-navy-900 mb-4">Trending Topics</h3>
+            <div className="flex flex-wrap gap-2">
+              {popularTags.slice(0, 10).map(tag => (
+                <button
+                  key={tag}
+                  onClick={() => handleTagClick(tag)}
+                  className="px-3 py-1 rounded-full text-xs font-medium bg-navy-100 text-navy-600 border border-navy-200 hover:bg-navy-200 transition-all duration-200"
+                >
+                  #{tag}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Top Researchers */}
+          <div className="card">
+            <h3 className="text-lg font-semibold text-navy-900 mb-4">Top Researchers</h3>
+            <div className="space-y-3">
+              {users.slice(0, 5).map(user => (
+                <div key={user.id} className="flex items-center space-x-3">
+                  <UserAvatar user={user} size="sm" showOnlineStatus={true} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-navy-900 truncate">
+                      {user.name || `${user.firstName} ${user.lastName}`}
+                    </p>
+                    <p className="text-xs text-navy-500 truncate">{user.institution}</p>
+                  </div>
+                  <FollowButton userId={user.id} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick Stats */}
+          <div className="card">
+            <h3 className="text-lg font-semibold text-navy-900 mb-4">Platform Stats</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-center p-3 bg-teal-50 rounded-lg">
+                <div className="text-2xl font-bold text-teal-600">{posts.length}</div>
+                <div className="text-sm text-navy-600">Posts</div>
+              </div>
+              <div className="text-center p-3 bg-emerald-50 rounded-lg">
+                <div className="text-2xl font-bold text-emerald-600">{users.length}</div>
+                <div className="text-sm text-navy-600">Researchers</div>
               </div>
             </div>
-          )}
+          </div>
 
-          {/* Suggested Users Widget */}
-          {activeTab !== 'users' && users.length > 0 && (
-            <div className="bg-white shadow rounded-lg p-4">
-              <h3 className="text-md font-medium text-gray-900 mb-3">People to Follow</h3>
+          {/* Quick Actions */}
+          {user && (
+            <div className="card">
+              <h3 className="text-lg font-semibold text-navy-900 mb-4">Quick Actions</h3>
               <div className="space-y-3">
-                {users.slice(0, 5).map(person => (
-                  <div key={person.id} className="flex items-center justify-between">
-                    <Link 
-                      to={`/profile/${person.id}`}
-                      className="flex items-center space-x-2 flex-1 min-w-0"
-                    >
-                      <img
-                        src={person.avatar || `https://ui-avatars.com/api/?name=${person.firstName || person.username}&background=random`}
-                        alt={person.firstName || person.username}
-                        className="w-8 h-8 rounded-full"
-                      />
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium text-gray-900 truncate">
-                          {person.firstName && person.lastName ? `${person.firstName} ${person.lastName}` : person.username}
-                        </p>
-                        <p className="text-xs text-gray-500 truncate">{person.position}</p>
-                      </div>
-                    </Link>
-                    {user && user.id !== person.id && (
-                      <FollowButton 
-                        userId={person.id} 
-                        onFollowChange={fetchExploreData}
-                      />
-                    )}
-                  </div>
-                ))}
+                <button className="w-full btn-primary text-left">
+                  <DocumentTextIcon className="h-4 w-4 mr-2 inline" />
+                  Create Post
+                </button>
+                <button className="w-full btn-outline text-left">
+                  <UserGroupIcon className="h-4 w-4 mr-2 inline" />
+                  Find Researchers
+                </button>
+                <button className="w-full btn-outline text-left">
+                  <HashtagIcon className="h-4 w-4 mr-2 inline" />
+                  Browse Topics
+                </button>
               </div>
             </div>
           )}
