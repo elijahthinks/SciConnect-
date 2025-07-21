@@ -61,6 +61,13 @@ export default function Navbar() {
       description: 'Latest posts and updates'
     },
     {
+      name: 'Research',
+      path: '/research',
+      icon: AcademicCapIcon,
+      activeIcon: AcademicCapIcon,
+      description: 'Research posts and fact-checking'
+    },
+    {
       name: 'Explore',
       path: '/explore',
       icon: MagnifyingGlassIcon,

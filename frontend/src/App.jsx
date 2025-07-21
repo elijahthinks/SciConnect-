@@ -3,6 +3,7 @@ import { useAuth } from './store/auth';
 import { useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Feed from './pages/Feed';
+import ResearchFeed from './pages/ResearchFeed';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import ResetPassword from './pages/ResetPassword';
@@ -94,6 +95,7 @@ function App() {
                 <>
                   <Route path="/" element={<Feed />} />
                   <Route path="/feed" element={<Navigate to="/" replace />} />
+                  <Route path="/research" element={<ResearchFeed />} />
                   <Route path="/explore" element={<Explore />} />
                   <Route path="/connections" element={<Connections />} />
                   <Route path="/groups" element={<Groups />} />

@@ -15,6 +15,7 @@ const reactionsRoutes = require('./routes/reactions');
 const chatRoutes = require('./routes/chat');
 const groupsRoutes = require('./routes/groups');
 const onlineStatusRoutes = require('./routes/onlineStatus');
+const researchRoutes = require('./routes/research');
 const { initializeSocket } = require('./middleware/socket');
 const path = require('path');
 const fs = require('fs');
@@ -33,6 +34,10 @@ require('./models/UserRelationship');
 require('./models/GroupChat');
 require('./models/GroupChatMember');
 require('./models/GroupMessage');
+// Research Models
+require('./models/ResearchPost');
+require('./models/FactCheck');
+require('./models/Collaboration');
 
 const app = express();
 const server = http.createServer(app);
@@ -104,6 +109,7 @@ app.use('/api/reactions', reactionsRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/groups', groupsRoutes);
 app.use('/api/online-status', onlineStatusRoutes);
+app.use('/api/research', researchRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
