@@ -14,19 +14,19 @@ import axios from 'axios';
 import UserAvatar from './UserAvatar';
 
 const factCheckTypes = [
-  { value: 'correction', label: 'Correction', icon: ExclamationTriangleIcon, color: 'text-red-600' },
-  { value: 'clarification', label: 'Clarification', icon: ChatBubbleLeftIcon, color: 'text-blue-600' },
-  { value: 'citation', label: 'Citation Needed', icon: FlagIcon, color: 'text-orange-600' },
-  { value: 'methodology_concern', label: 'Methodology Concern', icon: ExclamationTriangleIcon, color: 'text-yellow-600' },
-  { value: 'result_question', label: 'Question Results', icon: ChatBubbleLeftIcon, color: 'text-purple-600' },
-  { value: 'general_note', label: 'General Note', icon: ChatBubbleLeftIcon, color: 'text-gray-600' }
+  { value: 'correction', label: 'Correction', icon: ExclamationTriangleIcon, color: 'text-earth-600' },
+  { value: 'clarification', label: 'Clarification', icon: ChatBubbleLeftIcon, color: 'text-primary-600' },
+  { value: 'citation', label: 'Citation Needed', icon: FlagIcon, color: 'text-warm-600' },
+  { value: 'methodology_concern', label: 'Methodology Concern', icon: ExclamationTriangleIcon, color: 'text-warm-600' },
+  { value: 'result_question', label: 'Question Results', icon: ChatBubbleLeftIcon, color: 'text-neutral-600' },
+  { value: 'general_note', label: 'General Note', icon: ChatBubbleLeftIcon, color: 'text-neutral-600' }
 ];
 
 const severityLevels = [
-  { value: 'low', label: 'Low', color: 'text-green-600', bg: 'bg-green-100' },
-  { value: 'medium', label: 'Medium', color: 'text-yellow-600', bg: 'bg-yellow-100' },
-  { value: 'high', label: 'High', color: 'text-orange-600', bg: 'bg-orange-100' },
-  { value: 'critical', label: 'Critical', color: 'text-red-600', bg: 'bg-red-100' }
+  { value: 'low', label: 'Low', color: 'text-sage-600', bg: 'bg-sage-100' },
+  { value: 'medium', label: 'Medium', color: 'text-warm-600', bg: 'bg-warm-100' },
+  { value: 'high', label: 'High', color: 'text-earth-600', bg: 'bg-earth-100' },
+  { value: 'critical', label: 'Critical', color: 'text-earth-700', bg: 'bg-earth-200' }
 ];
 
 export default function FactCheckSection({ researchPostId }) {

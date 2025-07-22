@@ -9,41 +9,41 @@ const REACTION_TYPES = {
     icon: HandThumbUpIcon,
     solidIcon: HandThumbUpSolidIcon,
     label: 'Like',
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-50',
-    hoverColor: 'hover:bg-blue-100'
+    color: 'text-primary-500',
+    bgColor: 'bg-primary-50',
+    hoverColor: 'hover:bg-primary-100'
   },
   heart: {
     icon: HeartIcon,
     solidIcon: HeartSolidIcon,
     label: 'Love',
-    color: 'text-red-500',
-    bgColor: 'bg-red-50',
-    hoverColor: 'hover:bg-red-100'
+    color: 'text-earth-500',
+    bgColor: 'bg-earth-50',
+    hoverColor: 'hover:bg-earth-100'
   },
   celebrate: {
     icon: SparklesIcon,
     solidIcon: SparklesSolidIcon,
     label: 'Celebrate',
-    color: 'text-yellow-500',
-    bgColor: 'bg-yellow-50',
-    hoverColor: 'hover:bg-yellow-100'
+    color: 'text-warm-500',
+    bgColor: 'bg-warm-50',
+    hoverColor: 'hover:bg-warm-100'
   },
   insightful: {
     icon: LightBulbIcon,
     solidIcon: LightBulbSolidIcon,
     label: 'Insightful',
-    color: 'text-green-500',
-    bgColor: 'bg-green-50',
-    hoverColor: 'hover:bg-green-100'
+    color: 'text-sage-500',
+    bgColor: 'bg-sage-50',
+    hoverColor: 'hover:bg-sage-100'
   },
   curious: {
     icon: QuestionMarkCircleIcon,
     solidIcon: QuestionMarkCircleSolidIcon,
     label: 'Curious',
-    color: 'text-purple-500',
-    bgColor: 'bg-purple-50',
-    hoverColor: 'hover:bg-purple-100'
+    color: 'text-neutral-500',
+    bgColor: 'bg-neutral-50',
+    hoverColor: 'hover:bg-neutral-100'
   }
 };
 

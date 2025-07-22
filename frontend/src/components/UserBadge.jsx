@@ -15,66 +15,66 @@ const UserBadge = ({ type, label, description }) => {
     const configs = {
       'hobbyist': {
         icon: HeartIcon,
-        bgColor: 'bg-gradient-to-r from-pink-100 to-red-100',
-        textColor: 'text-pink-700',
-        borderColor: 'border-pink-200',
-        iconColor: 'text-pink-600'
+        bgColor: 'bg-gradient-to-r from-earth-100 to-earth-200',
+        textColor: 'text-earth-700',
+        borderColor: 'border-earth-200',
+        iconColor: 'text-earth-600'
       },
       'independent': {
         icon: UserIcon,
-        bgColor: 'bg-gradient-to-r from-green-100 to-emerald-100',
-        textColor: 'text-green-700',
-        borderColor: 'border-green-200',
-        iconColor: 'text-green-600'
+        bgColor: 'bg-gradient-to-r from-sage-100 to-sage-200',
+        textColor: 'text-sage-700',
+        borderColor: 'border-sage-200',
+        iconColor: 'text-sage-600'
       },
       'academic': {
         icon: AcademicCapIcon,
-        bgColor: 'bg-gradient-to-r from-blue-100 to-indigo-100',
-        textColor: 'text-blue-700',
-        borderColor: 'border-blue-200',
-        iconColor: 'text-blue-600'
+        bgColor: 'bg-gradient-to-r from-primary-100 to-primary-200',
+        textColor: 'text-primary-700',
+        borderColor: 'border-primary-200',
+        iconColor: 'text-primary-600'
       },
       'student': {
         icon: AcademicCapIcon,
-        bgColor: 'bg-gradient-to-r from-purple-100 to-violet-100',
-        textColor: 'text-purple-700',
-        borderColor: 'border-purple-200',
-        iconColor: 'text-purple-600'
+        bgColor: 'bg-gradient-to-r from-neutral-100 to-neutral-200',
+        textColor: 'text-neutral-700',
+        borderColor: 'border-neutral-200',
+        iconColor: 'text-neutral-600'
       },
       'professional': {
         icon: StarIcon,
-        bgColor: 'bg-gradient-to-r from-yellow-100 to-orange-100',
-        textColor: 'text-yellow-700',
-        borderColor: 'border-yellow-200',
-        iconColor: 'text-yellow-600'
+        bgColor: 'bg-gradient-to-r from-warm-100 to-warm-200',
+        textColor: 'text-warm-700',
+        borderColor: 'border-warm-200',
+        iconColor: 'text-warm-600'
       },
       'citizen-scientist': {
         icon: BeakerIcon,
-        bgColor: 'bg-gradient-to-r from-cyan-100 to-teal-100',
-        textColor: 'text-cyan-700',
-        borderColor: 'border-cyan-200',
-        iconColor: 'text-cyan-600'
+        bgColor: 'bg-gradient-to-r from-sage-100 to-primary-100',
+        textColor: 'text-sage-700',
+        borderColor: 'border-sage-200',
+        iconColor: 'text-sage-600'
       },
       'open-source': {
         icon: CodeBracketIcon,
-        bgColor: 'bg-gradient-to-r from-gray-100 to-slate-100',
-        textColor: 'text-gray-700',
-        borderColor: 'border-gray-200',
-        iconColor: 'text-gray-600'
+        bgColor: 'bg-gradient-to-r from-neutral-100 to-warm-100',
+        textColor: 'text-neutral-700',
+        borderColor: 'border-neutral-200',
+        iconColor: 'text-neutral-600'
       },
       'innovator': {
         icon: LightBulbIcon,
-        bgColor: 'bg-gradient-to-r from-amber-100 to-yellow-100',
-        textColor: 'text-amber-700',
-        borderColor: 'border-amber-200',
-        iconColor: 'text-amber-600'
+        bgColor: 'bg-gradient-to-r from-earth-100 to-earth-200',
+        textColor: 'text-earth-700',
+        borderColor: 'border-earth-200',
+        iconColor: 'text-earth-600'
       },
       'global': {
         icon: GlobeAltIcon,
-        bgColor: 'bg-gradient-to-r from-indigo-100 to-purple-100',
-        textColor: 'text-indigo-700',
-        borderColor: 'border-indigo-200',
-        iconColor: 'text-indigo-600'
+        bgColor: 'bg-gradient-to-r from-primary-100 to-sage-100',
+        textColor: 'text-primary-700',
+        borderColor: 'border-primary-200',
+        iconColor: 'text-primary-600'
       }
     };
     

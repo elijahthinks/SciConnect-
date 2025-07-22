@@ -14,18 +14,18 @@ import axios from 'axios';
 import UserAvatar from './UserAvatar';
 
 const collaborationRoles = [
-  { value: 'lead', label: 'Lead Researcher', icon: AcademicCapIcon, color: 'text-purple-600' },
-  { value: 'co_author', label: 'Co-Author', icon: UserIcon, color: 'text-blue-600' },
-  { value: 'contributor', label: 'Contributor', icon: UserGroupIcon, color: 'text-green-600' },
-  { value: 'reviewer', label: 'Reviewer', icon: CheckCircleIcon, color: 'text-orange-600' },
-  { value: 'advisor', label: 'Advisor', icon: BriefcaseIcon, color: 'text-gray-600' }
+  { value: 'lead', label: 'Lead Researcher', icon: AcademicCapIcon, color: 'text-primary-600' },
+  { value: 'co_author', label: 'Co-Author', icon: UserIcon, color: 'text-sage-600' },
+  { value: 'contributor', label: 'Contributor', icon: UserGroupIcon, color: 'text-sage-600' },
+  { value: 'reviewer', label: 'Reviewer', icon: CheckCircleIcon, color: 'text-warm-600' },
+  { value: 'advisor', label: 'Advisor', icon: BriefcaseIcon, color: 'text-neutral-600' }
 ];
 
 const collaborationStatuses = {
-  invited: { label: 'Invited', color: 'text-yellow-600', bg: 'bg-yellow-100' },
-  accepted: { label: 'Accepted', color: 'text-green-600', bg: 'bg-green-100' },
-  declined: { label: 'Declined', color: 'text-red-600', bg: 'bg-red-100' },
-  pending: { label: 'Pending', color: 'text-blue-600', bg: 'bg-blue-100' }
+  invited: { label: 'Invited', color: 'text-warm-600', bg: 'bg-warm-100' },
+  accepted: { label: 'Accepted', color: 'text-sage-600', bg: 'bg-sage-100' },
+  declined: { label: 'Declined', color: 'text-earth-600', bg: 'bg-earth-100' },
+  pending: { label: 'Pending', color: 'text-primary-600', bg: 'bg-primary-100' }
 };
 
 export default function CollaborationSection({ researchPostId }) {

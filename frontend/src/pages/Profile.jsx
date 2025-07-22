@@ -13,13 +13,15 @@ import axios from 'axios';
 
 const Profile = () => {
   const { userId } = useParams();
-  const { user: currentUser, token } = useAuth();
+  const { user: currentUser, token, login } = useAuth();
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
     name: '',
     bio: '',
     institution: '',
@@ -73,6 +75,8 @@ const Profile = () => {
       const fullName = data.firstName && data.lastName ? `${data.firstName} ${data.lastName}` : data.username;
       setProfile({ ...data, name: fullName });
       setFormData({
+        firstName: data.firstName || '',
+        lastName: data.lastName || '',
         name: fullName,
         bio: data.bio || '',
         institution: data.institution || '',
@@ -126,8 +130,17 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put('/api/profile', formData);
+      const response = await axios.put('/api/profile', {
+        ...formData,
+        firstName: formData.firstName,
+        lastName: formData.lastName
+      });
       setProfile(response.data);
+      // Fetch latest user info from backend
+      const meRes = await axios.get('/api/auth/me');
+      if (login && meRes.data && meRes.data.user) {
+        login(meRes.data.user, token);
+      }
       setIsEditing(false);
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -597,11 +610,8 @@ const Profile = () => {
                     <input
                       type="text"
                       name="firstName"
-                      value={formData.name.split(' ')[0] || ''}
-                      onChange={(e) => setFormData({
-                        ...formData,
-                        name: `${e.target.value} ${formData.name.split(' ').slice(1).join(' ')}`
-                      })}
+                      value={formData.firstName}
+                      onChange={e => setFormData({ ...formData, firstName: e.target.value, name: `${e.target.value} ${formData.lastName}` })}
                       className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                     />
                   </div>
@@ -612,11 +622,8 @@ const Profile = () => {
                     <input
                       type="text"
                       name="lastName"
-                      value={formData.name.split(' ').slice(1).join(' ') || ''}
-                      onChange={(e) => setFormData({
-                        ...formData,
-                        name: `${formData.name.split(' ')[0] || ''} ${e.target.value}`
-                      })}
+                      value={formData.lastName}
+                      onChange={e => setFormData({ ...formData, lastName: e.target.value, name: `${formData.firstName} ${e.target.value}` })}
                       className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                     />
                   </div>

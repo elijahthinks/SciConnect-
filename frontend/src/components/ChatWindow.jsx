@@ -253,12 +253,12 @@ export default function ChatWindow({ isOpen, onClose }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-white/30 w-full max-w-6xl h-[90vh] flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200/50 bg-gradient-to-r from-blue-50/90 to-purple-50/90 backdrop-blur-sm">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200/50 bg-gradient-to-r from-primary-50/90 to-sage-50/90 backdrop-blur-sm">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 bg-gradient-to-r from-primary-600 to-sage-600 rounded-xl flex items-center justify-center shadow-lg">
               <span className="text-white font-bold text-lg">💬</span>
             </div>
-            <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <h2 className="text-xl font-bold bg-gradient-to-r from-primary-600 to-sage-600 bg-clip-text text-transparent">
               Messages
             </h2>
           </div>
@@ -389,7 +389,7 @@ export default function ChatWindow({ isOpen, onClose }) {
                       <div
                         className={`relative max-w-[70%] rounded-2xl p-4 shadow-lg ${
                           message.senderId === user.id
-                            ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
+                            ? 'bg-gradient-to-r from-primary-500 to-sage-500 text-white'
                             : 'bg-white/95 backdrop-blur-sm text-gray-900 border border-white/50'
                         }`}
                       >

@@ -15,6 +15,7 @@ import Messages from './pages/Messages';
 import Groups from './pages/Groups';
 import ErrorBoundary from './components/ErrorBoundary';
 import { Toaster } from 'react-hot-toast';
+import MobileNav from './components/MobileNav';
 
 function App() {
   const { user, token } = useAuth();
@@ -51,7 +52,7 @@ function App() {
   return (
     <ErrorBoundary>
       <Router>
-        <div className="min-h-screen bg-gradient-to-br from-navy-50 via-teal-50 to-emerald-50">
+        <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-primary-50 to-neutral-100">
           <Toaster 
             position="top-right"
             toastOptions={{
@@ -59,7 +60,7 @@ function App() {
               style: {
                 background: '#ffffff',
                 color: '#1e293b',
-                boxShadow: '0 10px 15px -3px rgba(15, 118, 110, 0.1), 0 4px 6px -2px rgba(15, 118, 110, 0.05)',
+                boxShadow: '0 10px 15px -3px rgba(99, 102, 241, 0.1), 0 4px 6px -2px rgba(99, 102, 241, 0.05)',
                 borderRadius: '0.75rem',
                 border: '1px solid #e2e8f0',
                 fontFamily: 'Inter, system-ui, sans-serif'
@@ -68,8 +69,9 @@ function App() {
           />
           
           {user && <Navbar />}
+          {user && <MobileNav />}
           
-          <main className={user ? 'pt-4 pb-8' : 'min-h-screen'}>
+          <main className={user ? 'pt-1 pb-20 md:pb-6' : 'min-h-screen'}>
             <Routes>
               {/* Public Routes */}
               <Route 

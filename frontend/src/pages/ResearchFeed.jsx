@@ -59,8 +59,9 @@ export default function ResearchFeed() {
   const fetchPopularTags = async () => {
     try {
       const response = await axios.get('/api/research/tags/popular');
-      setPopularTags(response.data || []);
+      setPopularTags(Array.isArray(response.data) ? response.data : []);
     } catch (err) {
+      setPopularTags([]);
       console.error('Failed to fetch popular tags:', err);
     }
   };
@@ -383,7 +384,7 @@ export default function ResearchFeed() {
           <div className="card">
             <h3 className="text-lg font-semibold text-navy-900 mb-4">Trending Research</h3>
             <div className="flex flex-wrap gap-2">
-              {popularTags.slice(0, 8).map(tag => (
+              {(Array.isArray(popularTags) ? popularTags : []).slice(0, 8).map(tag => (
                 <button
                   key={tag}
                   onClick={() => toggleTag(tag)}

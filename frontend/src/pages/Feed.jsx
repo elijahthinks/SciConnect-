@@ -110,18 +110,18 @@ export default function Feed() {
 
   if (error) {
     return (
-      <div className="max-w-2xl mx-auto p-6">
-        <div className="bg-rose-50/80 backdrop-blur-sm border border-rose-200/50 rounded-2xl p-6 shadow-science">
-          <div className="flex items-center justify-center w-16 h-16 gradient-amber rounded-xl mx-auto mb-4">
+              <div className="max-w-2xl mx-auto p-6">
+          <div className="bg-error-50 border border-error-200 rounded-2xl p-6 shadow-soft">
+          <div className="flex items-center justify-center w-16 h-16 bg-warning-500 rounded-xl mx-auto mb-4">
             <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-rose-800 text-center mb-2">Something went wrong</h3>
-          <p className="text-rose-700 text-center mb-4">{error}</p>
+          <h3 className="text-lg font-semibold text-neutral-900 text-center mb-2">Something went wrong</h3>
+          <p className="text-neutral-600 text-center mb-4">{error}</p>
           <button
             onClick={() => fetchPosts(true)}
-            className="w-full gradient-amber text-white py-3 px-4 rounded-xl font-semibold hover:shadow-science-lg transition-all duration-200 transform hover:scale-105 shadow-science"
+            className="w-full bg-primary-600 text-white py-3 px-4 rounded-xl font-semibold hover:shadow-large transition-all duration-200 transform hover:scale-105 shadow-medium"
           >
             Try again
           </button>
@@ -132,37 +132,22 @@ export default function Feed() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Main Content */}
         <div className="lg:col-span-8">
-      {/* Welcome Header */}
-      {user && (
-            <div className="bg-gradient-to-r from-teal-50 to-emerald-50 rounded-2xl p-6 mb-6 border border-teal-200/50 shadow-science">
-              <h1 className="text-2xl font-bold gradient-science bg-clip-text text-transparent mb-2">
-            Welcome back, {user.firstName || user.name || user.username}!
-          </h1>
-              <p className="text-navy-600">
-                Share your latest research, connect with fellow scientists and technologists, and discover new ideas
-          </p>
-          {user.institution && (
-                <p className="text-sm text-navy-500 mt-2">
-              {user.institution} {user.position && `• ${user.position}`}
-            </p>
-          )}
-        </div>
-      )}
+
 
       {/* Create Post */}
       {user && <CreatePost onPostCreated={handlePostCreated} />}
       
       {/* Filters */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
+      <div className="mb-3">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-4">
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-                  className="rounded-xl border-navy-200 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white/80 backdrop-blur-sm shadow-science px-4 py-2 font-medium"
+                  className="rounded-xl border-neutral-200 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white shadow-soft px-4 py-2 font-medium"
             >
               <option value="all">All Posts</option>
               {user && (
@@ -175,10 +160,10 @@ export default function Feed() {
             
             <button
               onClick={() => setShowFilters(!showFilters)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-science ${
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-soft ${
                 showFilters || selectedTags.length > 0
-                      ? 'gradient-science text-white shadow-science-lg'
-                      : 'bg-white/80 backdrop-blur-sm text-navy-600 hover:bg-teal-50 border border-navy-200'
+                      ? 'bg-primary-600 text-white shadow-large'
+                      : 'bg-white text-neutral-600 hover:bg-primary-50 border border-neutral-200'
               }`}
             >
               <FunnelIcon className="h-4 w-4" />
@@ -194,9 +179,9 @@ export default function Feed() {
 
         {/* Tags Filter */}
         {showFilters && (
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-science border border-navy-200 p-6 mb-4 transform transition-all duration-300">
-                <h3 className="text-sm font-semibold text-navy-700 mb-3 flex items-center">
-                  <TagIcon className="h-5 w-5 mr-2 text-teal-600" />
+                        <div className="bg-white rounded-2xl shadow-soft border border-neutral-200 p-6 mb-4 transform transition-all duration-300">
+            <h3 className="text-sm font-semibold text-neutral-700 mb-3 flex items-center">
+              <TagIcon className="h-5 w-5 mr-2 text-primary-600" />
               Filter by Tags
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -206,8 +191,8 @@ export default function Feed() {
                   onClick={() => toggleTag(tag)}
                       className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 transform hover:scale-105 ${
                     selectedTags.includes(tag)
-                          ? 'bg-teal-100 text-teal-700 border border-teal-200 shadow-sm'
-                          : 'bg-navy-100 text-navy-600 border border-navy-200 hover:bg-navy-200'
+                          ? 'bg-primary-100 text-primary-700 border border-primary-200 shadow-sm'
+                          : 'bg-neutral-100 text-neutral-600 border border-neutral-200 hover:bg-neutral-200'
                   }`}
                 >
                       {tag}
@@ -219,7 +204,7 @@ export default function Feed() {
       </div>
       
           {/* Posts */}
-      <div className="space-y-6">
+      <div className="space-y-3">
             {posts.map((post, index) => (
               <div key={post.id} ref={index === posts.length - 1 ? lastPostRef : null}>
                 <PostCard
@@ -232,26 +217,26 @@ export default function Feed() {
             
             {loading && (
               <div className="flex justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
                       </div>
             )}
             
             {!loading && !hasMore && posts.length > 0 && (
               <div className="text-center py-8">
-                <p className="text-navy-500">No more posts to load</p>
+                <p className="text-neutral-500">No more posts to load</p>
                     </div>
             )}
             
             {!loading && posts.length === 0 && (
               <div className="text-center py-12">
-                <div className="w-16 h-16 bg-gradient-to-r from-teal-100 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <DocumentIcon className="h-8 w-8 text-teal-600" />
-                    </div>
-                <h3 className="text-lg font-semibold text-navy-900 mb-2">No posts yet</h3>
-                <p className="text-navy-600 mb-4">Be the first to share your research or thoughts!</p>
+                                <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <DocumentIcon className="h-8 w-8 text-primary-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-neutral-900 mb-2">No posts yet</h3>
+                <p className="text-neutral-600 mb-4">Be the first to share your research or thoughts!</p>
                 <button
                   onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                  className="gradient-science text-white px-6 py-2 rounded-lg font-medium hover:shadow-science-lg transition-all duration-200 transform hover:scale-105 shadow-science"
+                  className="bg-primary-600 text-white px-6 py-2 rounded-lg font-medium hover:shadow-large transition-all duration-200 transform hover:scale-105 shadow-medium"
                 >
                   Create Post
                 </button>
@@ -261,19 +246,19 @@ export default function Feed() {
         </div>
 
         {/* Sidebar */}
-        <div className="lg:col-span-4 space-y-6">
+        <div className="lg:col-span-4 space-y-4">
           {/* Quick Stats */}
           {user && (
             <div className="card">
-              <h3 className="text-lg font-semibold text-navy-900 mb-4">Your Activity</h3>
+              <h3 className="text-lg font-semibold text-neutral-900 mb-4">Your Activity</h3>
               <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-3 bg-teal-50 rounded-lg">
-                  <div className="text-2xl font-bold text-teal-600">{posts.length}</div>
-                  <div className="text-sm text-navy-600">Posts</div>
+                <div className="text-center p-3 bg-primary-50 rounded-lg">
+                  <div className="text-2xl font-bold text-primary-600">{posts.length}</div>
+                  <div className="text-sm text-neutral-600">Posts</div>
                 </div>
-                <div className="text-center p-3 bg-emerald-50 rounded-lg">
-                  <div className="text-2xl font-bold text-emerald-600">0</div>
-                  <div className="text-sm text-navy-600">Connections</div>
+                <div className="text-center p-3 bg-accent-50 rounded-lg">
+                  <div className="text-2xl font-bold text-accent-600">0</div>
+                  <div className="text-sm text-neutral-600">Connections</div>
                 </div>
               </div>
             </div>
@@ -281,13 +266,13 @@ export default function Feed() {
 
           {/* Popular Tags */}
           <div className="card">
-            <h3 className="text-lg font-semibold text-navy-900 mb-4">Trending Topics</h3>
+            <h3 className="text-lg font-semibold text-neutral-900 mb-4">Trending Topics</h3>
             <div className="flex flex-wrap gap-2">
               {popularTags.slice(0, 8).map(tag => (
                 <button
                   key={tag}
                   onClick={() => toggleTag(tag)}
-                  className="px-3 py-1 rounded-full text-xs font-medium bg-navy-100 text-navy-600 border border-navy-200 hover:bg-navy-200 transition-all duration-200"
+                  className="px-3 py-1 rounded-full text-xs font-medium bg-neutral-100 text-neutral-600 border border-neutral-200 hover:bg-neutral-200 transition-all duration-200"
                 >
                   #{tag}
                 </button>
@@ -295,26 +280,7 @@ export default function Feed() {
             </div>
           </div>
 
-          {/* Quick Actions */}
-          {user && (
-            <div className="card">
-              <h3 className="text-lg font-semibold text-navy-900 mb-4">Quick Actions</h3>
-              <div className="space-y-3">
-                <button className="w-full btn-primary text-left">
-                  <DocumentIcon className="h-4 w-4 mr-2 inline" />
-                  Create Research Post
-                </button>
-                <button className="w-full btn-outline text-left">
-                  <UserGroupIcon className="h-4 w-4 mr-2 inline" />
-                  Find Collaborators
-                </button>
-                <button className="w-full btn-outline text-left">
-                  <BeakerIcon className="h-4 w-4 mr-2 inline" />
-                  Browse Research
-                </button>
-              </div>
-            </div>
-          )}
+
         </div>
       </div>
     </div>

@@ -68,13 +68,13 @@ export default function PostCard({ post, onDelete, onUpdate }) {
     
     return (
       <div className="mb-4">
-        <p className="text-navy-900 whitespace-pre-wrap leading-relaxed">
+        <p className="text-neutral-900 whitespace-pre-wrap leading-relaxed">
           {shouldTruncate ? `${post.content.slice(0, maxLength)}...` : post.content}
         </p>
         {shouldTruncate && (
           <button
             onClick={() => setShowFullContent(true)}
-            className="text-teal-600 hover:text-teal-700 text-sm mt-2 font-medium transition-colors duration-200"
+            className="text-primary-600 hover:text-primary-700 text-sm mt-2 font-medium transition-colors duration-200"
           >
             Read more
           </button>
@@ -95,7 +95,7 @@ export default function PostCard({ post, onDelete, onUpdate }) {
                 key={index}
                 src={url}
                 alt={`Post media ${index + 1}`}
-                className="w-full h-64 object-cover rounded-xl cursor-pointer transition-transform duration-300 hover:scale-[1.02] shadow-science"
+                className="w-full h-64 object-cover rounded-xl cursor-pointer transition-transform duration-300 hover:scale-[1.02] shadow-medium"
                 onClick={() => window.open(url, '_blank')}
               />
             ))}
@@ -135,21 +135,21 @@ export default function PostCard({ post, onDelete, onUpdate }) {
             <div className="flex items-center space-x-2">
               <Link 
                 to={`/profile/${post.author?.id}`}
-                className="font-semibold text-navy-900 hover:text-teal-600 transition-colors duration-200"
+                className="font-semibold text-neutral-900 hover:text-primary-600 transition-colors duration-200"
               >
                 {post.author?.name || (post.author?.firstName && post.author?.lastName 
                   ? `${post.author.firstName} ${post.author.lastName}` 
                   : post.author?.username || 'Unknown User')}
               </Link>
-              <span className="text-navy-400">·</span>
-              <span className="text-sm text-navy-500 font-medium">{formatDate(post.createdAt)}</span>
-              <span className="text-navy-400">·</span>
-              <div className="flex items-center text-navy-500" title={visibilityIcons[post.visibility || 'public'].label}>
+              <span className="text-neutral-400">·</span>
+              <span className="text-sm text-neutral-500 font-medium">{formatDate(post.createdAt)}</span>
+              <span className="text-neutral-400">·</span>
+              <div className="flex items-center text-neutral-500" title={visibilityIcons[post.visibility || 'public'].label}>
                 <VisibilityIcon className="h-4 w-4" />
               </div>
             </div>
             {post.author?.title && (
-              <p className="text-sm text-navy-600 mt-1">{post.author.title}</p>
+              <p className="text-sm text-neutral-600 mt-1">{post.author.title}</p>
             )}
           </div>
         </div>
@@ -158,14 +158,14 @@ export default function PostCard({ post, onDelete, onUpdate }) {
           <div className="flex items-center space-x-2">
             <button
               onClick={() => onUpdate && onUpdate(post)}
-              className="p-2 text-navy-400 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all duration-200 transform hover:scale-105"
+              className="p-2 text-neutral-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all duration-200 transform hover:scale-105"
             >
               <PencilIcon className="h-4 w-4" />
             </button>
             <button
               onClick={handleDelete}
               disabled={isDeleting}
-              className="p-2 text-navy-400 hover:text-rose-600 hover:bg-rose-50 disabled:opacity-50 rounded-lg transition-all duration-200 transform hover:scale-105"
+              className="p-2 text-neutral-400 hover:text-error-600 hover:bg-error-50 disabled:opacity-50 rounded-lg transition-all duration-200 transform hover:scale-105"
             >
               <TrashIcon className="h-4 w-4" />
             </button>
@@ -183,7 +183,7 @@ export default function PostCard({ post, onDelete, onUpdate }) {
           {post.tags.map((tag, index) => (
             <span
               key={index}
-              className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-teal-100 text-teal-700 border border-teal-200 shadow-sm transition-all duration-200 hover:bg-teal-200 hover:scale-105"
+              className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-700 border border-primary-200 shadow-sm transition-all duration-200 hover:bg-primary-200 hover:scale-105"
             >
               <TagIcon className="h-3 w-3 mr-1" />
               {tag}
@@ -193,13 +193,13 @@ export default function PostCard({ post, onDelete, onUpdate }) {
       )}
 
       {/* Post Actions */}
-      <div className="flex items-center justify-between mt-6 pt-4 border-t border-navy-100">
+      <div className="flex items-center justify-between mt-6 pt-4 border-t border-neutral-200">
         <div className="flex items-center space-x-6">
           <ReactionButton key={`reaction-${post.id}`} targetType="post" targetId={post.id} />
 
           <button
             onClick={() => setShowComments(!showComments)}
-            className="flex items-center space-x-2 text-navy-500 hover:text-teal-600 bg-white/70 hover:bg-teal-50 px-3 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 border border-navy-200"
+            className="flex items-center space-x-2 text-neutral-500 hover:text-primary-600 bg-white/70 hover:bg-primary-50 px-3 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 border border-neutral-200"
           >
             <ChatBubbleLeftIcon className="h-5 w-5" />
             <span className="font-medium">Comment</span>
@@ -207,7 +207,7 @@ export default function PostCard({ post, onDelete, onUpdate }) {
 
           <button
             onClick={handleShare}
-            className="flex items-center space-x-2 text-navy-500 hover:text-amber-600 bg-white/70 hover:bg-amber-50 px-3 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 border border-navy-200"
+            className="flex items-center space-x-2 text-neutral-500 hover:text-accent-600 bg-white/70 hover:bg-accent-50 px-3 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 border border-neutral-200"
           >
             <ShareIcon className="h-5 w-5" />
             <span className="font-medium">Share</span>
@@ -217,7 +217,7 @@ export default function PostCard({ post, onDelete, onUpdate }) {
 
       {/* Comments Section */}
       {showComments && (
-        <div className="mt-6 border-t border-navy-100 pt-6">
+        <div className="mt-6 border-t border-neutral-200 pt-6">
           <CommentSection postId={post.id} />
         </div>
       )}

@@ -86,7 +86,7 @@ export default function CreateResearchPost({ onPostCreated }) {
         const formData = new FormData();
         media.forEach(file => formData.append('media', file));
         
-        const uploadResponse = await axios.post('/api/research/upload/media', formData, {
+        const uploadResponse = await axios.post('/api/posts/upload/media', formData, {
           headers: { 
             'Content-Type': 'multipart/form-data'
           },
@@ -241,7 +241,7 @@ export default function CreateResearchPost({ onPostCreated }) {
   };
 
   return (
-    <div id="create-research-post" className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6 mb-6 transform transition-all duration-300 hover:shadow-2xl">
+    <div id="create-research-post" className="bg-white rounded-xl shadow-soft border border-neutral-200 p-4 mb-4 transform transition-all duration-300 hover:shadow-large">
       <form onSubmit={handleSubmit}>
         <div className="flex items-start space-x-4">
           <div className="flex-shrink-0">
@@ -250,28 +250,29 @@ export default function CreateResearchPost({ onPostCreated }) {
           
           <div className="flex-1">
             {/* Header */}
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-1">
+            <div className="mb-3">
+              <h3 className="text-base font-semibold text-neutral-900 mb-1">
                 Share Your Research
               </h3>
-              <p className="text-sm text-gray-600">
+              <p className="text-xs text-neutral-600">
                 Share your latest findings, methodologies, and discoveries with the scientific community
               </p>
             </div>
 
             {/* Research Type Selector */}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Research Type</label>
+              <label className="block text-sm font-medium text-neutral-700 mb-2">Research Type</label>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 {researchTypes.map(({ value, label, icon: Icon }) => (
                   <button
                     key={value}
                     type="button"
+                    data-research-type={value}
                     onClick={() => setResearchType(value)}
                     className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 transform hover:scale-105 ${
                       researchType === value
-                        ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
-                        : 'bg-white/70 text-gray-600 hover:bg-blue-50 border border-gray-200'
+                        ? 'bg-primary-600 text-white shadow-medium'
+                        : 'bg-white text-neutral-600 hover:bg-primary-50 border border-neutral-200'
                     }`}
                   >
                     <Icon className="h-3 w-3" />
@@ -284,7 +285,7 @@ export default function CreateResearchPost({ onPostCreated }) {
             {/* Visibility and Collaboration Selectors */}
             <div className="flex items-center space-x-4 mb-4">
               <div>
-                <span className="text-sm font-medium text-gray-700">Visibility:</span>
+                <span className="text-sm font-medium text-neutral-700">Visibility:</span>
                 <div className="flex items-center space-x-2 mt-1">
                   {Object.entries(visibilityOptions).map(([key, { icon: Icon, label }]) => (
                     <button
@@ -293,8 +294,8 @@ export default function CreateResearchPost({ onPostCreated }) {
                       onClick={() => setVisibility(key)}
                       className={`flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 ${
                         visibility === key 
-                          ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg' 
-                          : 'bg-white/70 text-gray-600 hover:bg-blue-50 border border-gray-200'
+                          ? 'bg-primary-600 text-white shadow-medium' 
+                          : 'bg-white text-neutral-600 hover:bg-primary-50 border border-neutral-200'
                       }`}
                     >
                       <Icon className="h-4 w-4" />
@@ -305,7 +306,7 @@ export default function CreateResearchPost({ onPostCreated }) {
               </div>
               
               <div>
-                <span className="text-sm font-medium text-gray-700">Collaboration:</span>
+                <span className="text-sm font-medium text-neutral-700">Collaboration:</span>
                 <div className="flex items-center space-x-2 mt-1">
                   {Object.entries(collaborationOptions).map(([key, { icon: Icon, label }]) => (
                     <button
@@ -314,8 +315,8 @@ export default function CreateResearchPost({ onPostCreated }) {
                       onClick={() => setCollaborationStatus(key)}
                       className={`flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 ${
                         collaborationStatus === key 
-                          ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg' 
-                          : 'bg-white/70 text-gray-600 hover:bg-green-50 border border-gray-200'
+                          ? 'bg-accent-600 text-white shadow-medium' 
+                          : 'bg-white text-neutral-600 hover:bg-accent-50 border border-neutral-200'
                       }`}
                     >
                       <Icon className="h-4 w-4" />
@@ -332,13 +333,13 @@ export default function CreateResearchPost({ onPostCreated }) {
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Describe your research findings, methodology, or share your latest discoveries..."
-                className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none bg-white/70 backdrop-blur-sm placeholder-gray-500 text-gray-900 text-lg leading-relaxed shadow-sm"
+                className="w-full p-3 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none bg-white placeholder-neutral-500 text-neutral-900 text-base leading-relaxed shadow-soft"
                 rows="4"
               />
               <div className="mt-2 flex justify-between items-center">
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-neutral-500">
                   {content.length > 0 && (
-                    <span className={content.length > 1800 ? 'text-red-500' : 'text-gray-500'}>
+                    <span className={content.length > 1800 ? 'text-red-500' : 'text-neutral-500'}>
                       {content.length}/2000 characters
                     </span>
                   )}
@@ -349,51 +350,51 @@ export default function CreateResearchPost({ onPostCreated }) {
             {/* Research Details */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Methodology</label>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Methodology</label>
                 <textarea
                   value={methodology}
                   onChange={(e) => setMethodology(e.target.value)}
                   placeholder="Describe your research methodology..."
-                  className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none bg-white/70 backdrop-blur-sm placeholder-gray-500 text-gray-900 text-sm"
+                  className="w-full p-3 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none bg-white placeholder-neutral-500 text-neutral-900 text-sm"
                   rows="3"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Results</label>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Results</label>
                 <textarea
                   value={results}
                   onChange={(e) => setResults(e.target.value)}
                   placeholder="Share your key findings and results..."
-                  className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none bg-white/70 backdrop-blur-sm placeholder-gray-500 text-gray-900 text-sm"
+                  className="w-full p-3 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none bg-white placeholder-neutral-500 text-neutral-900 text-sm"
                   rows="3"
                 />
               </div>
             </div>
 
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Conclusions</label>
+              <label className="block text-sm font-medium text-neutral-700 mb-2">Conclusions</label>
               <textarea
                 value={conclusions}
                 onChange={(e) => setConclusions(e.target.value)}
                 placeholder="What are the implications of your research?"
-                className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none bg-white/70 backdrop-blur-sm placeholder-gray-500 text-gray-900 text-sm"
+                className="w-full p-3 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none bg-white placeholder-neutral-500 text-neutral-900 text-sm"
                 rows="3"
               />
             </div>
 
             {/* Citations */}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                              <label className="block text-sm font-medium text-neutral-700 mb-2 flex items-center">
                 <LinkIcon className="h-4 w-4 mr-2" />
                 Citations
               </label>
               <div className="space-y-3">
                 {citations.map((citation, index) => (
-                  <div key={index} className="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg">
+                  <div key={index} className="flex items-center space-x-2 p-3 bg-neutral-50 rounded-lg">
                     <div className="flex-1">
                       <p className="text-sm font-medium">{citation.title}</p>
-                      <p className="text-xs text-gray-600">{citation.authors} ({citation.year})</p>
+                      <p className="text-xs text-neutral-600">{citation.authors} ({citation.year})</p>
                     </div>
                     <button
                       type="button"
@@ -411,48 +412,48 @@ export default function CreateResearchPost({ onPostCreated }) {
                     placeholder="Paper title"
                     value={citationForm.title}
                     onChange={(e) => setCitationForm({...citationForm, title: e.target.value})}
-                    className="p-2 border border-gray-200 rounded-lg text-sm"
+                    className="p-2 border border-neutral-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   />
                   <input
                     type="text"
                     placeholder="Authors"
                     value={citationForm.authors}
                     onChange={(e) => setCitationForm({...citationForm, authors: e.target.value})}
-                    className="p-2 border border-gray-200 rounded-lg text-sm"
+                    className="p-2 border border-neutral-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   />
                   <input
                     type="text"
                     placeholder="Journal/Conference"
                     value={citationForm.journal}
                     onChange={(e) => setCitationForm({...citationForm, journal: e.target.value})}
-                    className="p-2 border border-gray-200 rounded-lg text-sm"
+                    className="p-2 border border-neutral-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   />
                   <input
                     type="text"
                     placeholder="Year"
                     value={citationForm.year}
                     onChange={(e) => setCitationForm({...citationForm, year: e.target.value})}
-                    className="p-2 border border-gray-200 rounded-lg text-sm"
+                    className="p-2 border border-neutral-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   />
                   <input
                     type="text"
                     placeholder="DOI"
                     value={citationForm.doi}
                     onChange={(e) => setCitationForm({...citationForm, doi: e.target.value})}
-                    className="p-2 border border-gray-200 rounded-lg text-sm"
+                    className="p-2 border border-neutral-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   />
                   <input
                     type="text"
                     placeholder="URL"
                     value={citationForm.url}
                     onChange={(e) => setCitationForm({...citationForm, url: e.target.value})}
-                    className="p-2 border border-gray-200 rounded-lg text-sm"
+                    className="p-2 border border-neutral-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   />
                 </div>
                 <button
                   type="button"
                   onClick={addCitation}
-                  className="px-3 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm hover:bg-blue-200 transition-colors"
+                  className="px-3 py-2 bg-primary-100 text-primary-700 rounded-lg text-sm hover:bg-primary-200 transition-colors"
                 >
                   Add Citation
                 </button>
@@ -462,24 +463,24 @@ export default function CreateResearchPost({ onPostCreated }) {
             {/* Publication Details */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">DOI</label>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">DOI</label>
                 <input
                   type="text"
                   value={doi}
                   onChange={(e) => setDoi(e.target.value)}
                   placeholder="Digital Object Identifier"
-                  className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/70 backdrop-blur-sm placeholder-gray-500 text-gray-900 text-sm"
+                  className="w-full p-3 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white/70 backdrop-blur-sm placeholder-neutral-500 text-neutral-900 text-sm"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Preprint URL</label>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Preprint URL</label>
                 <input
                   type="url"
                   value={preprintUrl}
                   onChange={(e) => setPreprintUrl(e.target.value)}
                   placeholder="Link to preprint (arXiv, bioRxiv, etc.)"
-                  className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/70 backdrop-blur-sm placeholder-gray-500 text-gray-900 text-sm"
+                  className="w-full p-3 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white/70 backdrop-blur-sm placeholder-neutral-500 text-neutral-900 text-sm"
                 />
               </div>
             </div>
@@ -487,23 +488,23 @@ export default function CreateResearchPost({ onPostCreated }) {
             {/* Funding and Conflicts */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Funding Sources</label>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Funding Sources</label>
                 <textarea
                   value={funding}
                   onChange={(e) => setFunding(e.target.value)}
                   placeholder="Funding acknowledgments..."
-                  className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none bg-white/70 backdrop-blur-sm placeholder-gray-500 text-gray-900 text-sm"
+                  className="w-full p-3 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none bg-white/70 backdrop-blur-sm placeholder-neutral-500 text-neutral-900 text-sm"
                   rows="2"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Conflicts of Interest</label>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Conflicts of Interest</label>
                 <textarea
                   value={conflictsOfInterest}
                   onChange={(e) => setConflictsOfInterest(e.target.value)}
                   placeholder="Declare any conflicts of interest..."
-                  className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none bg-white/70 backdrop-blur-sm placeholder-gray-500 text-gray-900 text-sm"
+                  className="w-full p-3 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none bg-white/70 backdrop-blur-sm placeholder-neutral-500 text-neutral-900 text-sm"
                   rows="2"
                 />
               </div>
@@ -516,9 +517,9 @@ export default function CreateResearchPost({ onPostCreated }) {
                   type="checkbox"
                   checked={openAccess}
                   onChange={(e) => setOpenAccess(e.target.checked)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-neutral-300 text-primary-600 focus:ring-primary-500"
                 />
-                <span className="text-sm font-medium text-gray-700">Open Access Research</span>
+                                  <span className="text-sm font-medium text-neutral-700">Open Access Research</span>
                 <CheckCircleIcon className="h-4 w-4 text-green-500" />
               </label>
             </div>
@@ -529,7 +530,7 @@ export default function CreateResearchPost({ onPostCreated }) {
                 {tags.map(tag => (
                   <span 
                     key={tag}
-                    className="bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 px-3 py-1 rounded-full text-sm flex items-center border border-blue-200 shadow-sm"
+                    className="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm flex items-center border border-primary-200 shadow-soft"
                   >
                     #{tag}
                     <button
@@ -550,12 +551,12 @@ export default function CreateResearchPost({ onPostCreated }) {
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleTagAdd()}
                     placeholder="Add tags (max 5)"
-                    className="flex-1 p-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/70 backdrop-blur-sm placeholder-gray-500 text-gray-900"
+                    className="flex-1 p-2 border border-neutral-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white/70 backdrop-blur-sm placeholder-neutral-500 text-neutral-900"
                   />
                   <button
                     type="button"
                     onClick={handleTagAdd}
-                    className="ml-2 p-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors"
+                    className="ml-2 p-2 bg-primary-100 text-primary-700 rounded-lg hover:bg-primary-200 transition-colors"
                   >
                     <TagIcon className="h-4 w-4" />
                   </button>
@@ -565,7 +566,7 @@ export default function CreateResearchPost({ onPostCreated }) {
 
             {/* Media Upload */}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Add Media</label>
+              <label className="block text-sm font-medium text-neutral-700 mb-2">Add Media</label>
               <div className="flex items-center space-x-4">
                 <input
                   ref={fileInputRef}
@@ -577,7 +578,7 @@ export default function CreateResearchPost({ onPostCreated }) {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                  className="flex items-center space-x-2 px-4 py-2 bg-neutral-100 text-neutral-700 rounded-lg hover:bg-neutral-200 transition-colors"
                 >
                   <PhotoIcon className="h-4 w-4" />
                   <span>Upload Media</span>
@@ -585,7 +586,7 @@ export default function CreateResearchPost({ onPostCreated }) {
                 
                 {media.length > 0 && (
                   <div className="flex items-center space-x-2">
-                    <span className="text-sm text-gray-600">{media[0].name}</span>
+                    <span className="text-sm text-neutral-600">{media[0].name}</span>
                     <button
                       type="button"
                       onClick={removeMedia}
@@ -599,13 +600,13 @@ export default function CreateResearchPost({ onPostCreated }) {
               
               {uploadProgress > 0 && uploadProgress < 100 && (
                 <div className="mt-2">
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${uploadProgress}%` }}
-                    ></div>
-                  </div>
-                  <p className="text-xs text-gray-600 mt-1">Uploading... {uploadProgress}%</p>
+                                  <div className="w-full bg-neutral-200 rounded-full h-2">
+                  <div 
+                    className="bg-primary-600 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${uploadProgress}%` }}
+                  ></div>
+                </div>
+                  <p className="text-xs text-neutral-600 mt-1">Uploading... {uploadProgress}%</p>
                 </div>
               )}
             </div>
@@ -615,7 +616,7 @@ export default function CreateResearchPost({ onPostCreated }) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 shadow-lg"
+                className="flex items-center space-x-2 bg-primary-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 shadow-medium"
               >
                 {isSubmitting ? (
                   <>

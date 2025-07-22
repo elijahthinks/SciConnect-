@@ -107,11 +107,11 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-primary-50 to-earth-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <div className="mx-auto h-16 w-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mb-6 shadow-lg">
+          <div className="mx-auto h-16 w-16 bg-primary-600 rounded-full flex items-center justify-center mb-6 shadow-lg">
             <span className="text-2xl font-bold text-white">S</span>
           </div>
           <h2 className="text-3xl font-extrabold text-gray-900 mb-2">
@@ -127,20 +127,20 @@ export default function Login() {
 
         {/* Messages */}
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg">
+          <div className="bg-error-50 border-l-4 border-error-400 p-4 rounded-lg">
             <div className="flex">
               <div className="ml-3">
-                <p className="text-sm text-red-700">{error}</p>
+                <p className="text-sm text-error-700">{error}</p>
               </div>
             </div>
           </div>
         )}
 
         {resetMessage && (
-          <div className="bg-green-50 border-l-4 border-green-400 p-4 rounded-lg">
+          <div className="bg-success-50 border-l-4 border-success-400 p-4 rounded-lg">
             <div className="flex">
               <div className="ml-3">
-                <p className="text-sm text-green-700">{resetMessage}</p>
+                <p className="text-sm text-success-700">{resetMessage}</p>
               </div>
             </div>
           </div>
@@ -204,7 +204,7 @@ export default function Login() {
                   required
                   value={form.email}
                   onChange={handleChange}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                  className="block w-full pl-10 pr-3 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200"
                   placeholder="Enter your email"
                 />
               </div>
@@ -227,7 +227,7 @@ export default function Login() {
                     required
                     value={form.password}
                     onChange={handleChange}
-                    className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    className="block w-full pl-10 pr-10 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200"
                     placeholder="Enter your password"
                   />
                   <button
@@ -253,7 +253,7 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={() => setForgotPasswordMode(true)}
-                  className="font-medium text-blue-600 hover:text-blue-500 transition-colors duration-200"
+                  className="font-medium text-primary-600 hover:text-primary-500 transition-colors duration-200"
                 >
                   Forgot your password?
                 </button>
@@ -266,7 +266,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
             >
               {loading ? (
                 <div className="flex items-center">
@@ -285,7 +285,7 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => setForgotPasswordMode(false)}
-                className="text-sm text-blue-600 hover:text-blue-500 transition-colors duration-200"
+                className="text-sm text-primary-600 hover:text-primary-500 transition-colors duration-200"
               >
                 ← Back to sign in
               </button>
@@ -294,7 +294,7 @@ export default function Login() {
                 Don't have an account?{' '}
                 <Link
                   to="/signup"
-                  className="font-medium text-blue-600 hover:text-blue-500 transition-colors duration-200"
+                  className="font-medium text-primary-600 hover:text-primary-500 transition-colors duration-200"
                 >
                   Sign up here
                 </Link>
@@ -306,20 +306,20 @@ export default function Login() {
         {/* Features Preview */}
         <div className="mt-8 pt-6 border-t border-gray-200">
           <p className="text-center text-xs text-gray-500 mb-4">Join the community</p>
-          <div className="grid grid-cols-3 gap-4 text-center">
-            <div className="space-y-1">
-              <div className="text-blue-600 text-sm font-semibold">Share</div>
-              <p className="text-xs text-gray-600">Research</p>
+                      <div className="grid grid-cols-3 gap-4 text-center">
+              <div className="space-y-1">
+                <div className="text-primary-600 text-sm font-semibold">Share</div>
+                <p className="text-xs text-neutral-600">Research</p>
+              </div>
+              <div className="space-y-1">
+                <div className="text-accent-600 text-sm font-semibold">Connect</div>
+                <p className="text-xs text-neutral-600">Collaborate</p>
+              </div>
+              <div className="space-y-1">
+                <div className="text-success-600 text-sm font-semibold">Discover</div>
+                <p className="text-xs text-neutral-600">Ideas</p>
+              </div>
             </div>
-            <div className="space-y-1">
-              <div className="text-purple-600 text-sm font-semibold">Connect</div>
-              <p className="text-xs text-gray-600">Collaborate</p>
-            </div>
-            <div className="space-y-1">
-              <div className="text-green-600 text-sm font-semibold">Discover</div>
-              <p className="text-xs text-gray-600">Ideas</p>
-            </div>
-          </div>
         </div>
       </div>
     </div>

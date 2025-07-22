@@ -5,41 +5,52 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Base styles with science theme */
+/* Base styles with clean professional theme */
 @layer base {
   html {
     font-family: 'Inter', system-ui, sans-serif;
+    scroll-behavior: smooth;
   }
-  
   body {
-    @apply bg-navy-50 text-navy-900;
+    @apply bg-neutral-50 text-neutral-900;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    line-height: 1.6;
+  }
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary-500 ring-offset-2 ring-offset-white;
   }
   
-  /* Improved focus styles for accessibility */
-  *:focus-visible {
-    @apply outline-none ring-2 ring-teal-500 ring-offset-2 ring-offset-white;
+  /* Improved typography */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+  
+  /* Better link styling */
+  a {
+    @apply transition-colors duration-200;
+  }
+  
+  /* Improved button base styles */
+  button {
+    @apply transition-all duration-200;
   }
 }
 
-/* Custom scrollbar with science theme */
+/* Custom scrollbar with clean theme */
 ::-webkit-scrollbar {
   width: 8px;
 }
-
 ::-webkit-scrollbar-track {
-  @apply bg-navy-100;
+  @apply bg-neutral-100;
 }
-
 ::-webkit-scrollbar-thumb {
-  @apply bg-teal-300 rounded-full;
+  @apply bg-neutral-300 rounded-full;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-teal-400;
+  @apply bg-neutral-400;
 }
 
-/* Custom animations */
+/* Enhanced animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -62,6 +73,28 @@
   }
 }
 
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 @keyframes bounce {
   0%, 20%, 53%, 80%, 100% {
     transform: translate3d(0, 0, 0);
@@ -77,7 +110,7 @@
   }
 }
 
-@keyframes pulse-science {
+@keyframes pulse-subtle {
   0%, 100% {
     opacity: 1;
   }
@@ -86,6 +119,21 @@
   }
 }
 
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Animation classes */
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out;
 }
@@ -94,12 +142,24 @@
   animation: slideIn 0.3s ease-out;
 }
 
+.animate-slideUp {
+  animation: slideUp 0.3s ease-out;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.2s ease-out;
+}
+
 .animate-bounce-subtle {
   animation: bounce 2s infinite;
 }
 
-.animate-pulse-science {
-  animation: pulse-science 2s infinite;
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }
 
 /* Text truncation utilities */
@@ -124,54 +184,74 @@
   -webkit-line-clamp: 3;
 }
 
-/* Science-themed button variants */
+/* Enhanced Button variants */
 .btn-primary {
-  @apply bg-teal-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-science hover:shadow-science-lg;
+  @apply bg-primary-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-medium hover:shadow-large transform hover:scale-105 active:scale-95;
 }
 
 .btn-secondary {
-  @apply bg-navy-200 text-navy-800 px-4 py-2 rounded-lg font-medium hover:bg-navy-300 focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply bg-neutral-200 text-neutral-800 px-6 py-3 rounded-xl font-medium hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95;
 }
 
 .btn-outline {
-  @apply border border-teal-300 text-teal-700 px-4 py-2 rounded-lg font-medium hover:bg-teal-50 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply border-2 border-primary-300 text-primary-700 px-6 py-3 rounded-xl font-medium hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95;
 }
 
-.btn-amber {
-  @apply bg-amber-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-science hover:shadow-science-lg;
+.btn-ghost {
+  @apply text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 px-4 py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105;
 }
 
-.btn-emerald {
-  @apply bg-emerald-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-science hover:shadow-science-lg;
-}
-
-/* Science-themed card styles */
+/* Enhanced Card styles */
 .card {
-  @apply bg-white rounded-xl shadow-science border border-navy-200 p-6;
+  @apply bg-white rounded-xl shadow-soft border border-neutral-200 p-4 transition-all duration-300;
 }
 
 .card-hover {
-  @apply card hover:shadow-science-lg transition-all duration-200 hover:border-teal-200;
+  @apply card hover:shadow-large hover:border-primary-200 transform hover:scale-[1.02];
 }
 
 .card-research {
-  @apply bg-white rounded-xl shadow-science border-l-4 border-l-teal-500 border border-navy-200 p-6;
+  @apply bg-white rounded-2xl shadow-soft border-l-4 border-l-primary-500 border border-neutral-200 p-6;
 }
 
-/* Science-themed form styles */
+.card-glass {
+  @apply bg-white/80 backdrop-blur-md rounded-2xl shadow-large border border-white/20 p-6;
+}
+
+/* Enhanced Form styles */
 .form-input {
-  @apply w-full px-3 py-2 border border-navy-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 bg-white;
+  @apply w-full px-4 py-3 border-2 border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white placeholder-neutral-400 text-neutral-900;
 }
 
 .form-textarea {
-  @apply w-full px-3 py-2 border border-navy-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 resize-none bg-white;
+  @apply w-full px-4 py-3 border-2 border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 resize-none bg-white placeholder-neutral-400 text-neutral-900;
 }
 
 .form-select {
-  @apply w-full px-3 py-2 border border-navy-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 bg-white;
+  @apply w-full px-4 py-3 border-2 border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white text-neutral-900;
 }
 
-/* Avatar styles */
+.form-floating {
+  @apply relative;
+}
+
+.form-floating input,
+.form-floating textarea {
+  @apply w-full px-4 py-4 border-2 border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white placeholder-transparent;
+}
+
+.form-floating label {
+  @apply absolute left-4 top-4 text-neutral-500 transition-all duration-200 pointer-events-none;
+}
+
+.form-floating input:focus ~ label,
+.form-floating input:not(:placeholder-shown) ~ label,
+.form-floating textarea:focus ~ label,
+.form-floating textarea:not(:placeholder-shown) ~ label {
+  @apply -top-2 left-3 text-xs text-primary-600 bg-white px-2;
+}
+
+/* Enhanced Avatar styles */
 .avatar {
   @apply rounded-full object-cover;
 }
@@ -192,43 +272,34 @@
   @apply w-24 h-24;
 }
 
-/* Science-themed status indicators */
+/* Enhanced Status indicators */
 .status-online {
-  @apply bg-emerald-400 border-2 border-white rounded-full;
+  @apply bg-success-400 border-2 border-white rounded-full;
 }
 
 .status-offline {
-  @apply bg-navy-400 border-2 border-white rounded-full;
+  @apply bg-neutral-400 border-2 border-white rounded-full;
 }
 
 .status-away {
-  @apply bg-amber-400 border-2 border-white rounded-full;
+  @apply bg-warning-400 border-2 border-white rounded-full;
 }
 
-/* Science-themed notification badges */
+/* Enhanced Notification badge */
 .notification-badge {
-  @apply absolute -top-1 -right-1 bg-rose-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium;
+  @apply absolute -top-1 -right-1 bg-primary-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium animate-pulse;
 }
 
-/* Science-themed loading states */
+/* Enhanced Loading shimmer */
 .loading-shimmer {
-  background: linear-gradient(90deg, #f0fdfa 25%, #ccfbf1 50%, #f0fdfa 75%);
+  background: linear-gradient(90deg, #f8fafc 25%, #e2e8f0 50%, #f8fafc 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-/* Science-themed focus ring */
+/* Enhanced Focus ring */
 .focus-ring {
-  @apply focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2;
+  @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
 }
 
 /* Smooth transitions for better UX */
@@ -247,20 +318,20 @@
   text-wrap: pretty;
 }
 
-/* Science-themed typography */
-.text-science {
-  @apply text-navy-900;
+/* Enhanced Typography */
+.text-primary {
+  @apply text-neutral-900;
 }
 
-.text-science-secondary {
-  @apply text-navy-600;
+.text-secondary {
+  @apply text-neutral-600;
 }
 
-.text-science-muted {
-  @apply text-navy-500;
+.text-muted {
+  @apply text-neutral-500;
 }
 
-/* Responsive typography */
+/* Enhanced Responsive typography */
 @media (max-width: 640px) {
   .text-responsive {
     font-size: 0.875rem;
@@ -280,24 +351,90 @@
   }
 }
 
-/* Science-themed gradients */
-.gradient-science {
-  background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+/* Enhanced Gradients (professional theme) */
+.gradient-primary {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
 }
 
-.gradient-navy {
-  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+.gradient-accent {
+  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
 }
 
-.gradient-amber {
-  background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+.gradient-subtle {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 }
 
-/* Science-themed borders */
-.border-science {
-  @apply border-teal-200;
+/* Enhanced Borders */
+.border-primary {
+  @apply border-primary-200;
 }
 
-.border-science-focus {
-  @apply border-teal-500;
+.border-primary-focus {
+  @apply border-primary-500;
+}
+
+/* Enhanced Shadows */
+.shadow-soft {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.shadow-medium {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.shadow-large {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Enhanced Skeleton Loading */
+.skeleton {
+  @apply animate-pulse bg-neutral-200 rounded;
+}
+
+.skeleton-text {
+  @apply skeleton h-4 mb-2;
+}
+
+.skeleton-avatar {
+  @apply skeleton rounded-full;
+}
+
+.skeleton-button {
+  @apply skeleton h-10 rounded-lg;
+}
+
+/* Enhanced Tooltip */
+.tooltip {
+  @apply absolute z-50 px-3 py-2 text-sm text-white bg-neutral-900 rounded-lg opacity-0 pointer-events-none transition-opacity duration-200;
+}
+
+.tooltip::after {
+  content: '';
+  @apply absolute w-0 h-0 border-4 border-transparent;
+}
+
+.tooltip-top::after {
+  @apply border-t-neutral-900 top-full left-1/2 transform -translate-x-1/2;
+}
+
+.tooltip-bottom::after {
+  @apply border-b-neutral-900 bottom-full left-1/2 transform -translate-x-1/2;
+}
+
+/* Enhanced Mobile Navigation */
+.mobile-nav {
+  @apply fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 px-4 py-2 z-40;
+}
+
+/* Enhanced Backdrop */
+.backdrop-blur-soft {
+  backdrop-filter: blur(8px);
+}
+
+.backdrop-blur-medium {
+  backdrop-filter: blur(16px);
+}
+
+.backdrop-blur-strong {
+  backdrop-filter: blur(24px);
 }

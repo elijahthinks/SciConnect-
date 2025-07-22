@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../store/auth';
 import NotificationBell from './NotificationBell';
+import { QuickActionButton } from './QuickActions';
+import QuickActions from './QuickActions';
+import UserAvatar from './UserAvatar';
 import {
   HomeIcon,
   MagnifyingGlassIcon,
@@ -34,6 +37,7 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showQuickActions, setShowQuickActions] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -71,7 +75,7 @@ export default function Navbar() {
       path: '/research',
       icon: BeakerIcon,
       activeIcon: BeakerIconSolid,
-      description: 'Research posts and fact-checking'
+      description: 'Research publications and findings'
     },
     {
       name: 'Explore',
@@ -111,20 +115,24 @@ export default function Navbar() {
   if (!user) return null;
 
   return (
-    <nav className="bg-white/95 backdrop-blur-sm border-b border-navy-200 sticky top-0 z-40 shadow-science">
+    <>
+      {showQuickActions && (
+        <QuickActions onClose={() => setShowQuickActions(false)} />
+      )}
+    <nav className="bg-white/95 backdrop-blur-sm border-b border-neutral-200 sticky top-0 z-40 shadow-soft">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-14">
           {/* Logo and Brand */}
           <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-3 group">
-              <div className="w-10 h-10 gradient-science rounded-full flex items-center justify-center shadow-science group-hover:shadow-science-lg transition-all duration-200">
-                <span className="text-xl font-bold text-white">S</span>
+            <Link to="/" className="flex items-center space-x-2 group">
+              <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center shadow-medium group-hover:shadow-large transition-all duration-200">
+                <span className="text-sm font-bold text-white">S</span>
               </div>
               <div className="hidden md:block">
-                <h1 className="text-xl font-bold gradient-science bg-clip-text text-transparent">
+                <h1 className="text-lg font-bold text-neutral-900">
                 SciConnect
                 </h1>
-                <p className="text-xs text-navy-500">Research Community</p>
+                <p className="text-xs text-neutral-500">Research Community</p>
               </div>
             </Link>
           </div>
@@ -137,22 +145,22 @@ export default function Navbar() {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`relative group flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
+                  className={`relative group flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all duration-200 ${
                     isActive(item.path)
-                      ? 'bg-teal-50 text-teal-700 shadow-science border border-teal-200'
-                      : 'text-navy-600 hover:text-navy-900 hover:bg-navy-50'
+                      ? 'bg-primary-50 text-primary-700 shadow-soft border border-primary-200'
+                      : 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50'
                   }`}
                   title={item.description}
                 >
                   <div className="relative">
-                    <Icon className="h-5 w-5" />
+                    <Icon className="h-4 w-4" />
                   </div>
-                  <span className="font-medium">{item.name}</span>
+                  <span className="font-medium text-xs">{item.name}</span>
                   
                   {/* Tooltip */}
-                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-3 py-1 bg-navy-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-3 py-1 bg-neutral-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
                     {item.description}
-                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-navy-900"></div>
+                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-neutral-900"></div>
                   </div>
                 </Link>
               );
@@ -161,12 +169,15 @@ export default function Navbar() {
 
           {/* Right side - Notifications, Create Post, Profile */}
           <div className="flex items-center space-x-3">
+            {/* Quick Actions Button */}
+            <QuickActionButton onClick={() => setShowQuickActions(true)} />
+            
             {/* Create Post Button */}
             <button 
               onClick={handlePostClick}
-              className="hidden md:flex items-center space-x-2 gradient-science text-white px-4 py-2 rounded-lg hover:shadow-science-lg transition-all duration-200 transform hover:scale-105 shadow-science"
+              className="hidden md:flex items-center space-x-1.5 bg-primary-600 text-white px-3 py-1.5 rounded-lg hover:bg-primary-700 transition-all duration-200 transform hover:scale-105 shadow-medium text-sm"
             >
-              <PlusIcon className="h-4 w-4" />
+              <PlusIcon className="h-3 w-3" />
               <span className="font-medium">Post</span>
             </button>
 
@@ -177,16 +188,14 @@ export default function Navbar() {
             <div className="relative">
                 <button 
                 onClick={() => setShowUserMenu(!showUserMenu)}
-                className="flex items-center space-x-3 p-2 rounded-lg hover:bg-navy-50 transition-colors"
+                className="flex items-center space-x-3 p-2 rounded-lg hover:bg-neutral-50 transition-colors"
               >
-                <div className="w-8 h-8 gradient-science rounded-full flex items-center justify-center text-white text-sm font-medium">
-                  {user.firstName?.[0] || user.username?.[0] || 'U'}
-                </div>
-                <div className="hidden md:block text-left">
-                  <p className="text-sm font-medium text-navy-900">
+                <UserAvatar user={user} size="sm" />
+                <div className="hidden md:block text-left min-w-0 flex-1">
+                  <p className="text-sm font-medium text-neutral-900 truncate">
                     {user.firstName} {user.lastName}
                   </p>
-                  <p className="text-xs text-navy-500">
+                  <p className="text-xs text-neutral-500 truncate">
                     {user.institution || 'Researcher'}
                   </p>
                 </div>
@@ -194,22 +203,20 @@ export default function Navbar() {
                 
               {/* Dropdown Menu */}
               {showUserMenu && (
-                <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-science-lg border border-navy-200 py-2 z-50">
+                <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-natural-lg border border-neutral-200 py-2 z-50">
                   {/* User Info */}
-                  <div className="px-4 py-3 border-b border-navy-100">
+                  <div className="px-4 py-3 border-b border-neutral-100">
                 <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 gradient-science rounded-full flex items-center justify-center text-white font-medium">
-                        {user.firstName?.[0] || user.username?.[0] || 'U'}
-                      </div>
-                      <div>
-                        <p className="font-medium text-navy-900">
+                                              <UserAvatar user={user} size="md" />
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-navy-900 truncate">
                           {user.firstName} {user.lastName}
                         </p>
-                        <p className="text-sm text-navy-500">
+                        <p className="text-sm text-navy-500 truncate">
                           {user.email}
                         </p>
                         {user.institution && (
-                          <p className="text-xs text-navy-400">
+                          <p className="text-xs text-navy-400 truncate">
                             {user.institution}
                           </p>
                       )}
@@ -252,7 +259,8 @@ export default function Navbar() {
             </div>
           </div>
         </div>
-      </div>
-    </nav>
+              </div>
+      </nav>
+    </>
   );
 } 

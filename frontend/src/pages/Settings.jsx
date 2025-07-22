@@ -177,13 +177,13 @@ export default function Settings() {
     <div className="max-w-5xl mx-auto p-6">
       {/* Header */}
       <div className="mb-8">
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 border border-blue-200/50 shadow-lg">
+        <div className="bg-gradient-to-r from-primary-50 to-sage-50 rounded-2xl p-6 border border-primary-200/50 shadow-lg">
           <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 bg-gradient-to-r from-primary-600 to-sage-600 rounded-xl flex items-center justify-center shadow-lg">
               <CogIcon className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-sage-600 bg-clip-text text-transparent">
                 Settings
               </h1>
               <p className="text-gray-600">Manage your account settings and preferences</p>

@@ -1,5 +1,5 @@
 body {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #f6f7f6 0%, #e3e7e3 50%, #fbe8d7 100%);
   min-height: 100vh;
   background-attachment: fixed;
 }
@@ -11,20 +11,20 @@ body {
 /* Add subtle animation for glass morphism effects */
 .glassmorphism-hover:hover {
   backdrop-filter: blur(20px);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 25px 50px -12px rgba(90, 113, 90, 0.15);
 }
 
 /* Enhanced gradient backgrounds for various elements */
 .gradient-bg-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #5a715a 0%, #3a483a 100%);
 }
 
 .gradient-bg-secondary {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, #e0753a 0%, #d15d2e 100%);
 }
 
 .gradient-bg-success {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  background: linear-gradient(135deg, #4a7c4a 0%, #3a623a 100%);
 }
 
 /* Custom scrollbar */
@@ -37,12 +37,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #5a715a 0%, #3a483a 100%);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  background: linear-gradient(135deg, #3a483a 0%, #5a715a 100%);
 }
 
 .logo {
@@ -52,10 +52,10 @@ body {
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em #5a715a);
 }
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 2em #4a7c4a);
 }
 
 @keyframes logo-spin {
@@ -78,5 +78,5 @@ body {
 }
 
 .read-the-docs {
-  color: #888;
+  color: #78716c;
 }
