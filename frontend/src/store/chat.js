@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { io } from 'socket.io-client';
 import axios from 'axios';
 import { persist } from 'zustand/middleware';
+import { SOCKET_URL } from '../config';
 
 const MAX_RETRY_ATTEMPTS = 3;
 const RETRY_DELAY = 2000; // 2 seconds
@@ -26,6 +27,9 @@ const useChatStore = create(
 
       // Actions
       initializeSocket: (userId) => {
+        // Real-time chat is disabled (e.g. on Vercel without a socket server)
+        if (!SOCKET_URL) return;
+
         const { socket, socketRetryCount } = get();
         
         // Clean up existing socket
@@ -38,8 +42,6 @@ const useChatStore = create(
           clearTimeout(get().socketRetryTimeout);
         }
 
-        const apiUrl = import.meta.env.VITE_API_URL || (
-          import.meta.env.MODE === 'production' ? 'https://sciconnect.com' : 'http://localhost:3000');
 
         // Get token from auth store format
         let token = null;
@@ -53,7 +55,7 @@ const useChatStore = create(
           console.error('Error getting token from localStorage:', error);
         }
 
-        const newSocket = io(apiUrl, {
+        const newSocket = io(SOCKET_URL, {
           auth: { token },
           reconnection: true,
           reconnectionAttempts: 5,

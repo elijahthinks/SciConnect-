@@ -4,7 +4,7 @@ const config = require('../config')[process.env.NODE_ENV || 'development'];
 
 // Create email transporter
 const createTransporter = () => {
-  return nodemailer.createTransporter({
+  return nodemailer.createTransport({
     host: config.email.host,
     port: config.email.port,
     secure: config.email.secure || false,

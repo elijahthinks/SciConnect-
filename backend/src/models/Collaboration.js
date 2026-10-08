@@ -13,7 +13,7 @@ const Collaboration = sequelize.define('Collaboration', {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'ResearchPosts',
+      model: ResearchPost,
       key: 'id'
     }
   },
@@ -21,7 +21,7 @@ const Collaboration = sequelize.define('Collaboration', {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'Users',
+      model: User,
       key: 'id'
     }
   },
@@ -67,7 +67,7 @@ const Collaboration = sequelize.define('Collaboration', {
     type: DataTypes.INTEGER,
     allowNull: true,
     references: {
-      model: 'Users',
+      model: User,
       key: 'id'
     }
   },

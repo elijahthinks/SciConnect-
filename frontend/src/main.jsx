@@ -29,7 +29,7 @@ axios.interceptors.response.use(
     if (error.response?.status === 401) {
       // Clear auth data and redirect to login
       localStorage.removeItem('auth');
-      window.location.href = '/login';
+      window.location.href = '/';
     }
     return Promise.reject(error);
   }

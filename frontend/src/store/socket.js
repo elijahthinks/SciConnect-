@@ -1,6 +1,7 @@
 import { io } from 'socket.io-client';
 import { create } from 'zustand';
 import useNotificationStore from './notifications';
+import { SOCKET_URL } from '../config';
 
 let socket = null;
 
@@ -9,17 +10,10 @@ const useSocketStore = create((set) => ({
   isConnected: false,
 
   initSocket: (token) => {
-    if (socket) return;
-
-    // Determine API URL depending on environment (Vite uses import.meta.env)
-    const apiUrl = import.meta.env.VITE_API_URL || (
-      import.meta.env.MODE === 'production'
-        ? 'https://sciconnect.com'
-        : 'http://localhost:3000'
-    );
+    if (socket || !SOCKET_URL) return;
 
     // Create new socket connection
-    socket = io(apiUrl, {
+    socket = io(SOCKET_URL, {
       auth: { token }
     });
 

@@ -34,11 +34,11 @@ const generalLimiter = rateLimit({
 });
 
 // Helper function to generate tokens
-const generateTokens = (userId) => {
+const generateTokens = (userId, accessExpiresIn = '15m') => {
   const accessToken = jwt.sign(
     { id: userId },
     config.jwtSecret,
-    { expiresIn: '15m' }
+    { expiresIn: accessExpiresIn }
   );
   
   const refreshToken = jwt.sign(
@@ -262,6 +262,52 @@ router.post(
     }
   }
 );
+
+// Guest login: lets visitors look around the demo site without signing up.
+// Everyone shares one guest account. It has no password, so the normal
+// /login route can't be used to get into it.
+const GUEST_EMAIL = 'guest@sciconnect.demo';
+
+router.post('/guest', generalLimiter, async (req, res) => {
+  try {
+    const [user] = await User.findOrCreate({
+      where: { email: GUEST_EMAIL },
+      defaults: {
+        username: 'guest',
+        firstName: 'Guest',
+        lastName: 'Visitor',
+        bio: 'Exploring SciConnect as a guest.',
+        isEmailVerified: true
+      }
+    });
+
+    // The frontend has no token refresh yet and sends users back to /login
+    // when a token expires, so give guests a longer-lived token.
+    const { accessToken } = generateTokens(user.id, '1d');
+    await user.update({ lastActive: new Date() });
+
+    res.json({
+      message: 'Logged in as guest',
+      token: accessToken,
+      user: {
+        id: user.id,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        name: `${user.firstName} ${user.lastName}`.trim(),
+        email: user.email,
+        avatar: user.avatar,
+        bio: user.bio,
+        isEmailVerified: user.isEmailVerified,
+        provider: user.provider,
+        isGuest: true
+      }
+    });
+  } catch (err) {
+    console.error('Guest login error:', err);
+    res.status(500).json({ message: 'Server error during guest login' });
+  }
+});
 
 // Refresh token
 router.post('/refresh', generalLimiter, async (req, res) => {

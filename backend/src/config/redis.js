@@ -56,6 +56,13 @@ const createRedisClient = () => {
 };
 
 const connectRedis = async () => {
+  // Redis is optional: without REDIS_URL (e.g. a Vercel deploy with no Redis
+  // add-on) skip it instead of retrying a localhost connection forever.
+  if (!config.database.redis) {
+    console.log('Redis not configured (REDIS_URL unset); skipping');
+    return null;
+  }
+
   try {
     if (!redisClient) {
       redisClient = createRedisClient();
