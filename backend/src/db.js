@@ -15,6 +15,9 @@ if (postgresUrl) {
   console.log('🐘 Using PostgreSQL database');
   sequelize = new Sequelize(postgresUrl, {
     dialect: 'postgres',
+    // Pass the driver in directly. Sequelize normally loads it by name at
+    // runtime, which Vercel's bundler can't see, so it would be left out.
+    dialectModule: require('pg'),
     logging: process.env.NODE_ENV === 'development' ? console.log : false,
     pool: {
       max: 10,
@@ -48,15 +51,19 @@ if (postgresUrl) {
       ]
     }
   });
-} else if (process.env.VERCEL) {
-  // Vercel's filesystem is read-only and wiped between requests, so a SQLite
-  // file can't work there. Fail loudly instead of losing data silently.
-  throw new Error('POSTGRES_URL (or DATABASE_URL) must be set when running on Vercel');
 } else {
-  console.log('📁 Using SQLite database (fallback)');
+  // On Vercel only /tmp is writable, and it's wiped whenever Vercel starts a
+  // fresh instance. That's fine for a show-only demo (the guest account is
+  // recreated automatically), but posts won't stick around. Add a Postgres
+  // database (POSTGRES_URL) to keep data.
+  const storage = process.env.VERCEL
+    ? '/tmp/database.sqlite'
+    : path.join(__dirname, 'database.sqlite');
+  console.log(`📁 Using SQLite database (fallback) at ${storage}`);
   sequelize = new Sequelize({
   dialect: 'sqlite',
-  storage: path.join(__dirname, 'database.sqlite'),
+  dialectModule: require('sqlite3'),
+  storage,
     logging: process.env.NODE_ENV === 'development' ? console.log : false,
     define: {
       underscored: false,

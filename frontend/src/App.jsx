@@ -4,9 +4,6 @@ import { useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Feed from './pages/Feed';
 import ResearchFeed from './pages/ResearchFeed';
-import Login from './pages/Login';
-import SignUp from './pages/SignUp';
-import ResetPassword from './pages/ResetPassword';
 import Profile from './pages/Profile';
 import Explore from './pages/Explore';
 import Connections from './pages/Connections';
@@ -16,6 +13,7 @@ import Groups from './pages/Groups';
 import ErrorBoundary from './components/ErrorBoundary';
 import { Toaster } from 'react-hot-toast';
 import MobileNav from './components/MobileNav';
+import GuestGate from './components/GuestGate';
 
 function App() {
   const { user, token } = useAuth();
@@ -32,7 +30,7 @@ function App() {
     if (user && token) {
       console.log('User is authenticated, should show protected routes');
     } else {
-      console.log('User is not authenticated, should redirect to login');
+      console.log('User is not authenticated, starting guest session');
     }
   }, [user, token]);
 
@@ -72,49 +70,24 @@ function App() {
           {user && <MobileNav />}
           
           <main className={user ? 'pt-1 pb-20 md:pb-6' : 'min-h-screen'}>
-            <Routes>
-              {/* Public Routes */}
-              <Route 
-                path="/login" 
-                element={
-                  user ? <Navigate to="/" replace /> : <Login />
-                } 
-              />
-              <Route 
-                path="/signup" 
-                element={
-                  user ? <Navigate to="/" replace /> : <SignUp />
-                } 
-              />
-              <Route 
-                path="/reset-password" 
-                element={
-                  user ? <Navigate to="/" replace /> : <ResetPassword />
-                } 
-              />
-              
-              {/* Protected Routes */}
-              {user ? (
-                <>
-                  <Route path="/" element={<Feed />} />
-                  <Route path="/feed" element={<Navigate to="/" replace />} />
-                  <Route path="/research" element={<ResearchFeed />} />
-                  <Route path="/explore" element={<Explore />} />
-                  <Route path="/connections" element={<Connections />} />
-                  <Route path="/groups" element={<Groups />} />
-                  <Route path="/chat" element={<Messages />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/profile/:userId" element={<Profile />} />
-                  <Route path="/settings" element={<Settings />} />
-                  
-                  {/* Fallback for authenticated users */}
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </>
-              ) : (
-                /* Redirect unauthenticated users to login */
-                <Route path="*" element={<Navigate to="/login" replace />} />
-              )}
-            </Routes>
+            {user ? (
+              <Routes>
+                <Route path="/" element={<Feed />} />
+                <Route path="/feed" element={<Navigate to="/" replace />} />
+                <Route path="/research" element={<ResearchFeed />} />
+                <Route path="/explore" element={<Explore />} />
+                <Route path="/connections" element={<Connections />} />
+                <Route path="/groups" element={<Groups />} />
+                <Route path="/chat" element={<Messages />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/profile/:userId" element={<Profile />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            ) : (
+              /* No login/sign-up: visitors are signed in as a guest automatically */
+              <GuestGate />
+            )}
           </main>
         </div>
       </Router>

@@ -4,8 +4,8 @@ A social platform for scientists, tech enthusiasts, and hobbyists to share resea
 
 ## Features
 
-- **Guest access**: visitors can click **Continue as guest** on the login or sign-up page to explore without creating an account
-- **Accounts & auth**: email/password sign-up with JWT, password reset by email, and optional Google/Facebook OAuth
+- **No sign-up needed**: this is a show-only site, so there are no login or sign-up pages. Every visitor is signed in automatically with a shared guest account
+- **Accounts & auth**: JWT-based auth (the backend still has sign-up, password reset and Google/Facebook OAuth routes, but the frontend no longer uses them)
 - **Profiles**: avatars, skill tags, side projects, and open-access profiles
 - **Feed & posts**: create posts, comment, and react
 - **Research feed**: research posts with fact-checking and collaboration requests
@@ -105,20 +105,20 @@ The repo is set up to deploy as a single Vercel project: the React app is served
 ### Steps
 
 1. Push this repo to GitHub and import it at [vercel.com/new](https://vercel.com/new). Leave **Root Directory** as the repo root; `vercel.json` sets the build settings.
-2. Add a Postgres database. In the Vercel project go to **Storage** and connect a Postgres provider (e.g. Neon). This sets `POSTGRES_URL` for you. Tables are created automatically on the first request.
+2. (Optional) Add a Postgres database. In the Vercel project go to **Storage** and connect a Postgres provider (e.g. Neon). This sets `POSTGRES_URL` for you. Tables are created automatically on the first request. Without it the site still runs, using a temporary SQLite file that resets whenever Vercel starts a fresh instance.
 3. Under **Settings → Environment Variables**, add at least:
    - `JWT_SECRET` and `JWT_REFRESH_SECRET` (long random strings, e.g. from `openssl rand -hex 32`)
    - `CLIENT_URL` and `FRONTEND_URL`: your Vercel URL, e.g. `https://your-app.vercel.app`
    - `CLOUDINARY_*` if you want image/video uploads to work
    - `EMAIL_*` if you want verification and password reset emails
-4. Deploy, then check `https://your-app.vercel.app/api/health`.
+4. Deploy and open the site. If something is misconfigured, the page shows the server's error message (e.g. which environment variable is missing).
 
 ### Limitations on Vercel
 
 Serverless functions start for each request and stop afterwards, which affects some features:
 
 - **Real-time features are off.** Live chat, typing indicators, live notifications and online status use Socket.IO, which needs a server that stays running. Pages still load data through the REST API; they just don't update live. To get them back, run `backend/server.js` on a host that supports long-running servers (Render, Railway, Fly.io) and set `VITE_SOCKET_URL` in Vercel to that server's URL.
-- **No SQLite.** The filesystem is read-only and wiped between requests, so a Postgres URL is required.
+- **SQLite data doesn't last.** Only `/tmp` is writable and it's wiped when Vercel starts a fresh instance, so add Postgres if you want posts to stick around.
 - **No local file uploads.** Use Cloudinary for media.
 - **Cold starts.** The first request after a quiet period is slower while the function boots and connects to the database.
 

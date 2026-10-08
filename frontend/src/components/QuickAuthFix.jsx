@@ -14,7 +14,7 @@ export default function QuickAuthFix() {
       
       // Redirect to login after a brief delay
       setTimeout(() => {
-        window.location.href = '/login';
+        window.location.href = '/';
       }, 1500);
     } catch (error) {
       console.error('Error fixing auth:', error);

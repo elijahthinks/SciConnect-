@@ -26,7 +26,7 @@ class AuthErrorBoundary extends React.Component {
   handleRetry = () => {
     // Clear auth and redirect to login
     localStorage.removeItem('auth');
-    window.location.href = '/login';
+    window.location.href = '/';
   };
 
   render() {

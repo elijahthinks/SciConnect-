@@ -155,6 +155,7 @@ app.use((err, req, res, next) => {
 });
 
 // Enhanced database sync with migrations
+let lastDbError = null;
 const syncDatabase = async () => {
   try {
     // Test database connection
@@ -176,6 +177,7 @@ const syncDatabase = async () => {
     }
   } catch (error) {
     console.error('Database sync error:', error);
+    lastDbError = error;
     
     // Last resort: try to force sync (WARNING: this will drop tables)
     if (process.env.NODE_ENV === 'development') {
@@ -203,7 +205,7 @@ const ensureDatabase = () => {
     dbReadyPromise = syncDatabase().then(ok => {
       if (!ok) {
         dbReadyPromise = null; // allow a retry on the next request
-        throw new Error('Failed to initialize database');
+        throw new Error(`Failed to initialize database: ${lastDbError ? lastDbError.message : 'unknown error'}`);
       }
     });
   }
