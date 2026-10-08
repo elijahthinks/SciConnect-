@@ -54,3 +54,6 @@ uploads/
 # Temporary files
 .tmp/
 .temp/
+
+# Vercel
+.vercel
