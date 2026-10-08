@@ -4,6 +4,7 @@ A social platform for scientists, tech enthusiasts, and hobbyists to share resea
 
 ## Features
 
+- **Guest access**: visitors can click **Continue as guest** on the login or sign-up page to explore without creating an account
 - **Accounts & auth**: email/password sign-up with JWT, password reset by email, and optional Google/Facebook OAuth
 - **Profiles**: avatars, skill tags, side projects, and open-access profiles
 - **Feed & posts**: create posts, comment, and react

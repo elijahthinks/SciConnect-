@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../store/auth';
+import GuestLoginButton from '../components/GuestLoginButton';
 import { EyeIcon, EyeSlashIcon, UserIcon, LockClosedIcon, EnvelopeIcon, AcademicCapIcon } from '@heroicons/react/24/outline';
 
 export default function SignUp() {
@@ -179,6 +180,9 @@ export default function SignUp() {
             </div>
           </div>
         )}
+
+        {/* Guest access: skip sign-up on the demo site */}
+        <GuestLoginButton />
 
         {/* OAuth Buttons */}
         <div className="space-y-3">

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../store/auth';
+import GuestLoginButton from '../components/GuestLoginButton';
 import { EyeIcon, EyeSlashIcon, UserIcon, LockClosedIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 
 export default function Login() {
@@ -145,6 +146,9 @@ export default function Login() {
             </div>
           </div>
         )}
+
+        {/* Guest access: skip sign-up on the demo site */}
+        <GuestLoginButton />
 
         {/* OAuth Buttons */}
         {!forgotPasswordMode && (
