@@ -1,9 +1,23 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+
+// Resolve everything from this folder so the build works from any working
+// directory (e.g. Vercel building from the repository root).
+const root = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  root,
   plugins: [react()],
+  css: {
+    postcss: {
+      plugins: [tailwindcss({ config: path.join(root, 'tailwind.config.js') }), autoprefixer()],
+    },
+  },
   server: {
     proxy: {
       '/api': {
