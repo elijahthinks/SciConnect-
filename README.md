@@ -44,6 +44,7 @@ SciConnect-/
 ├── test/                     Integration scripts that run against a live API
 ├── .gitattributes            Line endings and binary file handling
 ├── .gitignore
+├── vercel.json               Vercel build settings for the front end
 ├── CHANGELOG.md
 ├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md

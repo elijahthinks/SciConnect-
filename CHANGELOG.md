@@ -8,6 +8,7 @@ Notable changes to SciConnect. The format follows [Keep a Changelog](https://kee
 - Reorganized the repository: application code lives in `src/backend` and `src/frontend`, integration tests in `test/`, deployment files in `.build/`, the environment template in `.config/`, and guides in `docs/`.
 - The API now serves the front-end build from `src/frontend/dist`. It previously looked in a path that no longer existed.
 - PM2 and the deploy script point at the new layout.
+- Vercel builds the front end from `src/frontend` (configured in `vercel.json`).
 
 ### Added
 - README, license, contributing guide, code of conduct, security policy, CODEOWNERS and `.gitattributes`.
