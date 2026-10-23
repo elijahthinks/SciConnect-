@@ -2,8 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
-const session = require('express-session');
-const passport = require('./src/config/passport');
 const sequelize = require('./src/db');
 const authRoutes = require('./src/routes/auth');
 const profileRoutes = require('./src/routes/profile');
@@ -48,21 +46,6 @@ const io = initializeSocket(server);
 // Trust proxy (for production deployments behind load balancers)
 app.set('trust proxy', 1);
 
-// Session configuration for OAuth
-app.use(session({
-  secret: config.jwtSecret,
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
-  }
-}));
-
-// Initialize Passport
-app.use(passport.initialize());
-app.use(passport.session());
 
 // Middleware
 // Configure CORS: dynamically reflect the request origin when credentials are sent

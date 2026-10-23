@@ -2,7 +2,7 @@
   <img src="assets/banner.svg" alt="SciConnect: share work in progress, check claims, find collaborators." width="100%">
 </p>
 
-SciConnect is an open-source social network for scientists. Share research while it's still in progress, attach fact checks to claims, and find people to work with.
+SciConnect is an open-source social network for scientists. Share research while it's still in progress, attach fact checks to claims, and find people to work with. There are no accounts: everyone who opens it uses a shared guest profile.
 
 - **Research posts** with tags, links and attachments
 - **Fact checks** that mark a claim as supported, disputed or still open

@@ -24,7 +24,6 @@ function CommentForm({ postId, parentId = null, onCommentAdded, onCancel = null 
       };
       
       console.log('Sending comment data:', commentData);
-      console.log('User token available:', !!token);
       console.log('PostId type:', typeof commentData.postId);
       
       const response = await axios.post('/api/comments', commentData);

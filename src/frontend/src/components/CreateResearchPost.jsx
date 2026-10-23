@@ -73,11 +73,6 @@ export default function CreateResearchPost({ onPostCreated }) {
       return;
     }
 
-    if (!token) {
-      alert('Please log in to create a research post.');
-      return;
-    }
-
     setIsSubmitting(true);
     try {
       // First upload any media files

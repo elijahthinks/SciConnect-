@@ -13,7 +13,6 @@ import {
   BellIcon,
   UserIcon,
   Cog6ToothIcon,
-  ArrowRightOnRectangleIcon,
   PlusIcon,
   AcademicCapIcon,
   BeakerIcon,
@@ -33,16 +32,11 @@ import {
 } from '@heroicons/react/24/solid';
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showQuickActions, setShowQuickActions] = useState(false);
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   const handlePostClick = () => {
     // Navigate to home page if not already there
@@ -243,16 +237,6 @@ export default function Navbar() {
                       <Cog6ToothIcon className="h-5 w-5" />
                       <span>Settings</span>
                   </Link>
-                    
-                    <hr className="my-2 border-navy-100" />
-                  
-                  <button
-                    onClick={handleLogout}
-                      className="flex items-center space-x-3 px-4 py-2 text-rose-600 hover:bg-rose-50 transition-colors w-full text-left"
-                  >
-                      <ArrowRightOnRectangleIcon className="h-5 w-5" />
-                      <span>Sign Out</span>
-                  </button>
                   </div>
                 </div>
               )}

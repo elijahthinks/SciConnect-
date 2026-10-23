@@ -4,6 +4,9 @@ Notable changes to SciConnect. The format follows [Keep a Changelog](https://kee
 
 ## [Unreleased]
 
+### Removed
+- Sign-up, sign-in, password reset and Google/Facebook sign-in. Everyone uses SciConnect as a shared guest account, which the API creates automatically.
+
 ### Changed
 - Reorganized the repository: application code lives in `src/backend` and `src/frontend`, integration tests in `test/`, deployment files in `.build/`, the environment template in `.config/`, and guides in `docs/`.
 - The API now serves the front-end build from `src/frontend/dist`. It previously looked in a path that no longer existed.

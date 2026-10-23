@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../config');
 const Message = require('../models/Message');
 const onlineStatusService = require('../utils/onlineStatus');
+const { getGuestUser } = require('../utils/guestUser');
 
 // Store active connections
 const activeConnections = new Map();
@@ -17,19 +18,23 @@ function initializeSocket(server) {
     }
   });
 
-  // Authentication middleware
+  // Identify the connecting user; anyone without a valid token is the guest
   io.use(async (socket, next) => {
     try {
-      const token = socket.handshake.auth.token;
-      if (!token) {
-        return next(new Error('Authentication error'));
+      const token = socket.handshake.auth?.token;
+      if (token) {
+        try {
+          const decoded = jwt.verify(token, config[process.env.NODE_ENV || 'development'].jwtSecret);
+          socket.userId = decoded.id || decoded.userId;
+          return next();
+        } catch {
+          // Fall through to the guest
+        }
       }
-
-      const decoded = jwt.verify(token, config[process.env.NODE_ENV || 'development'].jwtSecret);
-      socket.userId = decoded.userId;
+      socket.userId = (await getGuestUser()).id;
       next();
     } catch (error) {
-      next(new Error('Authentication error'));
+      next(new Error('Could not identify user'));
     }
   });
 

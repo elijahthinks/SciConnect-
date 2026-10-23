@@ -1,12 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './store/auth';
-import { useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Feed from './pages/Feed';
 import ResearchFeed from './pages/ResearchFeed';
-import Login from './pages/Login';
-import SignUp from './pages/SignUp';
-import ResetPassword from './pages/ResetPassword';
 import Profile from './pages/Profile';
 import Explore from './pages/Explore';
 import Connections from './pages/Connections';
@@ -18,37 +13,6 @@ import { Toaster } from 'react-hot-toast';
 import MobileNav from './components/MobileNav';
 
 function App() {
-  const { user, token } = useAuth();
-
-  useEffect(() => {
-    console.log('App mounted, auth state:', { 
-      hasUser: !!user, 
-      hasToken: !!token,
-      userDetails: user ? { id: user.id, email: user.email, username: user.username } : null,
-      storedAuth: localStorage.getItem('auth')
-    });
-    
-    // Additional debugging for auth state
-    if (user && token) {
-      console.log('User is authenticated, should show protected routes');
-    } else {
-      console.log('User is not authenticated, should redirect to login');
-    }
-  }, [user, token]);
-
-  // Add debugging for route changes
-  useEffect(() => {
-    const handleRouteChange = () => {
-      console.log('Route changed to:', window.location.pathname, {
-        hasUser: !!user,
-        hasToken: !!token
-      });
-    };
-    
-    window.addEventListener('popstate', handleRouteChange);
-    return () => window.removeEventListener('popstate', handleRouteChange);
-  }, [user, token]);
-
   return (
     <ErrorBoundary>
       <Router>
@@ -68,52 +32,22 @@ function App() {
             }}
           />
           
-          {user && <Navbar />}
-          {user && <MobileNav />}
+          <Navbar />
+          <MobileNav />
           
-          <main className={user ? 'pt-1 pb-20 md:pb-6' : 'min-h-screen'}>
+          <main className="pt-1 pb-20 md:pb-6">
             <Routes>
-              {/* Public Routes */}
-              <Route 
-                path="/login" 
-                element={
-                  user ? <Navigate to="/" replace /> : <Login />
-                } 
-              />
-              <Route 
-                path="/signup" 
-                element={
-                  user ? <Navigate to="/" replace /> : <SignUp />
-                } 
-              />
-              <Route 
-                path="/reset-password" 
-                element={
-                  user ? <Navigate to="/" replace /> : <ResetPassword />
-                } 
-              />
-              
-              {/* Protected Routes */}
-              {user ? (
-                <>
-                  <Route path="/" element={<Feed />} />
-                  <Route path="/feed" element={<Navigate to="/" replace />} />
-                  <Route path="/research" element={<ResearchFeed />} />
-                  <Route path="/explore" element={<Explore />} />
-                  <Route path="/connections" element={<Connections />} />
-                  <Route path="/groups" element={<Groups />} />
-                  <Route path="/chat" element={<Messages />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/profile/:userId" element={<Profile />} />
-                  <Route path="/settings" element={<Settings />} />
-                  
-                  {/* Fallback for authenticated users */}
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </>
-              ) : (
-                /* Redirect unauthenticated users to login */
-                <Route path="*" element={<Navigate to="/login" replace />} />
-              )}
+              <Route path="/" element={<Feed />} />
+              <Route path="/feed" element={<Navigate to="/" replace />} />
+              <Route path="/research" element={<ResearchFeed />} />
+              <Route path="/explore" element={<Explore />} />
+              <Route path="/connections" element={<Connections />} />
+              <Route path="/groups" element={<Groups />} />
+              <Route path="/chat" element={<Messages />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/profile/:userId" element={<Profile />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
         </div>

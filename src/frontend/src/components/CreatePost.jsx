@@ -23,15 +23,9 @@ export default function CreatePost({ onPostCreated }) {
       return;
     }
 
-    if (!token) {
-      alert('Please log in to create a post.');
-      return;
-    }
-
     setIsSubmitting(true);
     try {
       console.log('Creating post with:', { content, media, mediaType, tags, visibility });
-      console.log('User token available:', !!token);
       
       // First upload any media files
       let mediaUrls = [];

@@ -13,7 +13,7 @@ import axios from 'axios';
 
 const Profile = () => {
   const { userId } = useParams();
-  const { user: currentUser, token, login } = useAuth();
+  const { user: currentUser, token } = useAuth();
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -138,8 +138,8 @@ const Profile = () => {
       setProfile(response.data);
       // Fetch latest user info from backend
       const meRes = await axios.get('/api/auth/me');
-      if (login && meRes.data && meRes.data.user) {
-        login(meRes.data.user, token);
+      if (meRes.data?.user) {
+        useAuth.setState({ user: meRes.data.user });
       }
       setIsEditing(false);
     } catch (error) {
