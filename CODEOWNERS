@@ -1,0 +1,9 @@
+# Reviewers are requested automatically for changes to these paths.
+# Later rules take precedence over earlier ones.
+
+*                   @elijahthinks
+/src/backend/       @elijahthinks
+/src/frontend/      @elijahthinks
+/.github/           @elijahthinks
+/.build/            @elijahthinks
+SECURITY.md         @elijahthinks

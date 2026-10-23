@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 400" width="1280" height="400" role="img" aria-labelledby="t d">
+<title id="t">SciConnect</title>
+<desc id="d">A cyanotype print of a network of researchers, linked across four clusters.</desc>
+<defs>
+<filter id="brush" x="-5%" y="-5%" width="110%" height="110%">
+<feTurbulence type="fractalNoise" baseFrequency="0.012 0.09" numOctaves="3" seed="4"/>
+<feDisplacementMap in="SourceGraphic" scale="26"/>
+</filter>
+<filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="2"/><feColorMatrix values="0 0 0 0 0.94  0 0 0 0 0.96  0 0 0 0 0.98  0 0 0 0.07 0"/></filter>
+<filter id="soft"><feGaussianBlur stdDeviation="0.6"/></filter>
+<radialGradient id="exp" cx="72%" cy="50%" r="70%"><stop offset="0" stop-color="#1D4C8F"/><stop offset="1" stop-color="#0E2C5E"/></radialGradient>
+<style>
+.e{fill:none;stroke:#E9F0F8;stroke-width:1.6;opacity:.55}
+.n{fill:#F1F5FA;opacity:.92}
+.r{fill:none;stroke:#F1F5FA;stroke-width:1.2;opacity:.35}
+.w{font-family:'Source Serif 4','Source Serif Pro',Georgia,'Times New Roman',serif;fill:#F1F5FA}
+.t{font-family:'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif;fill:#C9D9EE}
+</style>
+</defs>
+<rect width="1280" height="400" fill="#F1F5FA"/>
+<rect x="22" y="20" width="1236" height="360" fill="url(#exp)" filter="url(#brush)"/>
+<rect x="22" y="20" width="1236" height="360" filter="url(#grain)"/>
+<g filter="url(#soft)"><path class="e" d="M729 178Q720 182 710 181"/>
+<path class="e" d="M729 178Q735 163 748 152"/>
+<path class="e" d="M710 181Q726 162 748 152"/>
+<path class="e" d="M710 181Q863 109 1031 114"/>
+<path class="e" d="M819 197Q805 179 800 157"/>
+<path class="e" d="M819 197Q827 194 835 194"/>
+<path class="e" d="M800 157Q822 171 835 194"/>
+<path class="e" d="M800 157Q774 153 753 138"/>
+<path class="e" d="M835 194Q998 181 1149 244"/>
+<path class="e" d="M748 152Q749 145 753 138"/>
+<path class="e" d="M748 152Q738 147 732 138"/>
+<path class="e" d="M753 138Q742 141 732 138"/>
+<path class="e" d="M1031 114Q1019 126 1003 131"/>
+<path class="e" d="M1031 114Q1008 116 987 108"/>
+<path class="e" d="M931 84Q929 105 918 124"/>
+<path class="e" d="M931 84Q949 79 967 82"/>
+<path class="e" d="M931 84Q942 104 942 127"/>
+<path class="e" d="M918 124Q930 122 942 127"/>
+<path class="e" d="M918 124Q1003 169 1059 249"/>
+<path class="e" d="M1003 131Q992 121 987 108"/>
+<path class="e" d="M967 82Q977 81 986 85"/>
+<path class="e" d="M967 82Q980 93 987 108"/>
+<path class="e" d="M986 85Q989 96 987 108"/>
+<path class="e" d="M1158 212Q1159 215 1160 218"/>
+<path class="e" d="M1158 212Q1157 220 1153 227"/>
+<path class="e" d="M1081 271Q1067 262 1059 249"/>
+<path class="e" d="M1081 271Q1085 262 1092 256"/>
+<path class="e" d="M1173 285Q1156 267 1149 244"/>
+<path class="e" d="M1173 285Q1156 258 1153 227"/>
+<path class="e" d="M1059 249Q1076 249 1092 256"/>
+<path class="e" d="M1160 218Q1157 232 1149 244"/>
+<path class="e" d="M1160 218Q1158 223 1153 227"/>
+<path class="e" d="M1149 244Q1149 235 1153 227"/>
+<path class="e" d="M1153 227Q1029 294 888 297"/>
+<path class="e" d="M920 285Q818 239 748 152"/>
+<path class="e" d="M920 285Q924 277 932 272"/>
+<path class="e" d="M920 285Q937 298 946 318"/>
+<path class="e" d="M920 285Q906 295 888 297"/>
+<path class="e" d="M920 285Q948 261 984 252"/>
+<path class="e" d="M920 285Q945 304 958 332"/>
+<path class="e" d="M932 272Q944 293 946 318"/>
+<path class="e" d="M932 272Q955 256 984 252"/>
+<path class="e" d="M946 318Q954 323 958 332"/>
+<path class="e" d="M874 301Q881 297 888 297"/>
+<path class="e" d="M874 301Q887 313 892 330"/>
+<path class="e" d="M888 297Q894 313 892 330"/>
+<circle class="r" cx="729" cy="178" r="15"/>
+<circle class="n" cx="729" cy="178" r="7" style="--d:0ms"/>
+<circle class="n" cx="710" cy="181" r="4" style="--d:55ms"/>
+<circle class="r" cx="819" cy="197" r="24"/>
+<circle class="n" cx="819" cy="197" r="11" style="--d:110ms"/>
+<circle class="n" cx="800" cy="157" r="5" style="--d:165ms"/>
+<circle class="n" cx="835" cy="194" r="3" style="--d:220ms"/>
+<circle class="r" cx="748" cy="152" r="15"/>
+<circle class="n" cx="748" cy="152" r="7" style="--d:275ms"/>
+<circle class="n" cx="753" cy="138" r="4" style="--d:330ms"/>
+<circle class="n" cx="732" cy="138" r="3" style="--d:385ms"/>
+<circle class="n" cx="1031" cy="114" r="4" style="--d:440ms"/>
+<circle class="n" cx="931" cy="84" r="5" style="--d:495ms"/>
+<circle class="r" cx="918" cy="124" r="24"/>
+<circle class="n" cx="918" cy="124" r="11" style="--d:550ms"/>
+<circle class="n" cx="1003" cy="131" r="3" style="--d:605ms"/>
+<circle class="n" cx="967" cy="82" r="5" style="--d:660ms"/>
+<circle class="n" cx="942" cy="127" r="3" style="--d:715ms"/>
+<circle class="n" cx="986" cy="85" r="4" style="--d:770ms"/>
+<circle class="r" cx="987" cy="108" r="24"/>
+<circle class="n" cx="987" cy="108" r="11" style="--d:825ms"/>
+<circle class="n" cx="1158" cy="212" r="5" style="--d:880ms"/>
+<circle class="n" cx="1081" cy="271" r="3" style="--d:935ms"/>
+<circle class="n" cx="1173" cy="285" r="3" style="--d:990ms"/>
+<circle class="r" cx="1059" cy="249" r="15"/>
+<circle class="n" cx="1059" cy="249" r="7" style="--d:1045ms"/>
+<circle class="n" cx="1092" cy="256" r="4" style="--d:1100ms"/>
+<circle class="n" cx="1160" cy="218" r="3" style="--d:1155ms"/>
+<circle class="r" cx="1149" cy="244" r="15"/>
+<circle class="n" cx="1149" cy="244" r="7" style="--d:1210ms"/>
+<circle class="n" cx="1153" cy="227" r="4" style="--d:1265ms"/>
+<circle class="r" cx="920" cy="285" r="15"/>
+<circle class="n" cx="920" cy="285" r="7" style="--d:1320ms"/>
+<circle class="r" cx="932" cy="272" r="24"/>
+<circle class="n" cx="932" cy="272" r="11" style="--d:1375ms"/>
+<circle class="n" cx="946" cy="318" r="4" style="--d:1430ms"/>
+<circle class="r" cx="874" cy="301" r="15"/>
+<circle class="n" cx="874" cy="301" r="7" style="--d:1485ms"/>
+<circle class="n" cx="888" cy="297" r="5" style="--d:1540ms"/>
+<circle class="r" cx="984" cy="252" r="24"/>
+<circle class="n" cx="984" cy="252" r="11" style="--d:1595ms"/>
+<circle class="n" cx="892" cy="330" r="4" style="--d:1650ms"/>
+<circle class="r" cx="958" cy="332" r="24"/>
+<circle class="n" cx="958" cy="332" r="11" style="--d:1705ms"/></g>
+<text class="w" x="88" y="212" font-size="92" font-weight="600" letter-spacing="-1.5">SciConnect</text>
+<text class="t" x="92" y="262" font-size="25">Share work in progress. Check claims. Find collaborators.</text>
+</svg>
