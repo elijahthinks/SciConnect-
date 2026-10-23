@@ -26,6 +26,7 @@ import ReactionButton from './ReactionButton';
 import UserAvatar from './UserAvatar';
 import FactCheckSection from './FactCheckSection';
 import CollaborationSection from './CollaborationSection';
+import MockBadge from './MockBadge';
 
 const visibilityIcons = {
   public: { icon: GlobeAltIcon, label: 'Public' },
@@ -328,6 +329,7 @@ export default function ResearchPostCard({ post, onDelete, onUpdate }) {
               <div className="flex items-center text-navy-500" title={visibilityIcons[post.visibility || 'public'].label}>
                 <VisibilityIcon className="h-4 w-4" />
               </div>
+              {post.isMock && <MockBadge />}
             </div>
             {post.author?.institution && (
               <p className="text-sm text-navy-600 mt-1">{post.author.institution} {post.author.position && `• ${post.author.position}`}</p>

@@ -1,5 +1,6 @@
 // Example content shown when SciConnect runs without its API (e.g. on a
 // static host). Everything lives in memory and resets on reload.
+// Seeded posts carry isMock so the UI labels them as mock posts.
 
 const MIN = 60 * 1000;
 const HOUR = 60 * MIN;
@@ -119,7 +120,7 @@ export const posts = [
   { id: 107, userId: 6, content: 'We finally got logical error rates below the physical ones on our distance-3 code. Small step, lots of cryostat time. Paper draft is going round the group this week.', tags: ['quantum', 'physics'], createdAt: ago(2 * DAY) },
   { id: 108, userId: 2, content: 'If you dive the Cape Peninsula and photograph urchins, I would love your photos with a date and rough location. Even blurry ones help us map densities.', tags: ['citizen-science', 'kelp'], createdAt: ago(3 * DAY) },
   { id: 109, userId: 5, content: 'Pre-registration is not bureaucracy. It is the cheapest way to make your future self honest.', tags: ['reproducibility', 'open-science'], createdAt: ago(4 * DAY) },
-];
+].map((post) => ({ ...post, isMock: true }));
 
 export const researchPosts = [
   {
@@ -171,7 +172,7 @@ export const researchPosts = [
     citations: [],
     tags: ['astronomy', 'education'], createdAt: ago(5 * DAY),
   },
-];
+].map((post) => ({ ...post, isMock: true }));
 
 export const factChecks = {
   201: [

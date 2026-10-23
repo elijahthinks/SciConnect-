@@ -8,7 +8,7 @@ Notable changes to SciConnect. The format follows [Keep a Changelog](https://kee
 - Sign-up, sign-in, password reset and Google/Facebook sign-in. Everyone uses SciConnect as a shared guest account, which the API creates automatically.
 
 ### Added
-- Demo mode: when no API is reachable (for example on Vercel), the app shows built-in example researchers, posts, research, fact checks, groups and messages. Changes last until the page is reloaded. The data lives in `src/frontend/src/demo/data.js`.
+- Demo mode: when no API is reachable (for example on Vercel), the app shows built-in example researchers, posts, research, fact checks, groups and messages. Example posts are labelled "Mock post". Changes last until the page is reloaded. The data lives in `src/frontend/src/demo/data.js`.
 
 ### Changed
 - Reorganized the repository: application code lives in `src/backend` and `src/frontend`, integration tests in `test/`, deployment files in `.build/`, the environment template in `.config/`, and guides in `docs/`.

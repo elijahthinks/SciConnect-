@@ -6,6 +6,7 @@ import axios from 'axios';
 import CommentSection from './CommentSection';
 import ReactionButton from './ReactionButton';
 import UserAvatar from './UserAvatar';
+import MockBadge from './MockBadge';
 
 const visibilityIcons = {
   public: { icon: GlobeAltIcon, label: 'Public' },
@@ -147,6 +148,7 @@ export default function PostCard({ post, onDelete, onUpdate }) {
               <div className="flex items-center text-neutral-500" title={visibilityIcons[post.visibility || 'public'].label}>
                 <VisibilityIcon className="h-4 w-4" />
               </div>
+              {post.isMock && <MockBadge />}
             </div>
             {post.author?.title && (
               <p className="text-sm text-neutral-600 mt-1">{post.author.title}</p>
