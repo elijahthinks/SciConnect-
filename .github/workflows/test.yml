@@ -1,0 +1,36 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/backend
+    env:
+      NODE_ENV: development
+      PORT: 3000
+      JWT_SECRET: ci-only-secret
+      SESSION_SECRET: ci-only-secret
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # The lockfile is out of sync with package.json, so `npm ci` can't be used yet.
+      - run: npm install --no-audit --no-fund --legacy-peer-deps
+      - name: Check syntax
+        run: find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n1 node --check
+      - name: Boot the API and check health
+        run: |
+          node server.js > server.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3000/api/health; then exit 0; fi
+            sleep 1
+          done
+          cat server.log
+          exit 1

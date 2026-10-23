@@ -1,0 +1,24 @@
+# Normalize line endings
+* text=auto eol=lf
+
+# Windows scripts keep CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.sqlite* binary
+
+# Keep lockfiles out of diffs and language stats
+package-lock.json -diff linguist-generated=true
+
+# Documentation doesn't count toward language stats
+docs/** linguist-documentation

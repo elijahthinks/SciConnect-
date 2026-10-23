@@ -1,0 +1,31 @@
+# Run from the repository root:
+#   docker compose -f .build/docker-compose.yml up --build
+# Copy .config/env.example to src/backend/.env and fill it in first.
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: .build/Dockerfile
+    env_file: ../src/backend/.env
+    environment:
+      DATABASE_URL: postgresql://sciconnect:sciconnect@db:5432/sciconnect
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3000:3000"
+    depends_on: [db, redis]
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: sciconnect
+      POSTGRES_PASSWORD: sciconnect
+      POSTGRES_DB: sciconnect
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+
+volumes:
+  pgdata:

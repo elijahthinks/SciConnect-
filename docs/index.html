@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SciConnect</title>
+<meta name="description" content="SciConnect is an open-source social network where scientists share work in progress, check each other's claims, and find collaborators.">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --prussian: #17407E;   /* exposed cyanotype ground */
+  --deep: #0C2A5B;       /* longest exposure */
+  --halftone: #7FA8DA;   /* partial exposure, rules */
+  --paper: #F1F5FA;      /* unexposed paper */
+  --ink: #13233D;        /* body text */
+  --toned: #6E4A5E;      /* tannin-toned print: fact-check marks only */
+  --muted: #4A5D7A;
+  --serif: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+  --sans: 'Schibsted Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --measure: 62ch;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0B1A33; --ink: #DCE6F3; --muted: #9AB0CD; --halftone: #3E6296; --toned: #C79DB2;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0B1A33; --ink: #DCE6F3; --muted: #9AB0CD; --halftone: #3E6296; --toned: #C79DB2;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 400 1.125rem/1.62 var(--serif);
+  font-optical-sizing: auto;
+}
+a { color: inherit; text-decoration-color: var(--halftone); text-underline-offset: .2em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-color: currentColor; }
+:focus-visible { outline: 2px solid var(--halftone); outline-offset: 3px; border-radius: 2px; }
+
+/* ——— Hero: the print ——— */
+.print {
+  position: relative; color: #F1F5FA; overflow: hidden;
+  background: radial-gradient(120% 90% at 75% 45%, #1F4E92 0%, var(--prussian) 45%, var(--deep) 100%);
+  min-height: min(88vh, 760px);
+  display: grid; align-items: end;
+  margin: 14px; border-radius: 3px;
+  clip-path: url(#torn);
+}
+.print svg.net { position: absolute; inset: 0; width: 100%; height: 100%; }
+.net .e { fill: none; stroke: #E9F0F8; stroke-width: 1.4; opacity: .5; }
+.net .n { fill: #F1F5FA; opacity: .9; }
+.net .r { fill: none; stroke: #F1F5FA; stroke-width: 1; opacity: .3; }
+.print .grain { position: absolute; inset: 0; pointer-events: none; opacity: .5; }
+.print-copy { position: relative; padding: clamp(28px, 6vw, 88px); max-width: 44rem; }
+.wordmark {
+  font: 600 clamp(3.4rem, 11vw, 8.5rem)/.9 var(--serif);
+  font-variation-settings: 'opsz' 60; letter-spacing: -.035em; margin: 0 0 .3em;
+}
+.lede { font: 400 clamp(1.15rem, 2.2vw, 1.5rem)/1.45 var(--serif); margin: 0 0 1.6em; max-width: 30ch; color: #DCE7F5; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px 20px; font: 500 1rem/1 var(--sans); }
+.btn { display: inline-block; padding: 14px 20px; background: #F1F5FA; color: var(--deep); text-decoration: none; border-radius: 2px; }
+.btn:hover { background: #fff; }
+.print a:not(.btn) { color: #F1F5FA; text-decoration-color: rgba(241,245,250,.5); padding: 14px 0; }
+
+/* The one moment: the print develops */
+@media (prefers-reduced-motion: no-preference) {
+  .print { animation: develop 2.4s cubic-bezier(.2,.6,.2,1) both; }
+  .net .n, .net .e, .net .r { animation: fix 1.6s ease-out both; animation-delay: calc(400ms + var(--d, 0ms)); }
+  @keyframes develop { from { filter: brightness(2.6) saturate(.2); } to { filter: none; } }
+  @keyframes fix { from { opacity: 0; } }
+}
+
+/* ——— Body: a paper with sidenotes ——— */
+main { padding: clamp(40px, 7vw, 96px) 16px 64px; }
+.section {
+  display: grid; gap: 8px 48px; max-width: 74rem; margin: 0 auto clamp(56px, 8vw, 104px);
+  grid-template-columns: minmax(0, var(--measure)) minmax(0, 1fr);
+}
+.section > * { grid-column: 1; }
+.section > .side { grid-column: 2; grid-row: 1 / span 6; align-self: start; font: 400 .9375rem/1.5 var(--sans); color: var(--muted); padding-top: .55rem; max-width: 26ch; }
+@media (max-width: 860px) {
+  .section { grid-template-columns: minmax(0, 1fr); }
+  .section > .side { grid-column: 1; grid-row: auto; padding-top: 0; }
+}
+h2 { font: 600 clamp(1.75rem, 3.6vw, 2.5rem)/1.15 var(--serif); letter-spacing: -.015em; margin: 0 0 .5em; }
+p { margin: 0 0 1em; }
+.intro p:first-of-type { font-size: 1.3rem; line-height: 1.55; }
+
+dl.features { margin: .5rem 0 0; }
+.features div { display: grid; grid-template-columns: 11rem 1fr; gap: 4px 24px; padding: 18px 0; border-top: 1px solid var(--halftone); }
+.features div:last-child { border-bottom: 1px solid var(--halftone); }
+.features dt { font: 600 1rem/1.5 var(--sans); padding-top: .15em; }
+.features dd { margin: 0; }
+.features .mark { color: var(--toned); font-style: italic; }
+@media (max-width: 560px) { .features div { grid-template-columns: 1fr; } }
+
+ol.steps { list-style: none; counter-reset: s; padding: 0; margin: .5rem 0 0; }
+.steps li { counter-increment: s; position: relative; padding: 0 0 22px 3rem; }
+.steps li::before {
+  content: counter(s); position: absolute; left: 0; top: .05em;
+  width: 2rem; height: 2rem; border-radius: 50%; border: 1px solid var(--halftone);
+  display: grid; place-items: center; font: 500 .95rem/1 var(--sans); color: var(--muted);
+}
+.steps li:not(:last-child)::after { content: ""; position: absolute; left: calc(1rem - .5px); top: 2.3rem; bottom: 4px; border-left: 1px solid var(--halftone); }
+pre, code { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: .86em; }
+pre { margin: .5em 0 0; padding: 14px 16px; background: var(--prussian); color: #E9F0F8; border-radius: 2px; overflow-x: auto; line-height: 1.55; }
+:not(pre) > code { background: color-mix(in srgb, var(--halftone) 22%, transparent); padding: .1em .35em; border-radius: 2px; }
+
+.tree { font-size: .95rem; }
+.tree .c { color: #9FBDE3; }
+
+footer { margin: 0 14px 14px; padding: 28px clamp(16px, 5vw, 56px); background: var(--deep); color: #C9D9EE; font: 400 .95rem/1.5 var(--sans); border-radius: 3px; display: flex; flex-wrap: wrap; gap: 8px 28px; justify-content: space-between; }
+footer a { color: #F1F5FA; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <defs>
+    <clipPath id="torn" clipPathUnits="objectBoundingBox">
+      <path d="M0,.012 .04,.004 .09,.014 .15,.002 .23,.011 .31,.003 .4,.013 .49,.004 .58,.012 .67,.002 .76,.01 .85,.003 .93,.012 1,.005 .996,.2 1,.4 .994,.6 1,.8 .997,.994 .92,.99 .84,.998 .75,.988 .66,.997 .57,.989 .48,.998 .39,.99 .3,.997 .21,.988 .12,.996 .05,.989 0,.996 .004,.8 0,.6 .005,.4 0,.2Z"/>
+    </clipPath>
+    <filter id="grainf"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 .95  0 0 0 0 .97  0 0 0 0 1  0 0 0 .09 0"/></filter>
+  </defs>
+</svg>
+
+<header class="print">
+  <svg class="net" viewBox="0 0 1440 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+<path class="e" d="M1025 186Q1013 206 993 220"/>
+<path class="e" d="M1025 186Q1019 200 1007 211"/>
+<path class="e" d="M993 220Q971 226 950 221"/>
+<path class="e" d="M993 220Q999 213 1007 211"/>
+<path class="e" d="M925 212Q939 214 950 221"/>
+<path class="e" d="M925 212Q934 213 941 218"/>
+<path class="e" d="M925 212Q902 217 879 211"/>
+<path class="e" d="M950 221Q945 221 941 218"/>
+<path class="e" d="M941 218Q909 222 879 211"/>
+<path class="e" d="M879 211Q1020 164 1167 186"/>
+<path class="e" d="M879 211Q1075 213 1249 304"/>
+<path class="e" d="M1156 103Q1154 98 1155 92"/>
+<path class="e" d="M1156 103Q1184 122 1199 152"/>
+<path class="e" d="M1156 103Q1132 111 1107 107"/>
+<path class="e" d="M1095 101Q1124 89 1155 92"/>
+<path class="e" d="M1095 101Q1102 102 1107 107"/>
+<path class="e" d="M1167 186Q1153 195 1135 196"/>
+<path class="e" d="M1167 186Q1179 165 1199 152"/>
+<path class="e" d="M1155 92Q1133 105 1107 107"/>
+<path class="e" d="M1135 196Q1162 167 1199 152"/>
+<path class="e" d="M1199 152Q1242 222 1249 304"/>
+<path class="e" d="M1338 354Q1338 348 1341 343"/>
+<path class="e" d="M1338 354Q1334 326 1344 299"/>
+<path class="e" d="M1298 290Q1275 303 1249 304"/>
+<path class="e" d="M1298 290Q1322 289 1344 299"/>
+<path class="e" d="M1298 290Q1297 307 1288 322"/>
+<path class="e" d="M1341 343Q1337 320 1344 299"/>
+<path class="e" d="M1341 343Q1352 319 1373 303"/>
+<path class="e" d="M1249 304Q1271 308 1288 322"/>
+<path class="e" d="M1344 299Q1359 298 1373 303"/>
+<path class="e" d="M1288 322Q1200 434 1070 494"/>
+<path class="e" d="M1048 433Q1066 435 1081 444"/>
+<path class="e" d="M1048 433Q1049 448 1043 461"/>
+<path class="e" d="M1048 433Q1034 410 1033 384"/>
+<path class="e" d="M1048 433Q1015 439 982 430"/>
+<path class="e" d="M1070 494Q1084 478 1105 469"/>
+<path class="e" d="M1070 494Q1052 481 1043 461"/>
+<path class="e" d="M1105 469Q1090 460 1081 444"/>
+<path class="e" d="M1081 444Q1064 457 1043 461"/>
+<path class="e" d="M1043 461Q995 340 1007 211"/>
+<path class="e" d="M1043 461Q1009 453 982 430"/>
+<path class="e" d="M1033 384Q1013 413 982 430"/>
+<path class="e" d="M1248 632Q1250 605 1264 582"/>
+<path class="e" d="M1248 632Q1233 622 1224 607"/>
+<path class="e" d="M1284 577Q1275 581 1264 582"/>
+<path class="e" d="M1284 577Q1305 567 1329 568"/>
+<path class="e" d="M1284 577Q1272 574 1262 566"/>
+<path class="e" d="M1264 582Q1295 567 1329 568"/>
+<path class="e" d="M1264 582Q1246 573 1233 558"/>
+<path class="e" d="M1264 582Q1261 574 1262 566"/>
+<path class="e" d="M1264 582Q1247 599 1224 607"/>
+<path class="e" d="M1233 558Q1249 558 1262 566"/>
+<circle class="n" cx="1025" cy="186" r="3" style="--d:0ms"/>
+<circle class="r" cx="993" cy="220" r="15"/>
+<circle class="n" cx="993" cy="220" r="7" style="--d:55ms"/>
+<circle class="n" cx="925" cy="212" r="4" style="--d:110ms"/>
+<circle class="r" cx="950" cy="221" r="24"/>
+<circle class="n" cx="950" cy="221" r="11" style="--d:165ms"/>
+<circle class="n" cx="941" cy="218" r="3" style="--d:220ms"/>
+<circle class="n" cx="1007" cy="211" r="3" style="--d:275ms"/>
+<circle class="n" cx="879" cy="211" r="5" style="--d:330ms"/>
+<circle class="n" cx="1156" cy="103" r="3" style="--d:385ms"/>
+<circle class="r" cx="1095" cy="101" r="24"/>
+<circle class="n" cx="1095" cy="101" r="11" style="--d:440ms"/>
+<circle class="r" cx="1167" cy="186" r="24"/>
+<circle class="n" cx="1167" cy="186" r="11" style="--d:495ms"/>
+<circle class="r" cx="1155" cy="92" r="24"/>
+<circle class="n" cx="1155" cy="92" r="11" style="--d:550ms"/>
+<circle class="r" cx="1135" cy="196" r="24"/>
+<circle class="n" cx="1135" cy="196" r="11" style="--d:605ms"/>
+<circle class="r" cx="1199" cy="152" r="15"/>
+<circle class="n" cx="1199" cy="152" r="7" style="--d:660ms"/>
+<circle class="n" cx="1107" cy="107" r="4" style="--d:715ms"/>
+<circle class="n" cx="1338" cy="354" r="5" style="--d:770ms"/>
+<circle class="r" cx="1298" cy="290" r="24"/>
+<circle class="n" cx="1298" cy="290" r="11" style="--d:825ms"/>
+<circle class="n" cx="1341" cy="343" r="3" style="--d:880ms"/>
+<circle class="n" cx="1249" cy="304" r="5" style="--d:935ms"/>
+<circle class="n" cx="1344" cy="299" r="5" style="--d:990ms"/>
+<circle class="r" cx="1373" cy="303" r="15"/>
+<circle class="n" cx="1373" cy="303" r="7" style="--d:1045ms"/>
+<circle class="n" cx="1288" cy="322" r="3" style="--d:1100ms"/>
+<circle class="r" cx="1048" cy="433" r="15"/>
+<circle class="n" cx="1048" cy="433" r="7" style="--d:1155ms"/>
+<circle class="r" cx="1070" cy="494" r="24"/>
+<circle class="n" cx="1070" cy="494" r="11" style="--d:1210ms"/>
+<circle class="r" cx="1105" cy="469" r="15"/>
+<circle class="n" cx="1105" cy="469" r="7" style="--d:1265ms"/>
+<circle class="r" cx="1081" cy="444" r="15"/>
+<circle class="n" cx="1081" cy="444" r="7" style="--d:1320ms"/>
+<circle class="n" cx="1043" cy="461" r="4" style="--d:1375ms"/>
+<circle class="n" cx="1033" cy="384" r="3" style="--d:1430ms"/>
+<circle class="n" cx="982" cy="430" r="3" style="--d:1485ms"/>
+<circle class="r" cx="1248" cy="632" r="15"/>
+<circle class="n" cx="1248" cy="632" r="7" style="--d:1540ms"/>
+<circle class="n" cx="1284" cy="577" r="5" style="--d:1595ms"/>
+<circle class="r" cx="1264" cy="582" r="15"/>
+<circle class="n" cx="1264" cy="582" r="7" style="--d:1650ms"/>
+<circle class="n" cx="1329" cy="568" r="3" style="--d:1705ms"/>
+<circle class="r" cx="1233" cy="558" r="24"/>
+<circle class="n" cx="1233" cy="558" r="11" style="--d:1760ms"/>
+<circle class="n" cx="1262" cy="566" r="3" style="--d:1815ms"/>
+<circle class="r" cx="1224" cy="607" r="15"/>
+<circle class="n" cx="1224" cy="607" r="7" style="--d:1870ms"/>
+  </svg>
+  <svg class="grain" width="100%" height="100%" aria-hidden="true"><rect width="100%" height="100%" filter="url(#grainf)"/></svg>
+  <div class="print-copy">
+    <h1 class="wordmark">SciConnect</h1>
+    <p class="lede">A social network where scientists share work in progress, check each other's claims, and find collaborators.</p>
+    <div class="actions">
+      <a class="btn" href="#run">Run it locally</a>
+      <a href="https://github.com/elijahthinks/SciConnect-">View the source on GitHub</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="section intro" aria-labelledby="what">
+    <h2 id="what">What you can do</h2>
+    <p>Research rarely moves in finished papers. SciConnect is for the part in between: the half-run experiment, the dataset you want a second pair of eyes on, the question you can't answer alone.</p>
+    <dl class="features">
+      <div><dt>Research posts</dt><dd>Publish findings, methods or open questions with tags, links and attachments. Follow the people whose work you want to keep up with.</dd></div>
+      <div><dt>Fact checks</dt><dd>Attach a check to any claim, with sources. Readers see whether it's been <span class="mark">supported</span>, <span class="mark">disputed</span> or is still open.</dd></div>
+      <div><dt>Collaboration</dt><dd>Say what help a project needs, from a statistician to lab time, and let others offer to join.</dd></div>
+      <div><dt>Groups and messages</dt><dd>Real-time group chats and direct messages, with media sharing and online status.</dd></div>
+      <div><dt>Open profiles</dt><dd>List your skills, side projects and affiliations so the right people can find you.</dd></div>
+    </dl>
+    <aside class="side">Built with React and Vite on the front end, and Express, Sequelize and Socket.IO behind it. Runs on SQLite locally and PostgreSQL in production.</aside>
+  </section>
+
+  <section class="section" id="run" aria-labelledby="run-h">
+    <h2 id="run-h">Run it locally</h2>
+    <p>You need Node.js 18 or newer. SQLite works out of the box; Redis and Cloudinary are optional.</p>
+    <ol class="steps">
+      <li>Clone the repository.
+<pre><code>git clone https://github.com/elijahthinks/SciConnect-.git
+cd SciConnect-</code></pre></li>
+      <li>Install the back end and front end.
+<pre><code>cd src/backend
+npm run install:all</code></pre></li>
+      <li>Create your environment file. For local work, set <code>NODE_ENV=development</code> and fill in the secrets.
+<pre><code>cp ../../.config/env.example .env</code></pre></li>
+      <li>Start both servers. The app opens at <code>localhost:5173</code> and the API at <code>localhost:3000</code>.
+<pre><code>npm run dev:full</code></pre></li>
+    </ol>
+    <aside class="side">Deploying to a server? The <a href="production.md">production guide</a> covers PostgreSQL, PM2 and Nginx. For a database walkthrough, see <a href="setup.md">setup</a>.</aside>
+  </section>
+
+  <section class="section" aria-labelledby="map">
+    <h2 id="map">Where things live</h2>
+    <p>The repository keeps code, tests, deployment and community files apart, so you can find your way without reading everything.</p>
+<pre class="tree"><code>.github/        <span class="c">CI workflows, issue and pull request templates</span>
+.build/         <span class="c">Dockerfile, PM2 config, deploy script</span>
+.config/        <span class="c">Environment template</span>
+assets/         <span class="c">Logo and banner</span>
+docs/           <span class="c">Guides and feature notes (this page)</span>
+src/backend/    <span class="c">Express API, models, migrations, sockets</span>
+src/frontend/   <span class="c">React app</span>
+test/           <span class="c">Integration scripts against a running API</span></code></pre>
+    <aside class="side">Every folder and root file is described in the <a href="https://github.com/elijahthinks/SciConnect-#repository-layout">README</a>.</aside>
+  </section>
+
+  <section class="section" aria-labelledby="help">
+    <h2 id="help">Help build it</h2>
+    <p>Bug reports, feature ideas and pull requests are welcome. Start with the <a href="../CONTRIBUTING.md">contributing guide</a>, and read the <a href="../CODE_OF_CONDUCT.md">code of conduct</a> before joining discussions.</p>
+    <p>Found a security problem? Don't open a public issue. Follow the steps in the <a href="../SECURITY.md">security policy</a> instead.</p>
+  </section>
+</main>
+
+<footer>
+  <span>SciConnect is open source under the <a href="../LICENSE">MIT License</a>.</span>
+  <a href="../CHANGELOG.md">See what changed</a>
+</footer>
+</body>
+</html>
