@@ -3,6 +3,7 @@ import axios from 'axios';
 import useChatStore from './chat';
 import useSocketStore from './socket';
 import useOnlineStatusStore from './onlineStatus';
+import { isDemo } from '../demo/api';
 
 // SciConnect has no sign-in: everyone uses the shared guest account.
 // This placeholder is shown until the API answers, or if it can't be reached.
@@ -25,6 +26,8 @@ export const useAuth = create((set) => ({
       const { data } = await axios.get('/api/auth/me');
       if (!data?.user) return;
       set({ user: data.user });
+      // The demo has no server to hold a live connection
+      if (isDemo()) return;
       useSocketStore.getState().initSocket(null);
       useChatStore.getState().initializeSocket(data.user.id);
       useOnlineStatusStore.getState().fetchCurrentUserStatus();

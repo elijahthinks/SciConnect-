@@ -24,6 +24,10 @@ cp ../../.config/env.example .env        # set NODE_ENV=development and fill in 
 npm run dev:full                         # API on :3000, app on :5173
 ```
 
+### Demo mode
+
+If the front end can't reach the API, as on a static host like Vercel, it switches to built-in example content: researchers, posts, research with fact checks, groups and messages. Visitors can post, comment, react, chat and join groups. Their changes stay in the browser and reset on reload. Edit the examples in [`src/frontend/src/demo/data.js`](src/frontend/src/demo/data.js).
+
 To deploy, follow the [production guide](docs/production.md). You can also build the container in [`.build/`](.build/).
 
 ## Repository layout
